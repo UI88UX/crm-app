@@ -6,6 +6,9 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { PatientFormData, SaleFormData } from "@/types";
 import { createAdminClient } from "./admin";
+// src/lib/supabase/actions.ts
+// اضافه کردن import در بالای فایل
+import { tenantSchema, type TenantFormData } from "@/lib/validations/tenant";
 
 // ============================================
 // Schemas
@@ -441,4 +444,250 @@ export async function toggleSuperAdmin(userId: string, isSuperAdmin: boolean) {
 
   revalidatePath("/dashboard/users");
   return { data, error: null };
+}
+
+
+// ============================================
+// Tenants Management (Super Admin Only)
+// ============================================
+
+export async function getTenants() {
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید.", data: [] };
+  }
+
+  // بررسی super_admin بودن
+  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  if (!isSuperAdmin) {
+    return { error: "شما دسترسی لازم برای مشاهده لیست مطب‌ها را ندارید.", data: [] };
+  }
+
+  // استفاده از admin client برای دور زدن RLS
+  const supabaseAdmin = createAdminClient();
+
+  const { data, error } = await supabaseAdmin
+    .from("tenants")
+    .select(`
+      *,
+      users_count:users(count),
+      patients_count:patients(count),
+      sales_count:sales(count),
+      total_revenue:sales(sum(price))
+    `)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching tenants:", error);
+    return { error: error.message, data: [] };
+  }
+
+  // تبدیل داده‌ها به فرمت مناسب
+  const formattedData = data?.map((tenant: any) => ({
+    ...tenant,
+    users_count: tenant.users_count?.[0]?.count || 0,
+    patients_count: tenant.patients_count?.[0]?.count || 0,
+    sales_count: tenant.sales_count?.[0]?.count || 0,
+    total_revenue: tenant.total_revenue?.[0]?.sum || 0,
+  })) || [];
+
+  return { data: formattedData, error: null };
+}
+
+export async function getTenant(id: string) {
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید.", data: null };
+  }
+
+  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  if (!isSuperAdmin) {
+    return { error: "شما دسترسی لازم را ندارید.", data: null };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  const { data, error } = await supabaseAdmin
+    .from("tenants")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    return { error: error.message, data: null };
+  }
+
+  return { data, error: null };
+}
+
+export async function createTenant(data: TenantFormData) {
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  if (!isSuperAdmin) {
+    return { error: "شما دسترسی لازم برای ایجاد مطب جدید را ندارید." };
+  }
+
+  const validation = tenantSchema.safeParse(data);
+  if (!validation.success) {
+    const errors = validation.error.flatten().fieldErrors;
+    const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
+    return { error: firstError, fieldErrors: errors };
+  }
+
+  // تولید license_key به صورت خودکار اگر وارد نشده باشد
+  const licenseKey = data.license_key || generateLicenseKey();
+
+  const supabaseAdmin = createAdminClient();
+
+  const { data: result, error } = await supabaseAdmin
+    .from("tenants")
+    .insert({
+      ...validation.data,
+      license_key: licenseKey,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    if (error.code === "23505") {
+      return { error: "اسلاگ یا لایسنس قبلاً ثبت شده است." };
+    }
+    return { error: "خطا در ایجاد مطب: " + error.message };
+  }
+
+  revalidatePath("/admin/tenants");
+  return { data: result, error: null };
+}
+
+export async function updateTenant(id: string, data: Partial<TenantFormData>) {
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  if (!isSuperAdmin) {
+    return { error: "شما دسترسی لازم برای ویرایش مطب را ندارید." };
+  }
+
+  const validation = tenantSchema.partial().safeParse(data);
+  if (!validation.success) {
+    const errors = validation.error.flatten().fieldErrors;
+    const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
+    return { error: firstError, fieldErrors: errors };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  const { data: result, error } = await supabaseAdmin
+    .from("tenants")
+    .update(validation.data)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    return { error: "خطا در ویرایش مطب: " + error.message };
+  }
+
+  revalidatePath("/admin/tenants");
+  return { data: result, error: null };
+}
+
+export async function deleteTenant(id: string) {
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  if (!isSuperAdmin) {
+    return { error: "شما دسترسی لازم برای حذف مطب را ندارید." };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  // ابتدا بررسی کنید که مطب کاربر ندارد
+  const { count, error: countError } = await supabaseAdmin
+    .from("users")
+    .select("*", { count: 'exact', head: true })
+    .eq("tenant_id", id);
+
+  if (countError) {
+    return { error: "خطا در بررسی کاربران مطب: " + countError.message };
+  }
+
+  if (count && count > 0) {
+    return { error: "این مطب دارای کاربر است. ابتدا کاربران را انتقال یا حذف کنید." };
+  }
+
+  // حذف مطب
+  const { error } = await supabaseAdmin
+    .from("tenants")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    return { error: "خطا در حذف مطب: " + error.message };
+  }
+
+  revalidatePath("/admin/tenants");
+  return { data: { success: true, id }, error: null };
+}
+
+export async function toggleTenantStatus(id: string, status: 'active' | 'inactive' | 'suspended') {
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  if (!isSuperAdmin) {
+    return { error: "شما دسترسی لازم برای تغییر وضعیت مطب را ندارید." };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  const { data, error } = await supabaseAdmin
+    .from("tenants")
+    .update({ status })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    return { error: "خطا در تغییر وضعیت مطب: " + error.message };
+  }
+
+  revalidatePath("/admin/tenants");
+  return { data, error: null };
+}
+
+// تابع کمکی برای تولید license_key
+function generateLicenseKey(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let license = '';
+  for (let i = 0; i < 32; i++) {
+    if (i > 0 && i % 8 === 0) {
+      license += '-';
+    }
+    license += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return license;
 }
