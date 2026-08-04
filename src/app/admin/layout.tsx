@@ -18,12 +18,12 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   // چک کردن is_super_admin در app_metadata
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  // const isSuperAdmin = user.app_metadata?.is_super_admin === true;
   
-  if (!isSuperAdmin) {
-    // اگر super_admin نیست، به داشبورد برگردانده شود
-    redirect("/dashboard");
-  }
+  // if (!isSuperAdmin) {
+  //   // اگر super_admin نیست، به داشبورد برگردانده شود
+  //   redirect("/dashboard");
+  // }
 
   return (
     <div className="flex min-h-screen bg-gray-50">

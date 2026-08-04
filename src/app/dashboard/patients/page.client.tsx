@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 
+
+
 interface Patient {
   id: string;
   first_name: string;

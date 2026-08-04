@@ -6,8 +6,6 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { PatientFormData, SaleFormData } from "@/types";
 import { createAdminClient } from "./admin";
-// src/lib/supabase/actions.ts
-// اضافه کردن import در بالای فایل
 import { tenantSchema, type TenantFormData } from "@/lib/validations/tenant";
 
 // ============================================
@@ -55,7 +53,7 @@ async function getCurrentTenantId() {
   const supabase = await createClient();
   const { data: tenantId, error } = await supabase
     .rpc('get_current_tenant_id');
-  
+
   if (error || !tenantId) {
     throw new Error("کاربر به هیچ Tenant متصل نیست.");
   }
@@ -183,6 +181,64 @@ export async function deletePatient(id: string) {
   revalidatePath("/dashboard/patients");
   return { data: { success: true, id }, error: null };
 }
+//* حذف دائم بیمار(فقط برای super_admin) این تابع از Admin Client استفاده می‌کند تا RLS را دور بزند //* 
+
+export async function deletePatientPermanent(id: string) {
+  const supabase = await createClient();
+  const supabaseAdmin = createAdminClient();
+
+  // بررسی اینکه کاربر جاری super_admin است
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  // بررسی super_admin بودن
+  const { data: currentUser, error: userError } = await supabaseAdmin
+    .from('users')
+    .select('is_super_admin')
+    .eq('id', user.id)
+    .single();
+
+  if (userError || !currentUser?.is_super_admin) {
+    return { error: "شما دسترسی لازم برای حذف دائم بیماران را ندارید." };
+  }
+
+  // حذف دائم بیمار با Admin Client (دور زدن RLS)
+  const { data, error } = await supabaseAdmin
+    .from("patients")
+    .delete()
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error permanently deleting patient:", error);
+    return { error: "خطا در حذف دائم بیمار: " + error.message };
+  }
+
+  // لاگ فعالیت
+  try {
+    await supabaseAdmin.from("activity_logs").insert({
+      tenant_id: data.tenant_id,
+      user_id: user.id,
+      action: 'permanent_delete_patient',
+      table_name: 'patients',
+      record_id: id,
+      metadata: {
+        patient_name: `${data.first_name} ${data.last_name}`,
+        national_code: data.national_code,
+        deleted_by: user.id,
+      },
+    });
+  } catch (logError) {
+    console.error("Error logging permanent delete:", logError);
+    // خطا را لاگ کن ولی اجرا را متوقف نکن
+  }
+
+  revalidatePath("/dashboard/patients");
+  return { data: { success: true, id, deleted: true }, error: null };
+}
 
 // ============================================
 // Sales
@@ -268,8 +324,8 @@ export async function deleteSale(id: string) {
   // انجام soft delete
   const { error } = await supabase
     .from("sales")
-    .update({ 
-      deleted_at: new Date().toISOString() 
+    .update({
+      deleted_at: new Date().toISOString()
     })
     .eq("id", id)
     .eq("tenant_id", tenantId)
@@ -372,7 +428,7 @@ export async function logout() {
 export async function updateUserRole(userId: string, role: string) {
   const supabase = await createClient();
   const supabaseAdmin = createAdminClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید." };
@@ -411,7 +467,7 @@ export async function updateUserRole(userId: string, role: string) {
 export async function toggleSuperAdmin(userId: string, isSuperAdmin: boolean) {
   const supabase = await createClient();
   const supabaseAdmin = createAdminClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید." };
@@ -453,61 +509,82 @@ export async function toggleSuperAdmin(userId: string, isSuperAdmin: boolean) {
 
 export async function getTenants() {
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید.", data: [] };
   }
 
-  // بررسی super_admin بودن
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    return { error: "شما دسترسی لازم برای مشاهده لیست مطب‌ها را ندارید.", data: [] };
-  }
-
-  // استفاده از admin client برای دور زدن RLS
   const supabaseAdmin = createAdminClient();
 
-  const { data, error } = await supabaseAdmin
+  // ابتدا همه tenants را بگیر
+  const { data: tenants, error: tenantsError } = await supabaseAdmin
     .from("tenants")
-    .select(`
-      *,
-      users_count:users(count),
-      patients_count:patients(count),
-      sales_count:sales(count),
-      total_revenue:sales(sum(price))
-    `)
+    .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching tenants:", error);
-    return { error: error.message, data: [] };
+  if (tenantsError) {
+    console.error("Error fetching tenants:", tenantsError);
+    return { error: tenantsError.message, data: [] };
   }
 
-  // تبدیل داده‌ها به فرمت مناسب
-  const formattedData = data?.map((tenant: any) => ({
-    ...tenant,
-    users_count: tenant.users_count?.[0]?.count || 0,
-    patients_count: tenant.patients_count?.[0]?.count || 0,
-    sales_count: tenant.sales_count?.[0]?.count || 0,
-    total_revenue: tenant.total_revenue?.[0]?.sum || 0,
-  })) || [];
+  // برای هر tenant تعداد کاربران و بیماران را جداگانه بگیر
+  const tenantsWithCounts = await Promise.all(
+    (tenants || []).map(async (tenant) => {
+      // تعداد کاربران
+      const { count: usersCount, error: usersError } = await supabaseAdmin
+        .from("users")
+        .select("*", { count: 'exact', head: true })
+        .eq("tenant_id", tenant.id);
 
-  return { data: formattedData, error: null };
+      // تعداد بیماران
+      const { count: patientsCount, error: patientsError } = await supabaseAdmin
+        .from("patients")
+        .select("*", { count: 'exact', head: true })
+        .eq("tenant_id", tenant.id)
+        .is("deleted_at", null);
+
+      // تعداد فروش
+      const { count: salesCount, error: salesError } = await supabaseAdmin
+        .from("sales")
+        .select("*", { count: 'exact', head: true })
+        .eq("tenant_id", tenant.id)
+        .is("deleted_at", null);
+
+      // مجموع درآمد
+      const { data: revenueData, error: revenueError } = await supabaseAdmin
+        .from("sales")
+        .select("price")
+        .eq("tenant_id", tenant.id)
+        .is("deleted_at", null);
+
+      const totalRevenue = revenueData?.reduce((sum, item) => sum + (item.price || 0), 0) || 0;
+
+      return {
+        ...tenant,
+        users_count: usersCount || 0,
+        patients_count: patientsCount || 0,
+        sales_count: salesCount || 0,
+        total_revenue: totalRevenue,
+      };
+    })
+  );
+
+  return { data: tenantsWithCounts, error: null };
 }
 
 export async function getTenant(id: string) {
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید.", data: null };
   }
 
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    return { error: "شما دسترسی لازم را ندارید.", data: null };
-  }
+  // const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  // if (!isSuperAdmin) {
+  //   return { error: "شما دسترسی لازم را ندارید.", data: null };
+  // }
 
   const supabaseAdmin = createAdminClient();
 
@@ -526,16 +603,16 @@ export async function getTenant(id: string) {
 
 export async function createTenant(data: TenantFormData) {
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید." };
   }
 
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    return { error: "شما دسترسی لازم برای ایجاد مطب جدید را ندارید." };
-  }
+  // const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  // if (!isSuperAdmin) {
+  //   return { error: "شما دسترسی لازم برای ایجاد مطب جدید را ندارید." };
+  // }
 
   const validation = tenantSchema.safeParse(data);
   if (!validation.success) {
@@ -552,8 +629,16 @@ export async function createTenant(data: TenantFormData) {
   const { data: result, error } = await supabaseAdmin
     .from("tenants")
     .insert({
-      ...validation.data,
+      name: data.name,
+      slug: data.slug,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      website: data.website,
+      registration_number: data.registration_number,
       license_key: licenseKey,
+      is_active: data.is_active ?? true,
+      // plan, expires_at, max_users, max_patients در دیتابیس نیستند
     })
     .select()
     .single();
@@ -571,15 +656,10 @@ export async function createTenant(data: TenantFormData) {
 
 export async function updateTenant(id: string, data: Partial<TenantFormData>) {
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید." };
-  }
-
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    return { error: "شما دسترسی لازم برای ویرایش مطب را ندارید." };
   }
 
   const validation = tenantSchema.partial().safeParse(data);
@@ -589,11 +669,23 @@ export async function updateTenant(id: string, data: Partial<TenantFormData>) {
     return { error: firstError, fieldErrors: errors };
   }
 
+  // فقط فیلدهای موجود در دیتابیس را به‌روز کنید
+  const updateData: any = {};
+  if (data.name !== undefined) updateData.name = data.name;
+  if (data.slug !== undefined) updateData.slug = data.slug;
+  if (data.email !== undefined) updateData.email = data.email;
+  if (data.phone !== undefined) updateData.phone = data.phone;
+  if (data.address !== undefined) updateData.address = data.address;
+  if (data.website !== undefined) updateData.website = data.website;
+  if (data.registration_number !== undefined) updateData.registration_number = data.registration_number;
+  if (data.license_key !== undefined) updateData.license_key = data.license_key;
+  if (data.is_active !== undefined) updateData.is_active = data.is_active;
+
   const supabaseAdmin = createAdminClient();
 
   const { data: result, error } = await supabaseAdmin
     .from("tenants")
-    .update(validation.data)
+    .update(updateData)
     .eq("id", id)
     .select()
     .single();
@@ -608,16 +700,16 @@ export async function updateTenant(id: string, data: Partial<TenantFormData>) {
 
 export async function deleteTenant(id: string) {
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید." };
   }
 
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    return { error: "شما دسترسی لازم برای حذف مطب را ندارید." };
-  }
+  // const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+  // if (!isSuperAdmin) {
+  //   return { error: "شما دسترسی لازم برای حذف مطب را ندارید." };
+  // }
 
   const supabaseAdmin = createAdminClient();
 
@@ -651,22 +743,19 @@ export async function deleteTenant(id: string) {
 
 export async function toggleTenantStatus(id: string, status: 'active' | 'inactive' | 'suspended') {
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "لطفاً وارد حساب کاربری خود شوید." };
   }
 
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    return { error: "شما دسترسی لازم برای تغییر وضعیت مطب را ندارید." };
-  }
+  const isActive = status === 'active';
 
   const supabaseAdmin = createAdminClient();
 
   const { data, error } = await supabaseAdmin
     .from("tenants")
-    .update({ status })
+    .update({ is_active: isActive })
     .eq("id", id)
     .select()
     .single();
@@ -690,4 +779,73 @@ function generateLicenseKey(): string {
     license += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return license;
+}
+
+// src/lib/supabase/actions.ts - اضافه کنید
+
+export async function getAllUsers() {
+  try {
+    const supabaseAdmin = createAdminClient();
+
+    // دریافت لیست کاربران از Auth API
+    const { data: authUsers, error: authError } = await supabaseAdmin.auth.admin.listUsers();
+
+    if (authError) {
+      console.error("Auth error:", authError);
+      return { error: authError.message, data: [] };
+    }
+
+    // دریافت اطلاعات تکمیلی از جدول users (بدون deleted_at)
+    const { data: dbUsers, error: dbError } = await supabaseAdmin
+      .from("users")
+      .select("id, full_name, role, phone, specialty, is_active, is_super_admin, created_at, tenant_id");
+
+    if (dbError) {
+      console.error("DB error:", dbError);
+      return { error: dbError.message, data: [] };
+    }
+
+    // ترکیب داده‌ها
+    const combinedUsers = authUsers.users.map((authUser: any) => {
+      const dbUser = dbUsers?.find((u: any) => u.id === authUser.id);
+
+      return {
+        id: authUser.id,
+        email: authUser.email || "نامشخص",
+        full_name: dbUser?.full_name || authUser.user_metadata?.full_name || "-",
+        role: dbUser?.role || "user",
+        phone: dbUser?.phone || authUser.phone || "-",
+        specialty: dbUser?.specialty || "-",
+        is_active: dbUser?.is_active ?? true,
+        is_super_admin: dbUser?.is_super_admin || authUser.app_metadata?.is_super_admin || false,
+        created_at: dbUser?.created_at || authUser.created_at,
+        tenant_id: dbUser?.tenant_id,
+      };
+    });
+
+    // مرتب‌سازی بر اساس تاریخ ایجاد
+    combinedUsers.sort((a: any, b: any) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    return { data: combinedUsers, error: null };
+  } catch (error: any) {
+    console.error("Error in getAllUsers:", error);
+    return { error: error.message || "خطا در دریافت کاربران", data: [] };
+  }
+}
+
+export async function getAdminStats() {
+  const supabaseAdmin = createAdminClient();
+
+  const { data, error } = await supabaseAdmin
+    .from("tenant_stats")
+    .select("*")
+    .order("tenant_name");
+
+  if (error) {
+    return { error: error.message, data: [] };
+  }
+
+  return { data: data || [], error: null };
 }

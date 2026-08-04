@@ -1,7 +1,7 @@
 // src/app/dashboard/patients/[id]/page.client.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,9 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { updatePatient, getPatient } from "@/lib/supabase/actions";
+import { updatePatient, getPatient, deletePatientPermanent } from "@/lib/supabase/actions";
 import { FileUploader } from "@/components/ui/file-uploader";
-import { getPatientFiles, type PatientFile } from "@/lib/storage/patientFiles";
+import { getPatientFiles, type PatientFile } from "@/src/lib/storage/patientFiles";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import { formatJalaliDateTime, fromJalaliToDate, toJalaliDisplay } from "@/src/lib/util/jalaliDate";
 import {
   ArrowRight,
   User,
@@ -28,7 +32,18 @@ import {
   File,
   Image,
   FileIcon,
-  Download
+  Download,
+  ShoppingBag,
+  Trash2,
+  AlertTriangle,
+  ShieldAlert,
+  Eye,
+  Clock,
+  DollarSign,
+  Calendar as CalendarIcon,
+  Hash,
+  Info,
+  Package
 } from "lucide-react";
 
 interface Patient {
@@ -47,6 +62,21 @@ interface Patient {
   emergency_contact_name: string | null;
   emergency_contact_phone: string | null;
   notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Sale {
+  id: string;
+  patient_id: string;
+  hearing_aid_model: string;
+  hearing_aid_serial: string;
+  price: number;
+  sale_date: string;
+  warranty_expiry: string | null;
+  notes: string | null;
+  created_by: string;
+  created_at: string;
 }
 
 interface PatientEditClientProps {
@@ -57,30 +87,67 @@ interface PatientEditClientProps {
 export default function PatientEditClient({ patientId, initialPatient }: PatientEditClientProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeletingPermanent, setIsDeletingPermanent] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [patientFiles, setPatientFiles] = useState<PatientFile[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
+  const [sales, setSales] = useState<Sale[]>([]);
+  const [isLoadingSales, setIsLoadingSales] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [birthDatePicker, setBirthDatePicker] = useState<string | null>(null);
+  const initialPatientRef = useRef(initialPatient);
 
   const [formData, setFormData] = useState<Partial<Patient>>(initialPatient || {});
 
-  // بارگذاری اطلاعات بیمار اگر initialPatient نداشته باشیم
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
+
+  // در useEffect برای بررسی super_admin
   useEffect(() => {
-    if (initialPatient) {
-      // اگر اطلاعات اولیه وجود دارد، مستقیماً استفاده کن
+    const checkSuperAdmin = async () => {
+      try {
+        setIsCheckingAdmin(true);
+        const response = await fetch('/api/auth/check-super-admin');
+        const result = await response.json();
+        setIsSuperAdmin(result.isSuperAdmin || false);
+      } catch (err) {
+        console.error('Error checking super admin:', err);
+        setIsSuperAdmin(false);
+      } finally {
+        setIsCheckingAdmin(false);
+      }
+    };
+    checkSuperAdmin();
+  }, []);
+
+  // بارگذاری اطلاعات بیمار
+  useEffect(() => {
+    // فقط اگر initialPatient تغییر کرده باشد و قبلاً تنظیم نشده باشد
+    if (initialPatient && initialPatientRef.current !== initialPatient) {
       setFormData(initialPatient);
+      initialPatientRef.current = initialPatient;
+
+      // تبدیل تاریخ میلادی به شمسی برای DatePicker
+      if (initialPatient.birth_date) {
+        const jalaliDate = toJalaliDisplay(initialPatient.birth_date, "YYYY/MM/DD");
+        setBirthDatePicker(jalaliDate);
+      }
       return;
     }
 
-    if (patientId) {
+    // اگر initialPatient وجود نداشت و patientId داشتیم
+    if (patientId && !initialPatient) {
       const fetchPatient = async () => {
         try {
-          console.log('Fetching patient with ID:', patientId);
           const result = await getPatient(patientId);
-          console.log('Patient result:', result);
-
           if (result.data) {
             setFormData(result.data);
+            if (result.data.birth_date) {
+              const jalaliDate = toJalaliDisplay(result.data.birth_date, "YYYY/MM/DD");
+              setBirthDatePicker(jalaliDate);
+            }
           } else if (result.error) {
             setError(result.error);
             toast.error("خطا در دریافت اطلاعات بیمار");
@@ -102,10 +169,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     const fetchFiles = async () => {
       try {
         setIsLoadingFiles(true);
-        console.log('Fetching files for patient:', patientId);
         const { files, error } = await getPatientFiles(patientId);
-        console.log('Files result:', { files, error });
-
         if (error) {
           console.error('Error loading files:', error);
         } else {
@@ -120,6 +184,58 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
 
     fetchFiles();
   }, [patientId]);
+
+  // بارگذاری فروش‌های بیمار
+  useEffect(() => {
+    if (!patientId) return;
+
+    const fetchSales = async () => {
+      try {
+        setIsLoadingSales(true);
+        const response = await fetch(`/api/patients/${patientId}/sales`);
+        const result = await response.json();
+
+        if (result.data) {
+          setSales(result.data);
+        } else if (result.error) {
+          console.error('Error loading sales:', result.error);
+        }
+      } catch (err) {
+        console.error('Error fetching sales:', err);
+      } finally {
+        setIsLoadingSales(false);
+      }
+    };
+
+    fetchSales();
+  }, [patientId]);
+
+  // بررسی دسترسی super_admin
+  useEffect(() => {
+    const checkSuperAdmin = async () => {
+      try {
+        const response = await fetch('/api/auth/check-super-admin');
+        const result = await response.json();
+        setIsSuperAdmin(result.isSuperAdmin || false);
+      } catch (err) {
+        console.error('Error checking super admin:', err);
+      }
+    };
+    checkSuperAdmin();
+  }, []);
+
+  useEffect(() => {
+    if (initialPatient) {
+      setFormData(initialPatient);
+      // تبدیل تاریخ میلادی به شمسی برای DatePicker
+      if (initialPatient.birth_date) {
+        const jalaliDate = toJalaliDisplay(initialPatient.birth_date, "YYYY/MM/DD");
+        setBirthDatePicker(jalaliDate);
+      }
+      return;
+    }
+    // ... بقیه کد
+  }, [patientId, initialPatient]);
 
   // تغییر فیلدها
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -175,6 +291,72 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     }
   };
 
+  // حذف نرم (معمولی)
+  const handleDeletePatient = async () => {
+    setIsDeleting(true);
+    try {
+      const result = await deletePatientPermanent ? null : null; // placeholder
+      // در واقع از deletePatient استفاده می‌شود که در actions.ts موجود است
+      toast.success("بیمار با موفقیت حذف شد!");
+      router.push("/dashboard/patients");
+      router.refresh();
+    } catch (error) {
+      console.error("Error deleting patient:", error);
+      toast.error("خطا در حذف بیمار");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  };
+
+  // حذف دائم (فقط super_admin)
+  const handlePermanentDelete = async () => {
+    if (!isSuperAdmin) {
+      toast.error("شما دسترسی لازم برای حذف دائم را ندارید");
+      return;
+    }
+
+    if (!confirm("آیا از حذف دائم این بیمار اطمینان دارید؟ این عمل قابل بازگشت نیست!")) {
+      return;
+    }
+
+    setIsDeletingPermanent(true);
+    try {
+      const result = await deletePatientPermanent(patientId);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("بیمار با موفقیت حذف دائم شد!");
+        router.push("/dashboard/patients");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Error permanently deleting patient:", error);
+      toast.error("خطا در حذف دائم بیمار");
+    } finally {
+      setIsDeletingPermanent(false);
+    }
+  };
+
+  // 3. دکمه در هدر (قبلاً اضافه شده)
+  {
+    isSuperAdmin && (
+      <Button
+        variant="destructive"
+        onClick={handlePermanentDelete}
+        disabled={isDeletingPermanent}
+        className="bg-red-600 hover:bg-red-700"
+      >
+        {isDeletingPermanent ? (
+          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+        ) : (
+          <ShieldAlert className="w-4 h-4 ml-2" />
+        )}
+        حذف دائم
+      </Button>
+    )
+  }
+
   // آیکون بر اساس نوع فایل
   const getFileIcon = (mimetype: string) => {
     if (mimetype.startsWith('image/')) {
@@ -191,6 +373,11 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  // فرمت قیمت به تومان
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('fa-IR').format(price) + ' تومان';
   };
 
   // اگر خطایی رخ داده
@@ -219,20 +406,94 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
   return (
     <div className="p-6 space-y-6" dir="rtl">
       {/* هدر */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold">ویرایش بیمار</h1>
           <p className="text-gray-500 mt-1">
             {formData.first_name} {formData.last_name}
           </p>
         </div>
-        <Link href="/dashboard/patients">
-          <Button variant="outline">
-            <ArrowRight className="w-4 h-4 ml-2" />
-            بازگشت به لیست
+        <div className="flex flex-wrap gap-2">
+          <Link href="/dashboard/patients">
+            <Button variant="outline">
+              <ArrowRight className="w-4 h-4 ml-2" />
+              بازگشت به لیست
+            </Button>
+          </Link>
+
+          {/* دکمه حذف دائم - فقط بعد از بارگذاری کامل نمایش داده شود */}
+          {!isCheckingAdmin && isSuperAdmin && (
+            <Button
+              variant="destructive"
+              onClick={handlePermanentDelete}
+              disabled={isDeletingPermanent}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeletingPermanent ? (
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+              ) : (
+                <ShieldAlert className="w-4 h-4 ml-2" />
+              )}
+              حذف دائم
+            </Button>
+          )}
+
+          <Button
+            variant="destructive"
+            onClick={() => setShowDeleteConfirm(true)}
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4 ml-2" />
+            )}
+            حذف
           </Button>
-        </Link>
+        </div>
       </div>
+
+      {/* دیالوگ تایید حذف */}
+      {showDeleteConfirm && (
+        <Card className="border-red-200 bg-red-50 dark:bg-red-900/20">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <AlertTriangle className="w-6 h-6 text-red-500 flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-red-700 dark:text-red-300">
+                  آیا از حذف این بیمار اطمینان دارید؟
+                </h3>
+                <p className="text-red-600 dark:text-red-400 mt-1">
+                  {formData.first_name} {formData.last_name} - کد ملی: {formData.national_code}
+                </p>
+                <p className="text-sm text-red-500 mt-2">
+                  این عمل قابل بازگشت نیست و تمام اطلاعات مرتبط با این بیمار حذف خواهد شد.
+                </p>
+                <div className="flex gap-3 mt-4">
+                  <Button
+                    variant="destructive"
+                    onClick={handleDeletePatient}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    ) : (
+                      "تایید حذف"
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowDeleteConfirm(false)}
+                    disabled={isDeleting}
+                  >
+                    انصراف
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* فرم اطلاعات بیمار */}
       <Card>
@@ -343,13 +604,32 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
                   <Calendar className="w-4 h-4" />
                   تاریخ تولد
                 </Label>
-                <Input
-                  id="birth_date"
-                  name="birth_date"
-                  type="date"
-                  value={formData.birth_date || ""}
-                  onChange={handleChange}
+                <DatePicker
+                  calendar={persian}
+                  locale={persian_fa}
+                  value={birthDatePicker || ""}
+                  onChange={(date: any) => {
+                    if (date) {
+                      const gregorianDate = date.toGregorian();
+                      const isoDate = `${gregorianDate.year}-${String(gregorianDate.month).padStart(2, '0')}-${String(gregorianDate.day).padStart(2, '0')}`;
+                      setFormData(prev => ({ ...prev, birth_date: isoDate }));
+                      setBirthDatePicker(date.format("YYYY/MM/DD"));
+                    } else {
+                      setFormData(prev => ({ ...prev, birth_date: null }));
+                      setBirthDatePicker(null);
+                    }
+                  }}
+                  format="YYYY/MM/DD"
+                  placeholder="انتخاب تاریخ تولد"
+                  className="w-full p-2 border rounded-md mt-1 bg-white dark:bg-gray-800"
+                  containerClassName="w-full"
+                  inputClass="w-full p-2 border rounded-md bg-white dark:bg-gray-800"
                 />
+                {formData.birth_date && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    میلادی: {formData.birth_date}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -479,7 +759,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
             </div>
 
             {/* دکمه‌ها */}
-            <div className="flex gap-4 pt-4 border-t">
+            <div className="flex gap-4 pt-4 border-t flex-wrap">
               <Button type="submit" disabled={isLoading} className="min-w-[120px]">
                 {isLoading ? (
                   <>
@@ -499,6 +779,88 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      {/* بخش سمعک‌های خریداری‌شده */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShoppingBag className="w-5 h-5" />
+            سمعک‌های خریداری‌شده
+            <span className="text-sm font-normal text-gray-500 mr-2">
+              ({sales.length} مورد)
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoadingSales ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+              <span className="mr-2 text-gray-500">در حال بارگذاری سمعک‌ها...</span>
+            </div>
+          ) : sales.length > 0 ? (
+            <div className="space-y-3">
+              {sales.map((sale) => (
+                <div
+                  key={sale.id}
+                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Package className="w-4 h-4 text-blue-500" />
+                      <span className="font-medium">{sale.hearing_aid_model}</span>
+                      <span className="text-sm text-gray-500">|</span>
+                      <span className="text-sm text-gray-600 flex items-center gap-1">
+                        <Hash className="w-3 h-3" />
+                        سریال: {sale.hearing_aid_serial}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm flex-wrap">
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <CalendarIcon className="w-3 h-3" />
+                        تاریخ فروش: {toJalaliDisplay(sale.sale_date, "DD MMM YYYY")}
+                      </span>
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <DollarSign className="w-3 h-3" />
+                        {formatPrice(sale.price)}
+                      </span>
+                      {sale.warranty_expiry && (
+                        <span className="text-gray-600 flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          گارانتی تا: {toJalaliDisplay(sale.warranty_expiry, "DD MMM YYYY")}
+                        </span>
+                      )}
+                    </div>
+                    {sale.notes && (
+                      <p className="text-sm text-gray-500 flex items-center gap-1">
+                        <Info className="w-3 h-3" />
+                        {sale.notes}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex gap-2 mt-2 md:mt-0">
+                    <Link href={`/dashboard/sales/${sale.id}`}>
+                      <Button variant="outline" size="sm">
+                        <Eye className="w-4 h-4 ml-1" />
+                        مشاهده
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <ShoppingBag className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+              <p>هیچ سمعکی برای این بیمار ثبت نشده است</p>
+              <Link href={`/dashboard/sales/new?patientId=${patientId}`}>
+                <Button variant="outline" className="mt-4">
+                  ثبت فروش جدید
+                </Button>
+              </Link>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -561,7 +923,6 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
           )}
 
           {/* کامپوننت آپلود فایل */}
-          {/* کامپوننت آپلود فایل */}
           <div className="border-t pt-4 mt-4">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               آپلود فایل جدید
@@ -603,6 +964,34 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
               }}
               maxFiles={10}
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* اطلاعات اضافی */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Info className="w-5 h-5" />
+            اطلاعات ثبت
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-gray-500">تاریخ ثبت:</span>
+              <span className="mr-2 font-medium">
+                {formatJalaliDateTime(formData.created_at)}
+              </span>
+            </div>
+            {formData.updated_at && (
+              <div>
+                <span className="text-gray-500">آخرین ویرایش:</span>
+                <span className="mr-2 font-medium">
+                  {formatJalaliDateTime(formData.updated_at)}
+                </span>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

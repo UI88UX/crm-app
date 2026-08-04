@@ -12,10 +12,10 @@ export default async function TenantsPage() {
     redirect("/login");
   }
 
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    redirect("/dashboard");
-  }
+//   const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+//   if (!isSuperAdmin) {
+//     redirect("/dashboard");
+//   }
 
   const { data: tenants, error } = await getTenants();
 

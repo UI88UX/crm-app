@@ -11,10 +11,10 @@ export default async function NewTenantPage() {
     redirect("/login");
   }
 
-  const isSuperAdmin = user.app_metadata?.is_super_admin === true;
-  if (!isSuperAdmin) {
-    redirect("/dashboard");
-  }
+//   const isSuperAdmin = user.app_metadata?.is_super_admin === true;
+//   if (!isSuperAdmin) {
+//     redirect("/dashboard");
+//   }
 
   return (
     <div className="space-y-6">

@@ -12,14 +12,18 @@ import { toast } from "sonner";
 import { createPatient } from "@/lib/supabase/actions";
 import { FileUploader } from "@/components/ui/file-uploader";
 import { type PatientFile } from "@/lib/storage/patientFiles";
-import { 
-  ArrowRight, 
-  User, 
-  Phone, 
-  Mail, 
-  Calendar, 
-  MapPin, 
-  Home, 
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import { fromJalaliToDate, toJalaliDisplay } from "@/lib/util/jalaliDate";
+import {
+  ArrowRight,
+  User,
+  Phone,
+  Mail,
+  Calendar,
+  MapPin,
+  Home,
   FileText,
   Loader2,
   UserCircle,
@@ -37,7 +41,7 @@ interface FormData {
   national_code: string;
   phone: string;
   email: string;
-  birth_date: string;
+  birth_date: string | null;
   gender: string;
   address: string;
   city: string;
@@ -56,14 +60,15 @@ export default function NewPatientClient() {
   const [createdPatientName, setCreatedPatientName] = useState<string>("");
   const [uploadedFiles, setUploadedFiles] = useState<PatientFile[]>([]);
   const [isPatientCreated, setIsPatientCreated] = useState(false);
-  
+  const [birthDatePicker, setBirthDatePicker] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<FormData>({
     first_name: "",
     last_name: "",
     national_code: "",
     phone: "",
     email: "",
-    birth_date: "",
+    birth_date: null,
     gender: "",
     address: "",
     city: "",
@@ -123,7 +128,7 @@ export default function NewPatientClient() {
         setCreatedPatientName(`${result.data.first_name} ${result.data.last_name}`);
         setIsPatientCreated(true);
         toast.success(`بیمار ${result.data.first_name} ${result.data.last_name} با موفقیت ثبت شد!`);
-        
+
         // اسکرول به بخش فایل‌ها
         setTimeout(() => {
           const filesSection = document.getElementById('files-section');
@@ -179,8 +184,8 @@ export default function NewPatientClient() {
         <div>
           <h1 className="text-3xl font-bold">ثبت بیمار جدید</h1>
           <p className="text-gray-500 mt-1">
-            {isPatientCreated 
-              ? `بیمار ${createdPatientName} با موفقیت ثبت شد` 
+            {isPatientCreated
+              ? `بیمار ${createdPatientName} با موفقیت ثبت شد`
               : "اطلاعات بیمار را وارد کنید"}
           </p>
         </div>
@@ -302,13 +307,37 @@ export default function NewPatientClient() {
                     <Calendar className="w-4 h-4" />
                     تاریخ تولد
                   </Label>
-                  <Input
-                    id="birth_date"
-                    name="birth_date"
-                    type="date"
-                    value={formData.birth_date}
-                    onChange={handleChange}
+                  <DatePicker
+                    calendar={persian}
+                    locale={persian_fa}
+                    value={birthDatePicker || ""}
+                    onChange={(date: any) => {
+                      if (date && date.isValid) {
+                        // روش صحیح دریافت تاریخ میلادی
+                        const year = date.year;
+                        const month = date.month;
+                        const day = date.day;
+
+                        // ساخت تاریخ میلادی
+                        const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        setFormData(prev => ({ ...prev, birth_date: isoDate }));
+                        setBirthDatePicker(date.format("YYYY/MM/DD"));
+                      } else {
+                        setFormData(prev => ({ ...prev, birth_date: null }));
+                        setBirthDatePicker(null);
+                      }
+                    }}
+                    format="YYYY/MM/DD"
+                    placeholder="انتخاب تاریخ تولد"
+                    className="w-full p-2 border rounded-md mt-1 bg-white dark:bg-gray-800"
+                    containerClassName="w-full"
+                    inputClass="w-full p-2 border rounded-md bg-white dark:bg-gray-800"
                   />
+                  {formData.birth_date && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      میلادی: {formData.birth_date}
+                    </p>
+                  )}
                 </div>
 
                 <div>

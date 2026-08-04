@@ -27,7 +27,7 @@ import { tenantSchema, type TenantFormData } from "@/lib/validations/tenant";
 import { createTenant, updateTenant } from "@/lib/supabase/actions";
 
 interface TenantFormProps {
-  initialData?: TenantFormData & { id?: string };
+  initialData?: (TenantFormData & { id?: string }) | Partial<TenantFormData> & { id?: string };
   isEdit?: boolean;
 }
 
@@ -45,23 +45,41 @@ export function TenantForm({ initialData, isEdit = false }: TenantFormProps) {
     resolver: zodResolver(tenantSchema),
     defaultValues: initialData || {
       plan: "free",
-      status: "active",
+      is_active: true,
       max_users: 5,
       max_patients: 100,
     },
   });
 
   const plan = watch("plan");
-  const status = watch("status");
+  const isActive = watch("is_active");
 
   const onSubmit = async (data: TenantFormData) => {
     setIsLoading(true);
     try {
+      // داده‌ها را برای دیتابیس آماده کنید
+      const payload = {
+        name: data.name,
+        slug: data.slug,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        website: data.website,
+        registration_number: data.registration_number,
+        license_key: data.license_key,
+        is_active: data.is_active,
+        // این فیلدها در دیتابیس نیستند ولی برای نمایش نگه می‌داریم
+        plan: data.plan,
+        expires_at: data.expires_at,
+        max_users: data.max_users,
+        max_patients: data.max_patients,
+      };
+
       let result;
       if (isEdit && initialData?.id) {
-        result = await updateTenant(initialData.id, data);
+        result = await updateTenant(initialData.id, payload);
       } else {
-        result = await createTenant(data);
+        result = await createTenant(payload);
       }
 
       if (result.error) {
@@ -155,26 +173,26 @@ export function TenantForm({ initialData, isEdit = false }: TenantFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city">شهر</Label>
+              <Label htmlFor="website">وب‌سایت</Label>
               <Input
-                id="city"
-                placeholder="تهران"
-                {...register("city")}
+                id="website"
+                placeholder="https://example.com"
+                {...register("website")}
               />
-              {errors.city && (
-                <p className="text-sm text-red-500">{errors.city.message}</p>
+              {errors.website && (
+                <p className="text-sm text-red-500">{errors.website.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="province">استان</Label>
+              <Label htmlFor="registration_number">شماره ثبت</Label>
               <Input
-                id="province"
-                placeholder="تهران"
-                {...register("province")}
+                id="registration_number"
+                placeholder="شماره ثبت مطب"
+                {...register("registration_number")}
               />
-              {errors.province && (
-                <p className="text-sm text-red-500">{errors.province.message}</p>
+              {errors.registration_number && (
+                <p className="text-sm text-red-500">{errors.registration_number.message}</p>
               )}
             </div>
 
@@ -200,10 +218,10 @@ export function TenantForm({ initialData, isEdit = false }: TenantFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">وضعیت</Label>
+              <Label htmlFor="is_active">وضعیت</Label>
               <Select
-                value={status}
-                onValueChange={(value) => setValue("status", value as any)}
+                value={isActive ? "active" : "inactive"}
+                onValueChange={(value) => setValue("is_active", value === "active")}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="وضعیت را انتخاب کنید" />
@@ -211,11 +229,10 @@ export function TenantForm({ initialData, isEdit = false }: TenantFormProps) {
                 <SelectContent>
                   <SelectItem value="active">فعال</SelectItem>
                   <SelectItem value="inactive">غیرفعال</SelectItem>
-                  <SelectItem value="suspended">تعلیق</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.status && (
-                <p className="text-sm text-red-500">{errors.status.message}</p>
+              {errors.is_active && (
+                <p className="text-sm text-red-500">{errors.is_active.message}</p>
               )}
             </div>
 

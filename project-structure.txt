@@ -74,7 +74,22 @@ C:.
 |   |       |       4.pack.gz
 |   |       |       40.pack.gz
 |   |       |       41.pack.gz
+|   |       |       42.pack.gz
+|   |       |       43.pack.gz
+|   |       |       44.pack.gz
+|   |       |       45.pack.gz
+|   |       |       46.pack.gz
+|   |       |       47.pack.gz
+|   |       |       48.pack.gz
+|   |       |       49.pack.gz
 |   |       |       5.pack.gz
+|   |       |       50.pack.gz
+|   |       |       51.pack.gz
+|   |       |       52.pack.gz
+|   |       |       53.pack.gz
+|   |       |       54.pack.gz
+|   |       |       55.pack.gz
+|   |       |       56.pack.gz
 |   |       |       6.pack.gz
 |   |       |       7.pack.gz
 |   |       |       8.pack.gz
@@ -91,6 +106,7 @@ C:.
 |   |       +---edge-server-development
 |   |       |       0.pack.gz
 |   |       |       1.pack.gz
+|   |       |       2.pack.gz
 |   |       |       index.pack.gz
 |   |       |       index.pack.gz.old
 |   |       |       
@@ -98,8 +114,37 @@ C:.
 |   |               0.pack.gz
 |   |               1.pack.gz
 |   |               10.pack.gz
+|   |               100.pack.gz
+|   |               101.pack.gz
+|   |               102.pack.gz
+|   |               103.pack.gz
+|   |               104.pack.gz
+|   |               105.pack.gz
+|   |               106.pack.gz
+|   |               107.pack.gz
+|   |               108.pack.gz
+|   |               109.pack.gz
 |   |               11.pack.gz
+|   |               110.pack.gz
+|   |               111.pack.gz
+|   |               112.pack.gz
+|   |               113.pack.gz
+|   |               114.pack.gz
+|   |               115.pack.gz
+|   |               116.pack.gz
+|   |               117.pack.gz
+|   |               118.pack.gz
+|   |               119.pack.gz
 |   |               12.pack.gz
+|   |               120.pack.gz
+|   |               121.pack.gz
+|   |               122.pack.gz
+|   |               123.pack.gz
+|   |               124.pack.gz
+|   |               125.pack.gz
+|   |               126.pack.gz
+|   |               127.pack.gz
+|   |               128.pack.gz
 |   |               13.pack.gz
 |   |               14.pack.gz
 |   |               15.pack.gz
@@ -182,7 +227,19 @@ C:.
 |   |               85.pack.gz
 |   |               86.pack.gz
 |   |               87.pack.gz
+|   |               88.pack.gz
+|   |               89.pack.gz
 |   |               9.pack.gz
+|   |               90.pack.gz
+|   |               91.pack.gz
+|   |               92.pack.gz
+|   |               93.pack.gz
+|   |               94.pack.gz
+|   |               95.pack.gz
+|   |               96.pack.gz
+|   |               97.pack.gz
+|   |               98.pack.gz
+|   |               99.pack.gz
 |   |               index.pack.gz
 |   |               index.pack.gz.old
 |   |               
@@ -201,26 +258,19 @@ C:.
 |   |   |   server-reference-manifest.json
 |   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_rsc_node_modules_cookie_dist_index-4f4a97.js
 |   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_rsc_node_modules_cookie_dist_index-9a3385.js
-|   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_ssr_node_modules_class-variance-au-38dd4f.js
-|   |   |   vendors-_action-browser_node_modules_next_dist_server_app-render_encryption_js-_action-browse-3b6bf6.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_server_app-render_encryption_js-_action-browse-7247da.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_action-ba2834.js
-|   |   |   vendors-_action-browser_node_modules_next_dist_server_web_spec-extension_adapters_headers_js--3f08b6.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_server_web_spec-extension_adapters_headers_js--d6159b.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_shared_lib_errors_constants_js-_action-browser-46c010.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_AuthAdminApi_js-_rsc_node_m-3f3392.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_GoTrueClient_js.js
-|   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_index_js-_action-browser_no-256519.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_index_js-_rsc_node_modules_-38f355.js
 |   |   |   vendors-_action-browser_node_modules_supabase_functions-js_dist_module_FunctionsClient_js-_rs-ce769b.js
 |   |   |   vendors-_action-browser_node_modules_supabase_postgrest-js_dist_index_mjs.js
-|   |   |   vendors-_action-browser_node_modules_supabase_realtime-js_dist_module_index_js-_action-browse-8739cd.js
 |   |   |   vendors-_action-browser_node_modules_supabase_realtime-js_dist_module_index_js-_rsc_node_modu-b3a0e0.js
 |   |   |   vendors-_action-browser_node_modules_supabase_ssr_dist_module_createServerClient_js-_rsc_node-522faa.js
 |   |   |   vendors-_action-browser_node_modules_supabase_storage-js_dist_index_mjs-_rsc_node_modules_sup-97128d.js
 |   |   |   vendors-_action-browser_node_modules_supabase_supabase-js_dist_index_mjs-_rsc_node_modules_su-e7c6f7.js
-|   |   |   vendors-_action-browser_node_modules_supabase_supabase-js_dist_index_mjs.js
-|   |   |   vendors-_action-browser_node_modules_tslib_tslib_es6_mjs-_action-browser_node_modules_zod_v4_-14d38f.js
 |   |   |   vendors-_action-browser_node_modules_tslib_tslib_es6_mjs-_rsc_node_modules_tslib_tslib_es6_mjs.js
 |   |   |   vendors-_action-browser_node_modules_zod_v4_classic_iso_js-_action-browser_node_modules_zod_v-4c2c37.js
 |   |   |   vendors-_action-browser_node_modules_zod_v4_core_api_js-_action-browser_node_modules_zod_v4_c-170bfd.js
@@ -232,27 +282,16 @@ C:.
 |   |   |   vendors-_middleware_node_modules_supabase_phoenix_priv_static_phoenix_mjs-_middleware_node_mo-b5a1e8.js
 |   |   |   vendors-_middleware_node_modules_supabase_realtime-js_dist_module_index_js-_middleware_node_m-9651e7.js
 |   |   |   vendors-_middleware_node_modules_supabase_supabase-js_dist_index_mjs-_middleware_node_modules-66a330.js
-|   |   |   vendors-_rsc_node_modules_cookie_dist_index_js-_rsc_node_modules_iceberg-js_dist_index_mjs.js
 |   |   |   vendors-_rsc_node_modules_next_cache_js-_rsc_node_modules_next_dist_build_webpack_loaders_nex-43e347.js
-|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js.js
-|   |   |   vendors-_rsc_node_modules_next_dist_api_server_js-_rsc_node_modules_next_dist_server_route-mo-5a80cc.js
 |   |   |   vendors-_rsc_node_modules_next_dist_client_app-dir_link_js-_ssr_node_modules_radix-ui_react-s-1d78ca.js
-|   |   |   vendors-_rsc_node_modules_next_dist_client_components_hooks-server-context_js-_rsc_node_modul-0fbd54.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--a2441f.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_lib_patch-fetch_js-_rsc_node_modules_next_dist_ser-5b7b02.js
 |   |   |   vendors-_rsc_node_modules_next_dist_server_server-utils_js-_rsc_node_modules_next_dist_server-451747.js
 |   |   |   vendors-_rsc_node_modules_supabase_auth-js_dist_module_GoTrueClient_js.js
-|   |   |   vendors-_rsc_node_modules_supabase_auth-js_dist_module_index_js-_rsc_node_modules_supabase_au-45d79f.js
 |   |   |   vendors-_rsc_node_modules_supabase_postgrest-js_dist_index_mjs.js
-|   |   |   vendors-_rsc_node_modules_supabase_realtime-js_dist_module_index_js-_rsc_node_modules_supabas-7b5e74.js
-|   |   |   vendors-_rsc_node_modules_supabase_supabase-js_dist_index_mjs-_rsc_node_modules_tslib_tslib_es6_mjs.js
 |   |   |   vendors-_ssr_node_modules_clsx_dist_clsx_mjs-_ssr_node_modules_next-themes_dist_index_mjs-_rs-538e02.js
 |   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-be31a0.js
-|   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-f16288.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_app-build-id_js-_ssr_node_modules_next_dist_client-701ebc.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_app-build-id_js-_ssr_node_modules_next_dist_client-a1e645.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-bdeff0.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-d8ac72.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_match-segments_js-_ssr_node_modules_nex-066ae8.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_app_hot-reloader-client_js.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_components_code-fr-d05e44.js
@@ -262,27 +301,20 @@ C:.
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_styles_base_js-_ss-257d55.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_utils_css_js-_ssr_nod-bec560.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-14e420.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-9e21d8.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_dev_dev-build-indicator_internal_handle-dev-build--0c269b.js
 |   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-de8c1f.js
-|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-e71bb1.js
 |   |   |   vendors-_ssr_node_modules_next_dist_lib_error-telemetry-utils_js-_ssr_node_modules_next_dist_-14c5c4.js
-|   |   |   vendors-_ssr_node_modules_next_dist_lib_metadata_metadata-constants_js-_ssr_node_modules_next-2249ab.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-0255d3.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-c2c9c9.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-e961d8.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-b64c47.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_request_params_js-_ssr_node_modules_next_dist_serv-12163c.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_request_params_js-_ssr_node_modules_next_dist_serv-830067.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_rsc_node_m-bb42f6.js
 |   |   |   vendors-_ssr_node_modules_next_dist_shared_lib_error-source_js-_ssr_node_modules_next_dist_sh-4f2c13.js
 |   |   |   vendors-_ssr_node_modules_next_dist_shared_lib_error-source_js-_ssr_node_modules_next_dist_sh-76f959.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-label_dist_index_mjs-_ssr_node_modules_lucide-react_-e3273c.js
+|   |   |   vendors-_ssr_node_modules_radix-ui_react-label_dist_index_mjs-_ssr_node_modules_lucide-react_-49db2c.js
 |   |   |   vendors-_ssr_node_modules_sonner_dist_index_mjs.js
 |   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-8069bc.js
 |   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-fa67db.js
 |   |   |   webpack-runtime.js
-|   |   |   _rsc_node_modules_next_dist_build_webpack_loaders_next-flight-client-entry-loader_js_modules_-468c2a.js
+|   |   |   _action-browser_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_-1d69c5.js
 |   |   |   _ssr_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
 |   |   |   _ssr_src_lib_storage_patientFiles_ts.js
 |   |   |   
@@ -290,31 +322,18 @@ C:.
 |   |   |   |   page.js
 |   |   |   |   page_client-reference-manifest.js
 |   |   |   |   
-|   |   |   +---api
-|   |   |   |   \---storage
-|   |   |   |       \---upload
-|   |   |   |               route.js
-|   |   |   |               route_client-reference-manifest.js
-|   |   |   |               
-|   |   |   +---dashboard
-|   |   |   |   |   page.js
-|   |   |   |   |   page_client-reference-manifest.js
-|   |   |   |   |   
-|   |   |   |   +---patients
-|   |   |   |   |   |   page.js
-|   |   |   |   |   |   page_client-reference-manifest.js
-|   |   |   |   |   |   
-|   |   |   |   |   \---[id]
-|   |   |   |   |           page.js
-|   |   |   |   |           page_client-reference-manifest.js
-|   |   |   |   |           
-|   |   |   |   \---sales
-|   |   |   |           page.js
-|   |   |   |           page_client-reference-manifest.js
-|   |   |   |           
-|   |   |   \---favicon.ico
-|   |   |           route.js
-|   |   |           
+|   |   |   \---dashboard
+|   |   |       |   page.js
+|   |   |       |   page_client-reference-manifest.js
+|   |   |       |   
+|   |   |       \---patients
+|   |   |           |   page.js
+|   |   |           |   page_client-reference-manifest.js
+|   |   |           |   
+|   |   |           \---new
+|   |   |                   page.js
+|   |   |                   page_client-reference-manifest.js
+|   |   |                   
 |   |   \---static
 |   |       \---webpack
 |   |               633457081244afec._.hot-update.json
@@ -324,12 +343,10 @@ C:.
 |   |   |   |   app-pages-internals.js
 |   |   |   |   main-app.js
 |   |   |   |   polyfills.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-0a0a9c.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-673e56.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-341bc4.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_build_polyfills_process_js-_app-pages-brows-9224fe.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js-_app-pages-browser_n-79ff02.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js-_app-pages-browser_n-87480c.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_assign-location_js-_app-pages-browse-3c059e.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_components_client-page_js-_app-pages-a7ff94.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_components_links_js-_app-pages-brows-2e6835.js
@@ -353,39 +370,28 @@ C:.
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_next_react-refresh-utils_dist_runt-bc3eeb.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react-dom_cjs_react-dom-client_dev-4d7141.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react_jsx-dev-runtime_js-_app-page-1dda23.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react_jsx-dev-runtime_js-_app-page-3c8f24.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_lib_require-instrumentation-client_js-_app--3ed464.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_radix-ui_react-slot_dist_index_mjs-_app-pages-browser-0a55aa.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_sonner_dist_index_mjs.js
 |   |   |   |   webpack.js
 |   |   |   |   _app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
-|   |   |   |   _app-pages-browser_src_components_ui_badge_tsx-_app-pages-browser_src_components_ui_card_tsx--30cb75.js
 |   |   |   |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.js
-|   |   |   |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-d6cdf7.js
 |   |   |   |   _app-pages-browser_src_lib_storage_patientFiles_ts.js
 |   |   |   |   
 |   |   |   \---app
 |   |   |       |   layout.js
 |   |   |       |   page.js
 |   |   |       |   
-|   |   |       +---api
-|   |   |       |   \---storage
-|   |   |       |       \---upload
-|   |   |       |               route.js
-|   |   |       |               
 |   |   |       \---dashboard
 |   |   |           |   layout.js
 |   |   |           |   page.js
 |   |   |           |   
-|   |   |           +---patients
-|   |   |           |   |   page.js
-|   |   |           |   |   
-|   |   |           |   \---[id]
-|   |   |           |           page.js
-|   |   |           |           
-|   |   |           \---sales
-|   |   |                   page.js
-|   |   |                   
+|   |   |           \---patients
+|   |   |               |   page.js
+|   |   |               |   
+|   |   |               \---new
+|   |   |                       page.js
+|   |   |                       
 |   |   +---css
 |   |   |   \---app
 |   |   |           layout.css
@@ -395,80 +401,30 @@ C:.
 |   |   |       _ssgManifest.js
 |   |   |       
 |   |   \---webpack
-|   |       |   076fffc815a58a0d.webpack.hot-update.json
-|   |       |   27dc73937dcf57cd.webpack.hot-update.json
-|   |       |   476f0a5d5240e5d1.webpack.hot-update.json
-|   |       |   4c1457c770f4daf2.webpack.hot-update.json
+|   |       |   318da9d9f687269a.webpack.hot-update.json
+|   |       |   3ab14268ca6b4036.webpack.hot-update.json
+|   |       |   4d6240f1f1dbb184.webpack.hot-update.json
 |   |       |   633457081244afec._.hot-update.json
-|   |       |   659385113e75cef6.webpack.hot-update.json
-|   |       |   6a2214c776677e50.webpack.hot-update.json
-|   |       |   75ec478a6ddeca8b.webpack.hot-update.json
-|   |       |   8b0b36554438c5d9.webpack.hot-update.json
-|   |       |   8d262cb79aa52f18.webpack.hot-update.json
-|   |       |   8ed86bcfd6c9ad61.webpack.hot-update.json
-|   |       |   9dec2e5a92e16da3.webpack.hot-update.json
-|   |       |   b6f9410e08720e2f.webpack.hot-update.json
-|   |       |   bca570ff73cb64ae.webpack.hot-update.json
-|   |       |   c6852fef0b1b2ece.webpack.hot-update.json
-|   |       |   d0d699841b3d1b2d.webpack.hot-update.json
-|   |       |   e5db84e2173bb5f8.webpack.hot-update.json
-|   |       |   f97139e40bdf2bc4.webpack.hot-update.json
-|   |       |   ff29734427f76a5f.webpack.hot-update.json
-|   |       |   webpack.076fffc815a58a0d.hot-update.js
-|   |       |   webpack.27dc73937dcf57cd.hot-update.js
-|   |       |   webpack.476f0a5d5240e5d1.hot-update.js
-|   |       |   webpack.4c1457c770f4daf2.hot-update.js
-|   |       |   webpack.659385113e75cef6.hot-update.js
-|   |       |   webpack.6a2214c776677e50.hot-update.js
-|   |       |   webpack.75ec478a6ddeca8b.hot-update.js
-|   |       |   webpack.8b0b36554438c5d9.hot-update.js
-|   |       |   webpack.8d262cb79aa52f18.hot-update.js
-|   |       |   webpack.8ed86bcfd6c9ad61.hot-update.js
-|   |       |   webpack.9dec2e5a92e16da3.hot-update.js
-|   |       |   webpack.b6f9410e08720e2f.hot-update.js
-|   |       |   webpack.bca570ff73cb64ae.hot-update.js
-|   |       |   webpack.c6852fef0b1b2ece.hot-update.js
-|   |       |   webpack.d0d699841b3d1b2d.hot-update.js
-|   |       |   webpack.e5db84e2173bb5f8.hot-update.js
-|   |       |   webpack.f97139e40bdf2bc4.hot-update.js
-|   |       |   webpack.ff29734427f76a5f.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.076fffc815a58a0d.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.4c1457c770f4daf2.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.8b0b36554438c5d9.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.8d262cb79aa52f18.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.8ed86bcfd6c9ad61.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.9dec2e5a92e16da3.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.b6f9410e08720e2f.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.c6852fef0b1b2ece.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.e5db84e2173bb5f8.hot-update.js
-|   |       |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.ff29734427f76a5f.hot-update.js
+|   |       |   9950159cc0e6ea31.webpack.hot-update.json
+|   |       |   e79803ca71de8b7d.webpack.hot-update.json
+|   |       |   ecd4fb275ce40fe3.webpack.hot-update.json
+|   |       |   f9338158cc229444.webpack.hot-update.json
+|   |       |   webpack.318da9d9f687269a.hot-update.js
+|   |       |   webpack.3ab14268ca6b4036.hot-update.js
+|   |       |   webpack.4d6240f1f1dbb184.hot-update.js
+|   |       |   webpack.9950159cc0e6ea31.hot-update.js
+|   |       |   webpack.e79803ca71de8b7d.hot-update.js
+|   |       |   webpack.ecd4fb275ce40fe3.hot-update.js
+|   |       |   webpack.f9338158cc229444.hot-update.js
 |   |       |   
 |   |       \---app
-|   |           |   layout.27dc73937dcf57cd.hot-update.js
-|   |           |   layout.659385113e75cef6.hot-update.js
-|   |           |   layout.6a2214c776677e50.hot-update.js
-|   |           |   layout.75ec478a6ddeca8b.hot-update.js
-|   |           |   layout.bca570ff73cb64ae.hot-update.js
-|   |           |   page.f97139e40bdf2bc4.hot-update.js
-|   |           |   
-|   |           \---dashboard
-|   |               |   layout.076fffc815a58a0d.hot-update.js
-|   |               |   layout.4c1457c770f4daf2.hot-update.js
-|   |               |   layout.8b0b36554438c5d9.hot-update.js
-|   |               |   layout.8d262cb79aa52f18.hot-update.js
-|   |               |   layout.8ed86bcfd6c9ad61.hot-update.js
-|   |               |   layout.9dec2e5a92e16da3.hot-update.js
-|   |               |   layout.b6f9410e08720e2f.hot-update.js
-|   |               |   layout.c6852fef0b1b2ece.hot-update.js
-|   |               |   layout.e5db84e2173bb5f8.hot-update.js
-|   |               |   layout.ff29734427f76a5f.hot-update.js
-|   |               |   
-|   |               \---patients
-|   |                   |   page.659385113e75cef6.hot-update.js
-|   |                   |   
-|   |                   \---[id]
-|   |                           page.659385113e75cef6.hot-update.js
-|   |                           
+|   |               layout.318da9d9f687269a.hot-update.js
+|   |               layout.4d6240f1f1dbb184.hot-update.js
+|   |               layout.e79803ca71de8b7d.hot-update.js
+|   |               layout.ecd4fb275ce40fe3.hot-update.js
+|   |               layout.f9338158cc229444.hot-update.js
+|   |               page.3ab14268ca6b4036.hot-update.js
+|   |               
 |   \---types
 |       |   cache-life.d.ts
 |       |   package.json
@@ -477,27 +433,42 @@ C:.
 |           |   layout.ts
 |           |   page.ts
 |           |   
-|           +---api
-|           |   \---storage
-|           |       \---upload
-|           |               route.ts
-|           |               
 |           \---dashboard
 |               |   layout.ts
 |               |   page.ts
 |               |   
-|               +---patients
-|               |   |   page.ts
-|               |   |   
-|               |   \---[id]
-|               |           page.ts
-|               |           
-|               \---sales
-|                       page.ts
-|                       
+|               \---patients
+|                   |   page.ts
+|                   |   
+|                   \---new
+|                           page.ts
+|                           
 +---node_modules
 |   |   .package-lock.json
 |   |   
+|   +---.acorn-jsx-1Qum4IZp
+|   +---.ajv-8suxxEsH
+|   +---.ansi-styles-vKZNiHft
+|   +---.any-promise-7AEi0WKG
+|   +---.anymatch-6qMPrqyv
+|   +---.arg-WAA0fojq
+|   +---.argparse-PnIRvn4r
+|   +---.aria-query-V2A7v86V
+|   +---.array-buffer-byte-length-ECIUx9Fj
+|   +---.array-includes-ZKlPNKMj
+|   +---.array.prototype.findlast-KCEe6c88
+|   +---.array.prototype.findlastindex-HETU1mdT
+|   +---.array.prototype.flat-3L9ApgTg
+|   +---.array.prototype.flatmap-DgFVqnzp
+|   +---.array.prototype.tosorted-JnUT3ZTf
+|   +---.arraybuffer.prototype.slice-UzcsJ8ko
+|   +---.ast-types-flow-z6mgiDLE
+|   +---.async-function-U7pyVvet
+|   +---.attr-accept-8FO621sQ
+|   +---.available-typed-arrays-VUvECZ8S
+|   +---.axe-core-DON95Dnt
+|   +---.axobject-query-NNlkSsS6
+|   +---.balanced-match-Kcj2hzZI
 |   +---.bin
 |   |       acorn
 |   |       acorn.cmd
@@ -572,7 +543,322 @@ C:.
 |   |       update-browserslist-db.cmd
 |   |       update-browserslist-db.ps1
 |   |       
+|   +---.binary-extensions-ZJx1ZFNV
+|   +---.boolbase-aOJz1Wda
+|   +---.brace-expansion-whS6xbWZ
+|   +---.braces-r3K6AjXT
+|   +---.busboy-5nshkhpt
+|   +---.call-bind-8tMcSOAN
+|   +---.call-bind-apply-helpers-wLNKFNEX
+|   +---.call-bound-6iMlL0pW
+|   +---.callsites-3JQTkzze
+|   +---.camelcase-css-nMCa3Rjp
+|   +---.chalk-o8SD0u2L
+|   +---.chokidar-tQZ3J4Bu
+|   |   \---node_modules
+|   |       \---glob-parent
+|   +---.class-variance-authority-DGD6yQoz
+|   +---.client-only-vLNvlDkL
+|   +---.clsx-vE0psRek
+|   +---.color-convert-w5x2brID
+|   +---.color-name-loearjIw
+|   +---.concat-map-EWdlQ3cu
+|   +---.cookie-xbUDHpmp
+|   +---.critters-xD96rLro
+|   +---.cross-spawn-D9oZWppb
+|   +---.css-select-p5lAT6OW
+|   +---.css-what-gKA83Svm
+|   +---.csstype-gCEsbyTr
+|   +---.d3-array-KaIywZlA
+|   +---.d3-color-Ez8OFQSv
+|   +---.d3-ease-FDbYNJQ7
+|   +---.d3-format-pN991Zns
+|   +---.d3-interpolate-C87Qwn5C
+|   +---.d3-path-M18OOYpi
+|   +---.d3-scale-kLpQW3EJ
+|   +---.d3-shape-sJNxgYRJ
+|   +---.d3-time-format-N0PTCy31
+|   +---.d3-time-U2Oj4QMH
+|   +---.d3-timer-qWvD6fDF
+|   +---.damerau-levenshtein-zgUR0wYz
+|   +---.data-view-buffer-iXpPQwfv
+|   +---.data-view-byte-length-IgZPHjTc
+|   +---.data-view-byte-offset-bTg5vdmf
+|   +---.debug-E2oFtYnc
+|   +---.decimal.js-light-dMAkBByE
+|   +---.deep-is-dEx4JCnV
+|   +---.define-data-property-MOLDmw2i
+|   +---.define-properties-UwZDbHWw
+|   +---.detect-libc-5Xoumcm9
+|   +---.didyoumean-J6qFNuPX
+|   +---.dlv-Q3BshitI
+|   +---.doctrine-Rly3qYap
+|   +---.dom-serializer-Sr54ssNW
+|   +---.domelementtype-xGKWFXPp
+|   +---.domhandler-Qllo7Hct
+|   +---.domutils-lOW2p2Nh
+|   +---.dunder-proto-H67N6PoD
+|   +---.electron-to-chromium-07QAlVjD
+|   +---.emoji-regex-kI0isS0B
+|   +---.entities-BNQbWyBv
+|   +---.es-abstract-get-0j3saU7u
+|   +---.es-define-property-k22rgrRC
+|   +---.es-errors-unWmfGuq
+|   +---.es-iterator-helpers-T2x4QQAA
+|   +---.es-object-atoms-ZJh30umG
+|   +---.es-set-tostringtag-Q4v3Ut69
+|   +---.es-shim-unscopables-8kos9gSb
+|   +---.es-to-primitive-mRfquUMV
+|   +---.escalade-EHPWR0vE
+|   +---.escape-string-regexp-SXMR3poU
+|   +---.eslint-config-next-WHPYxYuk
+|   +---.eslint-import-resolver-node-GoKkzvML
+|   |   \---node_modules
+|   |       \---debug
+|   +---.eslint-import-resolver-typescript-36s7flbn
+|   +---.eslint-module-utils-ibwe44qK
+|   |   \---node_modules
+|   |       \---debug
+|   +---.eslint-plugin-import-MpeVtttB
+|   |   \---node_modules
+|   |       \---debug
+|   +---.eslint-plugin-jsx-a11y-vimH3dy9
+|   +---.eslint-plugin-react-1WyYiZAF
+|   +---.eslint-plugin-react-hooks-Zl8AgaRw
+|   +---.eslint-scope-7HipMbWq
+|   +---.eslint-visitor-keys-UTXpB4pA
+|   +---.espree-oaZ2sPEH
+|   +---.esquery-pdZIN2GM
+|   +---.esrecurse-0YuQNOG7
+|   +---.estraverse-ScTZTT82
+|   +---.esutils-eWeykUOG
+|   +---.eventemitter3-NksZhTZy
+|   +---.fast-deep-equal-D54ECuj3
+|   +---.fast-glob-XBTEO3Ox
+|   |   \---node_modules
+|   |       \---glob-parent
+|   +---.fast-json-stable-stringify-VA3wDDsC
+|   +---.fast-levenshtein-ehOc3vK7
+|   +---.fastq-jwHO5pel
+|   +---.file-entry-cache-62hyybjo
+|   +---.file-selector-8M7x8XRL
+|   +---.fill-range-qKVlehhh
+|   +---.find-up-ItI5cCrj
+|   +---.flat-cache-BzBap3H0
+|   +---.flatted-y5e7UK2a
+|   +---.for-each-LEo7N7mi
+|   +---.fraction.js-GQeNUsFA
+|   +---.function-bind-HfO8Q0FX
+|   +---.function.prototype.name-ltjx3P1x
+|   +---.functions-have-names-rStHZ603
+|   +---.generator-function-eQNDeuty
+|   +---.get-intrinsic-SQolRcFz
+|   +---.get-proto-dPwbIIC6
+|   +---.get-symbol-description-JRdsyEJx
+|   +---.get-tsconfig-CWXbkrBf
+|   +---.glob-parent-hc8AbURX
+|   +---.globals-7Jokivxm
+|   +---.globalthis-AbGa1KQT
+|   +---.gopd-fD0pzsQC
+|   +---.has-bigints-aMzImghp
+|   +---.has-flag-ymNnzVlV
+|   +---.has-property-descriptors-wVYl2L8A
+|   +---.has-proto-6EiNyeL9
+|   +---.has-symbols-aDKjP2EV
+|   +---.has-tostringtag-eRIDh1Qr
+|   +---.hasown-ZvnB9kYb
+|   +---.htmlparser2-CwWG0AVt
+|   +---.iceberg-js-Uj7gJOMj
+|   +---.ignore-ivWexYXN
+|   +---.immer-2VX7vkZe
+|   +---.import-fresh-QMPazD9q
+|   +---.imurmurhash-B4T4fKBN
+|   +---.internal-slot-HUYrIEly
+|   +---.internmap-iRROCkdB
+|   +---.is-array-buffer-xpJlu0lo
+|   +---.is-async-function-7UHUkwfy
+|   +---.is-bigint-vjF5rhWM
+|   +---.is-binary-path-66wKM2HQ
+|   +---.is-boolean-object-lFR5rcL1
+|   +---.is-bun-module-ztLNJ2oQ
+|   |   \---node_modules
+|   |       \---semver
+|   +---.is-callable-0FKrCoQp
+|   +---.is-core-module-13fq5LVM
+|   +---.is-data-view-ayDF4awe
+|   +---.is-date-object-W3EBdi9M
+|   +---.is-document.all-EUhyLx9A
+|   +---.is-extglob-woeTe117
+|   +---.is-finalizationregistry-4QCD13lN
+|   +---.is-generator-function-wKOuQVIe
+|   +---.is-glob-zFAxG1Y1
+|   +---.is-map-eesKemA8
+|   +---.is-negative-zero-Kgmx5Vqi
+|   +---.is-number-mPn0sdCQ
+|   +---.is-number-object-7DI2MCdy
+|   +---.is-regex-uaMfIkCI
+|   +---.is-set-7Ti2NiWI
+|   +---.is-shared-array-buffer-JVxCPZ0X
+|   +---.is-string-Ihxb3doz
+|   +---.is-symbol-NAF1MXjI
+|   +---.is-typed-array-GASl9lOC
+|   +---.is-weakmap-Sj8Sko8q
+|   +---.is-weakref-s3gvPChR
+|   +---.is-weakset-VLxHcj0F
+|   +---.isarray-CSMtSJGK
+|   +---.isexe-TJzaqRPQ
+|   +---.iterator.prototype-4r8ia6NC
+|   +---.js-tokens-369HfYRR
+|   +---.json-buffer-r7HZZAd1
+|   +---.json-schema-traverse-SFZlDVSP
+|   +---.json-stable-stringify-without-jsonify-lR2atGMB
+|   +---.jsx-ast-utils-AcEKwMtQ
+|   +---.keyv-FXpJusX3
+|   +---.language-subtag-registry-XeREkxk9
+|   +---.language-tags-Op46n5bC
+|   +---.levn-iDWtFIuG
+|   +---.lilconfig-HYZFR71M
+|   +---.lines-and-columns-9d35XFGh
+|   +---.locate-path-IAwecHxx
+|   +---.lodash.merge-kQntLjtn
+|   +---.math-intrinsics-ODH6Y8FO
+|   +---.merge2-NUXxalhX
+|   +---.micromatch-S9CCRPwC
+|   +---.minimatch-ZmaO4PYS
+|   +---.minimist-UUg7zA3t
+|   +---.ms-l9szD5Ut
+|   +---.mz-jCc4oYBi
+|   +---.natural-compare-LksHHC8l
+|   +---.next-themes-ZRnJmItX
+|   +---.node-exports-info-Xhq7oJSc
+|   +---.node-releases-MFj6s6VA
+|   +---.normalize-path-yxQResC8
+|   +---.nth-check-8SN8tlsY
+|   +---.object-assign-5Ihs0E8D
+|   +---.object-hash-0afT0Vsk
+|   +---.object-inspect-8nN6SSy0
+|   +---.object-keys-AZMGVGdx
+|   +---.object.assign-eETJieUL
+|   +---.object.entries-5JpH1Tsm
+|   +---.object.fromentries-F4JZiEHq
+|   +---.object.groupby-iDsBRtsr
+|   +---.object.values-aD56LGW1
+|   +---.optionator-X8zusiGf
+|   +---.own-keys-x8481FN8
+|   +---.p-limit-qYaodn5D
+|   +---.p-locate-FjBPyemR
+|   +---.parent-module-dKMaQHQ7
+|   +---.path-exists-QFLAM0YU
+|   +---.path-key-5GhSzga9
+|   +---.path-parse-Q6LYZyhg
+|   +---.picocolors-odjJN3I8
+|   +---.picomatch-HrrZ5kOk
+|   +---.pify-Vk4yGGsM
+|   +---.pirates-NP0ovfFp
+|   +---.possible-typed-array-names-YxWMSaea
+|   +---.postcss-import-CVkD67xN
+|   |   \---node_modules
+|   |       \---resolve
+|   +---.postcss-js-GOb2jcUE
+|   +---.postcss-load-config-ID9rya2d
+|   +---.postcss-media-query-parser-d0DkW3yI
+|   +---.postcss-nested-BGSSlNU5
+|   +---.postcss-selector-parser-IV2O9wv5
+|   +---.postcss-value-parser-g0MxR4sz
+|   +---.postcss-VeEdkCCP
+|   +---.prelude-ls-KLRZbqUG
+|   +---.prop-types-x7Comgsl
+|   +---.punycode-aUIRa44H
+|   +---.queue-microtask-HqQmgH3a
+|   +---.react-date-object-AJTxmGX8
+|   +---.react-dropzone-wsgjFvAV
+|   +---.react-element-popper-4cRmM2Z0
+|   +---.react-hook-form-wBi2OPLC
+|   +---.react-is-U1LePfJV
+|   +---.react-multi-date-picker-cVifpEM7
+|   +---.react-redux-mzYmDbb8
+|   +---.react-vULor6oI
+|   +---.read-cache-gZubVcJl
+|   +---.readdirp-Lv95OAVW
+|   +---.redux-thunk-BE39IGDW
+|   +---.redux-UpcMcqPT
+|   +---.reflect.getprototypeof-CBKFg7Xu
+|   +---.regexp.prototype.flags-543BVuFd
+|   +---.reselect-hVa1VmEV
+|   +---.resolve-from-ZEWL2lfk
+|   +---.resolve-pkg-maps-Wrr9r4hR
+|   +---.reusify-tlpHI5fr
+|   +---.run-parallel-jW0vDepn
+|   +---.safe-array-concat-lFrMCbri
+|   +---.safe-push-apply-D5y579fc
+|   +---.safe-regex-test-svvQi5Wt
+|   +---.scheduler-Tnzum3wy
+|   +---.server-only-frYWYx61
+|   +---.set-function-length-ywKdLTe3
+|   +---.set-function-name-VqURoHIL
+|   +---.set-proto-jFEfZxGl
+|   +---.sharp-CJ54i4En
+|   |   \---node_modules
+|   |       \---semver
+|   +---.shebang-command-aqOCnYPq
+|   +---.shebang-regex-JiiJJjYM
+|   +---.side-channel-list-0g37A4Y2
+|   +---.side-channel-LNtQXKBy
+|   +---.side-channel-map-kNKNnKOp
+|   +---.side-channel-weakmap-XocevR23
+|   +---.sonner-2JnmmK6l
+|   +---.source-map-js-kaniBqWH
+|   +---.stable-hash-TfdB9z5h
+|   +---.stop-iteration-iterator-9gbLLr9k
+|   +---.streamsearch-pfWISUwL
+|   +---.string.prototype.includes-QctZpYTi
+|   +---.string.prototype.matchall-XcUlGR5b
+|   +---.string.prototype.repeat-jyOEb9bh
+|   +---.string.prototype.trim-y4sIFy4l
+|   +---.string.prototype.trimend-1JVvKYeP
+|   +---.string.prototype.trimstart-U1qaCifD
+|   +---.strip-bom-5RdcsYOU
+|   +---.strip-json-comments-1SXrU7SI
+|   +---.styled-jsx-aig8eoIk
+|   +---.supports-color-ujRiVu8v
+|   +---.supports-preserve-symlinks-flag-YJmhFb7H
+|   +---.tailwind-merge-7AF9xWw1
+|   +---.tailwindcss-animate-5zH3lgsh
+|   +---.thenify-all-CvqjrOFi
+|   +---.thenify-pocuRDiw
+|   +---.tiny-invariant-qp6kBG60
+|   +---.tinyglobby-KdvHARZX
+|   |   \---node_modules
+|   |       +---fdir
+|   |       \---picomatch
+|   +---.to-regex-range-W9enwnvt
+|   +---.ts-api-utils-z1Y3h5Eh
+|   +---.ts-interface-checker-RnIqDKKn
+|   +---.tsconfig-paths-2rb9S7R4
+|   |   \---node_modules
+|   |       \---json5
+|   +---.tslib-uxHkHhmN
+|   +---.type-check-8YaKN5D9
+|   +---.typed-array-buffer-ofEVQnDg
+|   +---.typed-array-byte-length-AAtFpyR9
+|   +---.typed-array-byte-offset-zvYDMPFA
+|   +---.typed-array-length-N0SrIx7r
+|   +---.unbox-primitive-z7bsBdM2
+|   +---.undici-types-vmSTtZ9d
+|   +---.unrs-resolver-XVcxEFDG
+|   +---.uri-js-S5NyKpkx
+|   +---.use-sync-external-store-5xa9y0Zs
+|   +---.util-deprecate-P7b6LlL0
+|   +---.victory-vendor-13p2jPld
+|   +---.which-boxed-primitive-UdJsyEl4
+|   +---.which-builtin-type-L1azg2I4
+|   +---.which-collection-GN180bjm
+|   +---.which-typed-array-klTi0PU8
+|   +---.word-wrap-3BbGoOQm
+|   +---.yocto-queue-6MMhfah6
+|   +---.zod-MNSRpeu6
 |   +---@alloc
+|   |   +---.quick-lru-JVVwhiYS
 |   |   \---quick-lru
 |   |           index.d.ts
 |   |           index.js
@@ -606,6 +892,9 @@ C:.
 |   |           package.json
 |   |           
 |   +---@emnapi
+|   |   +---.core-FBXLqhG6
+|   |   +---.runtime-jdkJ0Vll
+|   |   +---.wasi-threads-2gzoQhvJ
 |   |   \---runtime
 |   |       |   index.js
 |   |       |   LICENSE
@@ -628,6 +917,13 @@ C:.
 |   |               emnapi.mjs
 |   |               
 |   +---@eslint
+|   |   +---.config-array-WdOwxIBh
+|   |   +---.config-helpers-RvtLuwtF
+|   |   +---.core-igovEKcg
+|   |   +---.eslintrc-O3ihTApY
+|   |   +---.js-LjeVWVKu
+|   |   +---.object-schema-1WQ7pzkS
+|   |   +---.plugin-kit-rkAzgiZ6
 |   |   +---config-array
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -777,6 +1073,10 @@ C:.
 |   |                   types.ts
 |   |                   
 |   +---@eslint-community
+|   |   +---.eslint-utils-bDUnUv5b
+|   |   |   \---node_modules
+|   |   |       \---eslint-visitor-keys
+|   |   +---.regexpp-j4Kmmj9d
 |   |   +---eslint-utils
 |   |   |   |   index.d.mts
 |   |   |   |   index.d.ts
@@ -814,7 +1114,77 @@ C:.
 |   |           package.json
 |   |           README.md
 |   |           
+|   +---@floating-ui
+|   |   +---core
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           floating-ui.core.browser.min.mjs
+|   |   |           floating-ui.core.browser.mjs
+|   |   |           floating-ui.core.d.mts
+|   |   |           floating-ui.core.d.ts
+|   |   |           floating-ui.core.esm.js
+|   |   |           floating-ui.core.mjs
+|   |   |           floating-ui.core.umd.js
+|   |   |           floating-ui.core.umd.min.js
+|   |   |           
+|   |   +---dom
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           floating-ui.dom.browser.min.mjs
+|   |   |           floating-ui.dom.browser.mjs
+|   |   |           floating-ui.dom.d.mts
+|   |   |           floating-ui.dom.d.ts
+|   |   |           floating-ui.dom.esm.js
+|   |   |           floating-ui.dom.mjs
+|   |   |           floating-ui.dom.umd.js
+|   |   |           floating-ui.dom.umd.min.js
+|   |   |           
+|   |   +---react-dom
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           floating-ui.react-dom.d.mts
+|   |   |           floating-ui.react-dom.d.ts
+|   |   |           floating-ui.react-dom.esm.js
+|   |   |           floating-ui.react-dom.mjs
+|   |   |           floating-ui.react-dom.umd.js
+|   |   |           floating-ui.react-dom.umd.min.js
+|   |   |           
+|   |   \---utils
+|   |       |   LICENSE
+|   |       |   package.json
+|   |       |   README.md
+|   |       |   
+|   |       +---dist
+|   |       |       floating-ui.utils.d.mts
+|   |       |       floating-ui.utils.d.ts
+|   |       |       floating-ui.utils.dom.d.mts
+|   |       |       floating-ui.utils.dom.d.ts
+|   |       |       floating-ui.utils.dom.esm.js
+|   |       |       floating-ui.utils.dom.mjs
+|   |       |       floating-ui.utils.dom.umd.js
+|   |       |       floating-ui.utils.dom.umd.min.js
+|   |       |       floating-ui.utils.esm.js
+|   |       |       floating-ui.utils.mjs
+|   |       |       floating-ui.utils.umd.js
+|   |       |       floating-ui.utils.umd.min.js
+|   |       |       
+|   |       \---dom
+|   |               floating-ui.utils.dom.d.ts
+|   |               floating-ui.utils.dom.esm.js
+|   |               floating-ui.utils.dom.umd.js
+|   |               package.json
+|   |               
 |   +---@hookform
+|   |   +---.resolvers-noXd42E7
 |   |   \---resolvers
 |   |       |   LICENSE
 |   |       |   package.json
@@ -1480,6 +1850,9 @@ C:.
 |   |                           zod.ts.snap
 |   |                           
 |   +---@humanfs
+|   |   +---.core-g21sGbAk
+|   |   +---.node-F8WEf08k
+|   |   +---.types-bQr2n1Vw
 |   |   +---core
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -1522,6 +1895,8 @@ C:.
 |   |               hfs-types.ts
 |   |               
 |   +---@humanwhocodes
+|   |   +---.module-importer-PDAR0mrO
+|   |   +---.retry-gWhkObqt
 |   |   +---module-importer
 |   |   |   |   CHANGELOG.md
 |   |   |   |   LICENSE
@@ -1552,6 +1927,7 @@ C:.
 |   |               retrier.mjs
 |   |               
 |   +---@img
+|   |   +---.colour-pbm9uQzj
 |   |   +---colour
 |   |   |       color.cjs
 |   |   |       index.cjs
@@ -1572,6 +1948,10 @@ C:.
 |   |               sharp-win32-x64.node
 |   |               
 |   +---@jridgewell
+|   |   +---.gen-mapping-FXasAnsn
+|   |   +---.resolve-uri-B5SGsFgm
+|   |   +---.sourcemap-codec-etG3iJ9V
+|   |   +---.trace-mapping-JghB2Zw6
 |   |   +---gen-mapping
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -1723,7 +2103,11 @@ C:.
 |   |               types.d.mts.map
 |   |               
 |   +---@napi-rs
+|   |   \---.wasm-runtime-Us0x6jGg
 |   +---@next
+|   |   +---.env-sMMLOmfM
+|   |   +---.eslint-plugin-next-ePRVQYDr
+|   |   +---.swc-win32-x64-msvc-000CsCLS
 |   |   +---env
 |   |   |   |   package.json
 |   |   |   |   README.md
@@ -1774,6 +2158,9 @@ C:.
 |   |           README.md
 |   |           
 |   +---@nodelib
+|   |   +---.fs.scandir-hWRPHHt2
+|   |   +---.fs.stat-wA1tnpOV
+|   |   +---.fs.walk-PYi5JSKn
 |   |   +---fs.scandir
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -1870,6 +2257,7 @@ C:.
 |   |                   index.js
 |   |                   
 |   +---@nolyfill
+|   |   +---.is-core-module-wgtoWYfH
 |   |   \---is-core-module
 |   |           index.d.ts
 |   |           index.js
@@ -1877,7 +2265,428 @@ C:.
 |   |           package.json
 |   |           
 |   +---@radix-ui
+|   |   +---.react-compose-refs-eVgv2RBM
+|   |   +---.react-label-8aRLDtCq
+|   |   +---.react-primitive-3Sqnv55s
+|   |   +---.react-separator-SKDZjLWz
+|   |   +---.react-slot-wOFtoxZt
+|   |   +---number
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---primitive
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |       |   index.d.mts
+|   |   |       |   index.d.ts
+|   |   |       |   index.js
+|   |   |       |   index.js.map
+|   |   |       |   index.mjs
+|   |   |       |   index.mjs.map
+|   |   |       |   
+|   |   |       \---internal
+|   |   |               is-development.false.d.mts
+|   |   |               is-development.false.d.ts
+|   |   |               is-development.false.js
+|   |   |               is-development.false.js.map
+|   |   |               is-development.false.mjs
+|   |   |               is-development.false.mjs.map
+|   |   |               is-development.true.d.mts
+|   |   |               is-development.true.d.ts
+|   |   |               is-development.true.js
+|   |   |               is-development.true.js.map
+|   |   |               is-development.true.mjs
+|   |   |               is-development.true.mjs.map
+|   |   |               
+|   |   +---react-arrow
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-collection
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
 |   |   +---react-compose-refs
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-context
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-dialog
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-direction
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-dismissable-layer
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-dropdown-menu
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-focus-guards
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-focus-scope
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-id
 |   |   |   |   LICENSE
 |   |   |   |   package.json
 |   |   |   |   README.md
@@ -1903,6 +2712,181 @@ C:.
 |   |   |           index.mjs
 |   |   |           index.mjs.map
 |   |   |           
+|   |   +---react-menu
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-popper
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-portal
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-presence
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
 |   |   +---react-primitive
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -1916,6 +2900,114 @@ C:.
 |   |   |           index.mjs
 |   |   |           index.mjs.map
 |   |   |           
+|   |   +---react-roving-focus
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-select
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
 |   |   +---react-separator
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -1929,7 +3021,187 @@ C:.
 |   |   |           index.mjs
 |   |   |           index.mjs.map
 |   |   |           
-|   |   \---react-slot
+|   |   +---react-slot
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-use-callback-ref
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-use-controllable-state
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-use-effect-event
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---src
+|   |   |           index.ts
+|   |   |           use-effect-event.tsx
+|   |   |           
+|   |   +---react-use-is-hydrated
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---src
+|   |   |           index.ts
+|   |   |           use-is-hydrated-legacy.ts
+|   |   |           use-is-hydrated.tsx
+|   |   |           
+|   |   +---react-use-layout-effect
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-use-previous
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-use-rect
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-use-size
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   \---dist
+|   |   |           index.d.mts
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           index.js.map
+|   |   |           index.mjs
+|   |   |           index.mjs.map
+|   |   |           
+|   |   +---react-visually-hidden
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   \---rect
 |   |       |   LICENSE
 |   |       |   package.json
 |   |       |   README.md
@@ -1942,8 +3214,10 @@ C:.
 |   |               index.mjs
 |   |               index.mjs.map
 |   |               
-|   +---@react-grab
 |   +---@reduxjs
+|   |   +---.toolkit-CI1ZcsNm
+|   |   |   \---node_modules
+|   |   |       \---immer
 |   |   \---toolkit
 |   |       |   LICENSE
 |   |       |   package.json
@@ -2246,6 +3520,7 @@ C:.
 |   |                   index.ts
 |   |                   
 |   +---@rtsao
+|   |   +---.scc-hVVVIee8
 |   |   \---scc
 |   |           index.d.ts
 |   |           index.js
@@ -2255,6 +3530,7 @@ C:.
 |   |           README.md
 |   |           
 |   +---@rushstack
+|   |   +---.eslint-patch-kijqiRVr
 |   |   \---eslint-patch
 |   |       |   CHANGELOG.json
 |   |       |   CHANGELOG.md
@@ -2414,6 +3690,8 @@ C:.
 |   |                   eslint-bulk.js.map
 |   |                   
 |   +---@standard-schema
+|   |   +---.spec-yG2cqkcn
+|   |   +---.utils-VtR6XbmM
 |   |   +---spec
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -2437,6 +3715,14 @@ C:.
 |   |               index.js
 |   |               
 |   +---@supabase
+|   |   +---.auth-js-omBmbuJN
+|   |   +---.functions-js-bCW8FwnI
+|   |   +---.phoenix-zIS3sT2O
+|   |   +---.postgrest-js-mhY1eVSL
+|   |   +---.realtime-js-1JOZEHSv
+|   |   +---.ssr-0LvVAfEG
+|   |   +---.storage-js-FMBSnM3p
+|   |   +---.supabase-js-WIU2kA9S
 |   |   +---auth-js
 |   |   |   |   AGENTS.md
 |   |   |   |   LICENSE
@@ -3221,6 +4507,8 @@ C:.
 |   |                               rpc.ts
 |   |                               
 |   +---@swc
+|   |   +---.counter-qwtwlb8h
+|   |   +---.helpers-FLEN5ors
 |   |   +---counter
 |   |   |       CHANGELOG.md
 |   |   |       index.js
@@ -3869,7 +5157,25 @@ C:.
 |   |                   package.json
 |   |                   
 |   +---@tybys
+|   |   \---.wasm-util-wRFh6pXH
 |   +---@types
+|   |   +---.d3-array-4xDOmVyh
+|   |   +---.d3-color-HAEYU5Qs
+|   |   +---.d3-ease-ed7Zr47D
+|   |   +---.d3-interpolate-eDErTOjb
+|   |   +---.d3-path-v2C7It2t
+|   |   +---.d3-scale-A5WGDpNK
+|   |   +---.d3-shape-2LJooplP
+|   |   +---.d3-time-JYDLZVp8
+|   |   +---.d3-timer-REybvdAu
+|   |   +---.estree-ZKKYmvbp
+|   |   +---.json-schema-7GVv5tR3
+|   |   +---.json5-neNgux5J
+|   |   +---.node-WcGB8gIJ
+|   |   +---.prop-types-Z0u6suFv
+|   |   +---.react-dom-z0CTdPnQ
+|   |   +---.react-WiUkxVDx
+|   |   +---.use-sync-external-store-ExHPRSzA
 |   |   +---d3-array
 |   |   |       index.d.ts
 |   |   |       LICENSE
@@ -4082,6 +5388,25 @@ C:.
 |   |               with-selector.d.ts
 |   |               
 |   +---@typescript-eslint
+|   |   +---.eslint-plugin-8bbfRTRS
+|   |   |   \---node_modules
+|   |   |       \---ignore
+|   |   +---.parser-ytYUEPyi
+|   |   +---.project-service-4f4KwSGk
+|   |   +---.scope-manager-GAlDsdmg
+|   |   +---.tsconfig-utils-DfLfH1Wt
+|   |   +---.type-utils-uHg6DCZA
+|   |   +---.types-YvNEdiQr
+|   |   +---.typescript-estree-N2yfyXZl
+|   |   |   \---node_modules
+|   |   |       +---balanced-match
+|   |   |       +---brace-expansion
+|   |   |       +---minimatch
+|   |   |       \---semver
+|   |   +---.utils-woNyLemV
+|   |   +---.visitor-keys-uJVjbiic
+|   |   |   \---node_modules
+|   |   |       \---eslint-visitor-keys
 |   |   +---eslint-plugin
 |   |   |   |   index.d.ts
 |   |   |   |   LICENSE
@@ -5456,6 +6781,7 @@ C:.
 |   |                       visitor-keys.js
 |   |                       
 |   +---@unrs
+|   |   +---.resolver-binding-win32-x64-msvc-tYHmNAD8
 |   |   \---resolver-binding-win32-x64-msvc
 |   |           package.json
 |   |           README.md
@@ -5663,6 +6989,24 @@ C:.
 |   |           sub.js
 |   |           textwrap.js
 |   |           
+|   +---aria-hidden
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   \---dist
+|   |       +---es2015
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       
+|   |       +---es2019
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       
+|   |       \---es5
+|   |               index.d.ts
+|   |               index.js
+|   |               
 |   +---aria-query
 |   |   |   LICENSE
 |   |   |   package.json
@@ -8287,6 +9631,20 @@ C:.
 |   |           elf.js
 |   |           filesystem.js
 |   |           process.js
+|   |           
+|   +---detect-node-es
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   Readme.md
+|   |   |   
+|   |   +---es5
+|   |   |       browser.js
+|   |   |       node.d.ts
+|   |   |       node.js
+|   |   |       
+|   |   \---esm
+|   |           browser.js
+|   |           node.js
 |   |           
 |   +---didyoumean
 |   |       didYouMean-1.2.1.js
@@ -17110,6 +18468,21 @@ C:.
 |   |   \---test
 |   |           GetIntrinsic.js
 |   |           
+|   +---get-nonce
+|   |   |   CHANGELOG.md
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   \---dist
+|   |       +---es2015
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       
+|   |       \---es5
+|   |               index.d.ts
+|   |               index.js
+|   |               
 |   +---get-proto
 |   |   |   .eslintrc
 |   |   |   .nycrc
@@ -30752,10 +32125,19 @@ C:.
 |   |   |               warning.d.ts
 |   |   |               warning.js
 |   |   |               
-|   |   \---types
-|   |           compiled.d.ts
-|   |           global.d.ts
-|   |           
+|   |   +---types
+|   |   |       compiled.d.ts
+|   |   |       global.d.ts
+|   |   |       
+|   |   \---wasm
+|   |       \---@next
+|   |           \---swc-wasm-nodejs
+|   |                   package.json
+|   |                   README.md
+|   |                   wasm.d.ts
+|   |                   wasm.js
+|   |                   wasm_bg.wasm
+|   |                   
 |   +---next-themes
 |   |   |   license.md
 |   |   |   package.json
@@ -32112,6 +33494,162 @@ C:.
 |   |               useSyncExternalStore.ts
 |   |               verifyPlainObject.ts
 |   |               warning.ts
+|   |               
+|   +---react-remove-scroll
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   +---dist
+|   |   |   +---es2015
+|   |   |   |       aggresiveCapture.d.ts
+|   |   |   |       aggresiveCapture.js
+|   |   |   |       Combination.d.ts
+|   |   |   |       Combination.js
+|   |   |   |       handleScroll.d.ts
+|   |   |   |       handleScroll.js
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       medium.d.ts
+|   |   |   |       medium.js
+|   |   |   |       pinchAndZoom.d.ts
+|   |   |   |       pinchAndZoom.js
+|   |   |   |       sidecar.d.ts
+|   |   |   |       sidecar.js
+|   |   |   |       SideEffect.d.ts
+|   |   |   |       SideEffect.js
+|   |   |   |       types.d.ts
+|   |   |   |       types.js
+|   |   |   |       UI.d.ts
+|   |   |   |       UI.js
+|   |   |   |       
+|   |   |   +---es2019
+|   |   |   |       aggresiveCapture.d.ts
+|   |   |   |       aggresiveCapture.js
+|   |   |   |       Combination.d.ts
+|   |   |   |       Combination.js
+|   |   |   |       handleScroll.d.ts
+|   |   |   |       handleScroll.js
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       medium.d.ts
+|   |   |   |       medium.js
+|   |   |   |       pinchAndZoom.d.ts
+|   |   |   |       pinchAndZoom.js
+|   |   |   |       sidecar.d.ts
+|   |   |   |       sidecar.js
+|   |   |   |       SideEffect.d.ts
+|   |   |   |       SideEffect.js
+|   |   |   |       types.d.ts
+|   |   |   |       types.js
+|   |   |   |       UI.d.ts
+|   |   |   |       UI.js
+|   |   |   |       
+|   |   |   \---es5
+|   |   |           aggresiveCapture.d.ts
+|   |   |           aggresiveCapture.js
+|   |   |           Combination.d.ts
+|   |   |           Combination.js
+|   |   |           handleScroll.d.ts
+|   |   |           handleScroll.js
+|   |   |           index.d.ts
+|   |   |           index.js
+|   |   |           medium.d.ts
+|   |   |           medium.js
+|   |   |           pinchAndZoom.d.ts
+|   |   |           pinchAndZoom.js
+|   |   |           sidecar.d.ts
+|   |   |           sidecar.js
+|   |   |           SideEffect.d.ts
+|   |   |           SideEffect.js
+|   |   |           types.d.ts
+|   |   |           types.js
+|   |   |           UI.d.ts
+|   |   |           UI.js
+|   |   |           
+|   |   +---sidecar
+|   |   |       package.json
+|   |   |       sidecar.d.ts
+|   |   |       
+|   |   \---UI
+|   |           package.json
+|   |           UI.d.ts
+|   |           
+|   +---react-remove-scroll-bar
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   +---constants
+|   |   |       package.json
+|   |   |       
+|   |   \---dist
+|   |       +---es2015
+|   |       |       component.d.ts
+|   |       |       component.js
+|   |       |       constants.d.ts
+|   |       |       constants.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       utils.d.ts
+|   |       |       utils.js
+|   |       |       
+|   |       +---es2019
+|   |       |       component.d.ts
+|   |       |       component.js
+|   |       |       constants.d.ts
+|   |       |       constants.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       utils.d.ts
+|   |       |       utils.js
+|   |       |       
+|   |       \---es5
+|   |               component.d.ts
+|   |               component.js
+|   |               constants.d.ts
+|   |               constants.js
+|   |               index.d.ts
+|   |               index.js
+|   |               utils.d.ts
+|   |               utils.js
+|   |               
+|   +---react-style-singleton
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   \---dist
+|   |       |   index.js
+|   |       |   
+|   |       +---es2015
+|   |       |       component.d.ts
+|   |       |       component.js
+|   |       |       hook.d.ts
+|   |       |       hook.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       singleton.d.ts
+|   |       |       singleton.js
+|   |       |       
+|   |       +---es2019
+|   |       |       component.d.ts
+|   |       |       component.js
+|   |       |       hook.d.ts
+|   |       |       hook.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       singleton.d.ts
+|   |       |       singleton.js
+|   |       |       
+|   |       \---es5
+|   |               component.d.ts
+|   |               component.js
+|   |               hook.d.ts
+|   |               hook.js
+|   |               index.d.ts
+|   |               index.js
+|   |               singleton.d.ts
+|   |               singleton.js
 |   |               
 |   +---read-cache
 |   |       index.js
@@ -35635,6 +37173,144 @@ C:.
 |   |                   wss.js
 |   |                   wss.js.map
 |   |                   
+|   +---use-callback-ref
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   \---dist
+|   |       +---es2015
+|   |       |       assignRef.d.ts
+|   |       |       assignRef.js
+|   |       |       createRef.d.ts
+|   |       |       createRef.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       mergeRef.d.ts
+|   |       |       mergeRef.js
+|   |       |       refToCallback.d.ts
+|   |       |       refToCallback.js
+|   |       |       transformRef.d.ts
+|   |       |       transformRef.js
+|   |       |       types.d.ts
+|   |       |       types.js
+|   |       |       useMergeRef.d.ts
+|   |       |       useMergeRef.js
+|   |       |       useRef.d.ts
+|   |       |       useRef.js
+|   |       |       useTransformRef.d.ts
+|   |       |       useTransformRef.js
+|   |       |       
+|   |       +---es2019
+|   |       |       assignRef.d.ts
+|   |       |       assignRef.js
+|   |       |       createRef.d.ts
+|   |       |       createRef.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       mergeRef.d.ts
+|   |       |       mergeRef.js
+|   |       |       refToCallback.d.ts
+|   |       |       refToCallback.js
+|   |       |       transformRef.d.ts
+|   |       |       transformRef.js
+|   |       |       types.d.ts
+|   |       |       types.js
+|   |       |       useMergeRef.d.ts
+|   |       |       useMergeRef.js
+|   |       |       useRef.d.ts
+|   |       |       useRef.js
+|   |       |       useTransformRef.d.ts
+|   |       |       useTransformRef.js
+|   |       |       
+|   |       \---es5
+|   |               assignRef.d.ts
+|   |               assignRef.js
+|   |               createRef.d.ts
+|   |               createRef.js
+|   |               index.d.ts
+|   |               index.js
+|   |               mergeRef.d.ts
+|   |               mergeRef.js
+|   |               refToCallback.d.ts
+|   |               refToCallback.js
+|   |               transformRef.d.ts
+|   |               transformRef.js
+|   |               types.d.ts
+|   |               types.js
+|   |               useMergeRef.d.ts
+|   |               useMergeRef.js
+|   |               useRef.d.ts
+|   |               useRef.js
+|   |               useTransformRef.d.ts
+|   |               useTransformRef.js
+|   |               
+|   +---use-sidecar
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   \---dist
+|   |       +---es2015
+|   |       |       config.d.ts
+|   |       |       config.js
+|   |       |       env.d.ts
+|   |       |       env.js
+|   |       |       exports.d.ts
+|   |       |       exports.js
+|   |       |       hoc.d.ts
+|   |       |       hoc.js
+|   |       |       hook.d.ts
+|   |       |       hook.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       medium.d.ts
+|   |       |       medium.js
+|   |       |       renderProp.d.ts
+|   |       |       renderProp.js
+|   |       |       types.d.ts
+|   |       |       types.js
+|   |       |       
+|   |       +---es2019
+|   |       |       config.d.ts
+|   |       |       config.js
+|   |       |       env.d.ts
+|   |       |       env.js
+|   |       |       exports.d.ts
+|   |       |       exports.js
+|   |       |       hoc.d.ts
+|   |       |       hoc.js
+|   |       |       hook.d.ts
+|   |       |       hook.js
+|   |       |       index.d.ts
+|   |       |       index.js
+|   |       |       medium.d.ts
+|   |       |       medium.js
+|   |       |       renderProp.d.ts
+|   |       |       renderProp.js
+|   |       |       types.d.ts
+|   |       |       types.js
+|   |       |       
+|   |       \---es5
+|   |               config.d.ts
+|   |               config.js
+|   |               env.d.ts
+|   |               env.js
+|   |               exports.d.ts
+|   |               exports.js
+|   |               hoc.d.ts
+|   |               hoc.js
+|   |               hook.d.ts
+|   |               hook.js
+|   |               index.d.ts
+|   |               index.js
+|   |               medium.d.ts
+|   |               medium.js
+|   |               renderProp.d.ts
+|   |               renderProp.js
+|   |               types.d.ts
+|   |               types.js
+|   |               
 |   +---use-sync-external-store
 |   |   |   index.js
 |   |   |   LICENSE
@@ -36133,7 +37809,6 @@ C:.
 |   \---zod
 |       |   index.cjs
 |       |   index.d.cts
-|       |   index.d.ts
 |       |   index.js
 |       |   LICENSE
 |       |   package.json
@@ -36142,52 +37817,27 @@ C:.
 |       +---locales
 |       |       index.cjs
 |       |       index.d.cts
-|       |       index.d.ts
 |       |       index.js
 |       |       package.json
 |       |       
 |       +---mini
 |       |       index.cjs
 |       |       index.d.cts
-|       |       index.d.ts
 |       |       index.js
 |       |       package.json
 |       |       
 |       +---src
-|       |   |   index.ts
-|       |   |   
-|       |   +---locales
-|       |   |       index.ts
-|       |   |       
-|       |   +---mini
-|       |   |       index.ts
-|       |   |       
 |       |   +---v3
 |       |   |   |   errors.ts
 |       |   |   |   external.ts
-|       |   |   |   index.ts
-|       |   |   |   standard-schema.ts
-|       |   |   |   types.ts
-|       |   |   |   ZodError.ts
 |       |   |   |   
 |       |   |   +---benchmarks
 |       |   |   |       datetime.ts
 |       |   |   |       discriminatedUnion.ts
-|       |   |   |       index.ts
-|       |   |   |       ipv4.ts
-|       |   |   |       object.ts
-|       |   |   |       primitives.ts
-|       |   |   |       realworld.ts
-|       |   |   |       string.ts
-|       |   |   |       union.ts
 |       |   |   |       
 |       |   |   +---helpers
 |       |   |   |       enumUtil.ts
 |       |   |   |       errorUtil.ts
-|       |   |   |       parseUtil.ts
-|       |   |   |       partialUtil.ts
-|       |   |   |       typeAliases.ts
-|       |   |   |       util.ts
 |       |   |   |       
 |       |   |   +---locales
 |       |   |   |       en.ts
@@ -36214,267 +37864,94 @@ C:.
 |       |   |           error.test.ts
 |       |   |           firstparty.test.ts
 |       |   |           firstpartyschematypes.test.ts
-|       |   |           function.test.ts
-|       |   |           generics.test.ts
-|       |   |           instanceof.test.ts
-|       |   |           intersection.test.ts
-|       |   |           language-server.source.ts
-|       |   |           language-server.test.ts
-|       |   |           literal.test.ts
-|       |   |           map.test.ts
-|       |   |           masking.test.ts
-|       |   |           mocker.test.ts
-|       |   |           Mocker.ts
-|       |   |           nan.test.ts
-|       |   |           nativeEnum.test.ts
-|       |   |           nullable.test.ts
-|       |   |           number.test.ts
-|       |   |           object-augmentation.test.ts
-|       |   |           object-in-es5-env.test.ts
-|       |   |           object.test.ts
-|       |   |           optional.test.ts
-|       |   |           parser.test.ts
-|       |   |           parseUtil.test.ts
-|       |   |           partials.test.ts
-|       |   |           pickomit.test.ts
-|       |   |           pipeline.test.ts
-|       |   |           preprocess.test.ts
-|       |   |           primitive.test.ts
-|       |   |           promise.test.ts
-|       |   |           readonly.test.ts
-|       |   |           record.test.ts
-|       |   |           recursive.test.ts
-|       |   |           refine.test.ts
-|       |   |           safeparse.test.ts
-|       |   |           set.test.ts
-|       |   |           standard-schema.test.ts
-|       |   |           string.test.ts
-|       |   |           transformer.test.ts
-|       |   |           tuple.test.ts
-|       |   |           unions.test.ts
-|       |   |           validations.test.ts
-|       |   |           void.test.ts
 |       |   |           
-|       |   +---v4
-|       |   |   |   index.ts
-|       |   |   |   
-|       |   |   +---classic
-|       |   |   |   |   checks.ts
-|       |   |   |   |   coerce.ts
-|       |   |   |   |   compat.ts
-|       |   |   |   |   errors.ts
-|       |   |   |   |   external.ts
-|       |   |   |   |   from-json-schema.ts
-|       |   |   |   |   index.ts
-|       |   |   |   |   iso.ts
-|       |   |   |   |   parse.ts
-|       |   |   |   |   schemas.ts
-|       |   |   |   |   
-|       |   |   |   \---tests
-|       |   |   |           anyunknown.test.ts
-|       |   |   |           apply.test.ts
-|       |   |   |           array.test.ts
-|       |   |   |           assignability.test.ts
-|       |   |   |           async-parsing.test.ts
-|       |   |   |           async-refinements.test.ts
-|       |   |   |           base.test.ts
-|       |   |   |           bigint.test.ts
-|       |   |   |           brand.test.ts
-|       |   |   |           catch.test.ts
-|       |   |   |           coalesce.test.ts
-|       |   |   |           codec-examples.test.ts
-|       |   |   |           codec.test.ts
-|       |   |   |           coerce.test.ts
-|       |   |   |           continuability.test.ts
-|       |   |   |           custom.test.ts
-|       |   |   |           date.test.ts
-|       |   |   |           datetime.test.ts
-|       |   |   |           default.test.ts
-|       |   |   |           describe-meta-checks.test.ts
-|       |   |   |           description.test.ts
-|       |   |   |           detached-methods.test.ts
-|       |   |   |           discriminated-unions.test.ts
-|       |   |   |           enum.test.ts
-|       |   |   |           error-utils.test.ts
-|       |   |   |           error.test.ts
-|       |   |   |           file.test.ts
-|       |   |   |           firstparty.test.ts
-|       |   |   |           fix-json-issue.test.ts
-|       |   |   |           from-json-schema.test.ts
-|       |   |   |           function.test.ts
-|       |   |   |           generics.test.ts
-|       |   |   |           global-config.test.ts
-|       |   |   |           hash.test.ts
-|       |   |   |           index.test.ts
-|       |   |   |           instanceof.test.ts
-|       |   |   |           intersection.test.ts
-|       |   |   |           jitless-allows-eval.test.ts
-|       |   |   |           json.test.ts
-|       |   |   |           lazy.test.ts
-|       |   |   |           literal.test.ts
-|       |   |   |           locales_ka.test.ts
-|       |   |   |           locales_ro.test.ts
-|       |   |   |           map.test.ts
-|       |   |   |           nan.test.ts
-|       |   |   |           nested-refine.test.ts
-|       |   |   |           nonoptional.test.ts
-|       |   |   |           nullable.test.ts
-|       |   |   |           number.test.ts
-|       |   |   |           object.test.ts
-|       |   |   |           optional.test.ts
-|       |   |   |           partial.test.ts
-|       |   |   |           pickomit.test.ts
-|       |   |   |           pipe.test.ts
-|       |   |   |           prefault.test.ts
-|       |   |   |           preprocess-types.test.ts
-|       |   |   |           preprocess.test.ts
-|       |   |   |           primitive.test.ts
-|       |   |   |           promise.test.ts
-|       |   |   |           prototypes.test.ts
-|       |   |   |           readonly.test.ts
-|       |   |   |           record.test.ts
-|       |   |   |           recursive-types.test.ts
-|       |   |   |           refine.test.ts
-|       |   |   |           registries.test.ts
-|       |   |   |           set.test.ts
-|       |   |   |           standard-schema.test.ts
-|       |   |   |           string-formats.test.ts
-|       |   |   |           string.test.ts
-|       |   |   |           stringbool.test.ts
-|       |   |   |           template-literal.test.ts
-|       |   |   |           to-json-schema-methods.test.ts
-|       |   |   |           to-json-schema.test.ts
-|       |   |   |           transform.test.ts
-|       |   |   |           tuple.test.ts
-|       |   |   |           union.test.ts
-|       |   |   |           url.test.ts
-|       |   |   |           validations.test.ts
-|       |   |   |           void.test.ts
-|       |   |   |           
-|       |   |   +---core
-|       |   |   |   |   api.ts
-|       |   |   |   |   checks.ts
-|       |   |   |   |   config.ts
-|       |   |   |   |   core.ts
-|       |   |   |   |   doc.ts
-|       |   |   |   |   errors.ts
-|       |   |   |   |   index.ts
-|       |   |   |   |   json-schema-generator.ts
-|       |   |   |   |   json-schema-processors.ts
-|       |   |   |   |   json-schema.ts
-|       |   |   |   |   parse.ts
-|       |   |   |   |   regexes.ts
-|       |   |   |   |   registries.ts
-|       |   |   |   |   schemas.ts
-|       |   |   |   |   standard-schema.ts
-|       |   |   |   |   to-json-schema.ts
-|       |   |   |   |   util.ts
-|       |   |   |   |   versions.ts
-|       |   |   |   |   zsf.ts
-|       |   |   |   |   
-|       |   |   |   \---tests
-|       |   |   |       |   extend.test.ts
-|       |   |   |       |   index.test.ts
-|       |   |   |       |   record-constructor.test.ts
-|       |   |   |       |   recursive-tuples.test.ts
-|       |   |   |       |   
-|       |   |   |       \---locales
-|       |   |   |               be.test.ts
-|       |   |   |               el.test.ts
-|       |   |   |               en.test.ts
-|       |   |   |               es.test.ts
-|       |   |   |               fr.test.ts
-|       |   |   |               he.test.ts
-|       |   |   |               hr.test.ts
-|       |   |   |               nl.test.ts
-|       |   |   |               ru.test.ts
-|       |   |   |               tr.test.ts
-|       |   |   |               uz.test.ts
-|       |   |   |               
-|       |   |   +---locales
-|       |   |   |       ar.ts
-|       |   |   |       az.ts
-|       |   |   |       be.ts
-|       |   |   |       bg.ts
-|       |   |   |       ca.ts
-|       |   |   |       cs.ts
-|       |   |   |       da.ts
-|       |   |   |       de.ts
-|       |   |   |       el.ts
-|       |   |   |       en.ts
-|       |   |   |       eo.ts
-|       |   |   |       es.ts
-|       |   |   |       fa.ts
-|       |   |   |       fi.ts
-|       |   |   |       fr-CA.ts
-|       |   |   |       fr.ts
-|       |   |   |       he.ts
-|       |   |   |       hr.ts
-|       |   |   |       hu.ts
-|       |   |   |       hy.ts
-|       |   |   |       id.ts
-|       |   |   |       index.ts
-|       |   |   |       is.ts
-|       |   |   |       it.ts
-|       |   |   |       ja.ts
-|       |   |   |       ka.ts
-|       |   |   |       kh.ts
-|       |   |   |       km.ts
-|       |   |   |       ko.ts
-|       |   |   |       lt.ts
-|       |   |   |       mk.ts
-|       |   |   |       ms.ts
-|       |   |   |       nl.ts
-|       |   |   |       no.ts
-|       |   |   |       ota.ts
-|       |   |   |       pl.ts
-|       |   |   |       ps.ts
-|       |   |   |       pt.ts
-|       |   |   |       ro.ts
-|       |   |   |       ru.ts
-|       |   |   |       sl.ts
-|       |   |   |       sv.ts
-|       |   |   |       ta.ts
-|       |   |   |       th.ts
-|       |   |   |       tr.ts
-|       |   |   |       ua.ts
-|       |   |   |       uk.ts
-|       |   |   |       ur.ts
-|       |   |   |       uz.ts
-|       |   |   |       vi.ts
-|       |   |   |       yo.ts
-|       |   |   |       zh-CN.ts
-|       |   |   |       zh-TW.ts
-|       |   |   |       
-|       |   |   \---mini
-|       |   |       |   checks.ts
-|       |   |       |   coerce.ts
-|       |   |       |   external.ts
-|       |   |       |   index.ts
-|       |   |       |   iso.ts
-|       |   |       |   parse.ts
-|       |   |       |   schemas.ts
-|       |   |       |   
-|       |   |       \---tests
-|       |   |               apply.test.ts
-|       |   |               assignability.test.ts
-|       |   |               brand.test.ts
-|       |   |               checks.test.ts
-|       |   |               codec.test.ts
-|       |   |               computed.test.ts
-|       |   |               error.test.ts
-|       |   |               functions.test.ts
-|       |   |               index.test.ts
-|       |   |               number.test.ts
-|       |   |               object.test.ts
-|       |   |               prototypes.test.ts
-|       |   |               recursive-types.test.ts
-|       |   |               standard-schema.test.ts
-|       |   |               string.test.ts
-|       |   |               
-|       |   \---v4-mini
-|       |           index.ts
-|       |           
+|       |   \---v4
+|       |       +---classic
+|       |       |   |   checks.ts
+|       |       |   |   coerce.ts
+|       |       |   |   compat.ts
+|       |       |   |   errors.ts
+|       |       |   |   external.ts
+|       |       |   |   
+|       |       |   \---tests
+|       |       |           anyunknown.test.ts
+|       |       |           apply.test.ts
+|       |       |           array.test.ts
+|       |       |           assignability.test.ts
+|       |       |           async-parsing.test.ts
+|       |       |           async-refinements.test.ts
+|       |       |           base.test.ts
+|       |       |           bigint.test.ts
+|       |       |           brand.test.ts
+|       |       |           catch.test.ts
+|       |       |           coalesce.test.ts
+|       |       |           codec-examples.test.ts
+|       |       |           codec.test.ts
+|       |       |           coerce.test.ts
+|       |       |           continuability.test.ts
+|       |       |           custom.test.ts
+|       |       |           date.test.ts
+|       |       |           datetime.test.ts
+|       |       |           default.test.ts
+|       |       |           describe-meta-checks.test.ts
+|       |       |           description.test.ts
+|       |       |           detached-methods.test.ts
+|       |       |           discriminated-unions.test.ts
+|       |       |           enum.test.ts
+|       |       |           error-utils.test.ts
+|       |       |           error.test.ts
+|       |       |           file.test.ts
+|       |       |           firstparty.test.ts
+|       |       |           fix-json-issue.test.ts
+|       |       |           
+|       |       +---core
+|       |       |   |   api.ts
+|       |       |   |   checks.ts
+|       |       |   |   config.ts
+|       |       |   |   core.ts
+|       |       |   |   doc.ts
+|       |       |   |   errors.ts
+|       |       |   |   
+|       |       |   \---tests
+|       |       |       |   extend.test.ts
+|       |       |       |   
+|       |       |       \---locales
+|       |       |               be.test.ts
+|       |       |               el.test.ts
+|       |       |               en.test.ts
+|       |       |               es.test.ts
+|       |       |               
+|       |       +---locales
+|       |       |       ar.ts
+|       |       |       az.ts
+|       |       |       be.ts
+|       |       |       bg.ts
+|       |       |       ca.ts
+|       |       |       cs.ts
+|       |       |       da.ts
+|       |       |       de.ts
+|       |       |       el.ts
+|       |       |       en.ts
+|       |       |       eo.ts
+|       |       |       es.ts
+|       |       |       fa.ts
+|       |       |       fi.ts
+|       |       |       fr-CA.ts
+|       |       |       
+|       |       \---mini
+|       |           |   checks.ts
+|       |           |   coerce.ts
+|       |           |   external.ts
+|       |           |   
+|       |           \---tests
+|       |                   apply.test.ts
+|       |                   assignability.test.ts
+|       |                   brand.test.ts
+|       |                   checks.test.ts
+|       |                   codec.test.ts
+|       |                   computed.test.ts
+|       |                   error.test.ts
+|       |                   
 |       +---v3
 |       |   |   errors.cjs
 |       |   |   errors.d.cts
@@ -36486,20 +37963,16 @@ C:.
 |       |   |   external.js
 |       |   |   index.cjs
 |       |   |   index.d.cts
-|       |   |   index.d.ts
 |       |   |   index.js
 |       |   |   package.json
 |       |   |   standard-schema.cjs
 |       |   |   standard-schema.d.cts
-|       |   |   standard-schema.d.ts
 |       |   |   standard-schema.js
 |       |   |   types.cjs
 |       |   |   types.d.cts
-|       |   |   types.d.ts
 |       |   |   types.js
 |       |   |   ZodError.cjs
 |       |   |   ZodError.d.cts
-|       |   |   ZodError.d.ts
 |       |   |   ZodError.js
 |       |   |   
 |       |   +---helpers
@@ -36513,19 +37986,15 @@ C:.
 |       |   |       errorUtil.js
 |       |   |       parseUtil.cjs
 |       |   |       parseUtil.d.cts
-|       |   |       parseUtil.d.ts
 |       |   |       parseUtil.js
 |       |   |       partialUtil.cjs
 |       |   |       partialUtil.d.cts
-|       |   |       partialUtil.d.ts
 |       |   |       partialUtil.js
 |       |   |       typeAliases.cjs
 |       |   |       typeAliases.d.cts
-|       |   |       typeAliases.d.ts
 |       |   |       typeAliases.js
 |       |   |       util.cjs
 |       |   |       util.d.cts
-|       |   |       util.d.ts
 |       |   |       util.js
 |       |   |       
 |       |   \---locales
@@ -36537,7 +38006,6 @@ C:.
 |       +---v4
 |       |   |   index.cjs
 |       |   |   index.d.cts
-|       |   |   index.d.ts
 |       |   |   index.js
 |       |   |   package.json
 |       |   |   
@@ -36564,24 +38032,19 @@ C:.
 |       |   |       external.js
 |       |   |       from-json-schema.cjs
 |       |   |       from-json-schema.d.cts
-|       |   |       from-json-schema.d.ts
 |       |   |       from-json-schema.js
 |       |   |       index.cjs
 |       |   |       index.d.cts
-|       |   |       index.d.ts
 |       |   |       index.js
 |       |   |       iso.cjs
 |       |   |       iso.d.cts
-|       |   |       iso.d.ts
 |       |   |       iso.js
 |       |   |       package.json
 |       |   |       parse.cjs
 |       |   |       parse.d.cts
-|       |   |       parse.d.ts
 |       |   |       parse.js
 |       |   |       schemas.cjs
 |       |   |       schemas.d.cts
-|       |   |       schemas.d.ts
 |       |   |       schemas.js
 |       |   |       
 |       |   +---core
@@ -36607,52 +38070,40 @@ C:.
 |       |   |       errors.js
 |       |   |       index.cjs
 |       |   |       index.d.cts
-|       |   |       index.d.ts
 |       |   |       index.js
 |       |   |       json-schema-generator.cjs
 |       |   |       json-schema-generator.d.cts
-|       |   |       json-schema-generator.d.ts
 |       |   |       json-schema-generator.js
 |       |   |       json-schema-processors.cjs
 |       |   |       json-schema-processors.d.cts
-|       |   |       json-schema-processors.d.ts
 |       |   |       json-schema-processors.js
 |       |   |       json-schema.cjs
 |       |   |       json-schema.d.cts
-|       |   |       json-schema.d.ts
 |       |   |       json-schema.js
 |       |   |       package.json
 |       |   |       parse.cjs
 |       |   |       parse.d.cts
-|       |   |       parse.d.ts
 |       |   |       parse.js
 |       |   |       regexes.cjs
 |       |   |       regexes.d.cts
-|       |   |       regexes.d.ts
 |       |   |       regexes.js
 |       |   |       registries.cjs
 |       |   |       registries.d.cts
-|       |   |       registries.d.ts
 |       |   |       registries.js
 |       |   |       schemas.cjs
 |       |   |       schemas.d.cts
-|       |   |       schemas.d.ts
 |       |   |       schemas.js
 |       |   |       standard-schema.cjs
 |       |   |       standard-schema.d.cts
-|       |   |       standard-schema.d.ts
 |       |   |       standard-schema.js
 |       |   |       to-json-schema.cjs
 |       |   |       to-json-schema.d.cts
-|       |   |       to-json-schema.d.ts
 |       |   |       to-json-schema.js
 |       |   |       util.cjs
 |       |   |       util.d.cts
-|       |   |       util.d.ts
 |       |   |       util.js
 |       |   |       versions.cjs
 |       |   |       versions.d.cts
-|       |   |       versions.d.ts
 |       |   |       versions.js
 |       |   |       
 |       |   +---locales
@@ -36718,156 +38169,118 @@ C:.
 |       |   |       fr-CA.js
 |       |   |       fr.cjs
 |       |   |       fr.d.cts
-|       |   |       fr.d.ts
 |       |   |       fr.js
 |       |   |       he.cjs
 |       |   |       he.d.cts
-|       |   |       he.d.ts
 |       |   |       he.js
 |       |   |       hr.cjs
 |       |   |       hr.d.cts
-|       |   |       hr.d.ts
 |       |   |       hr.js
 |       |   |       hu.cjs
 |       |   |       hu.d.cts
-|       |   |       hu.d.ts
 |       |   |       hu.js
 |       |   |       hy.cjs
 |       |   |       hy.d.cts
-|       |   |       hy.d.ts
 |       |   |       hy.js
 |       |   |       id.cjs
 |       |   |       id.d.cts
-|       |   |       id.d.ts
 |       |   |       id.js
 |       |   |       index.cjs
 |       |   |       index.d.cts
-|       |   |       index.d.ts
 |       |   |       index.js
 |       |   |       is.cjs
 |       |   |       is.d.cts
-|       |   |       is.d.ts
 |       |   |       is.js
 |       |   |       it.cjs
 |       |   |       it.d.cts
-|       |   |       it.d.ts
 |       |   |       it.js
 |       |   |       ja.cjs
 |       |   |       ja.d.cts
-|       |   |       ja.d.ts
 |       |   |       ja.js
 |       |   |       ka.cjs
 |       |   |       ka.d.cts
-|       |   |       ka.d.ts
 |       |   |       ka.js
 |       |   |       kh.cjs
 |       |   |       kh.d.cts
-|       |   |       kh.d.ts
 |       |   |       kh.js
 |       |   |       km.cjs
 |       |   |       km.d.cts
-|       |   |       km.d.ts
 |       |   |       km.js
 |       |   |       ko.cjs
 |       |   |       ko.d.cts
-|       |   |       ko.d.ts
 |       |   |       ko.js
 |       |   |       lt.cjs
 |       |   |       lt.d.cts
-|       |   |       lt.d.ts
 |       |   |       lt.js
 |       |   |       mk.cjs
 |       |   |       mk.d.cts
-|       |   |       mk.d.ts
 |       |   |       mk.js
 |       |   |       ms.cjs
 |       |   |       ms.d.cts
-|       |   |       ms.d.ts
 |       |   |       ms.js
 |       |   |       nl.cjs
 |       |   |       nl.d.cts
-|       |   |       nl.d.ts
 |       |   |       nl.js
 |       |   |       no.cjs
 |       |   |       no.d.cts
-|       |   |       no.d.ts
 |       |   |       no.js
 |       |   |       ota.cjs
 |       |   |       ota.d.cts
-|       |   |       ota.d.ts
 |       |   |       ota.js
 |       |   |       package.json
 |       |   |       pl.cjs
 |       |   |       pl.d.cts
-|       |   |       pl.d.ts
 |       |   |       pl.js
 |       |   |       ps.cjs
 |       |   |       ps.d.cts
-|       |   |       ps.d.ts
 |       |   |       ps.js
 |       |   |       pt.cjs
 |       |   |       pt.d.cts
-|       |   |       pt.d.ts
 |       |   |       pt.js
 |       |   |       ro.cjs
 |       |   |       ro.d.cts
-|       |   |       ro.d.ts
 |       |   |       ro.js
 |       |   |       ru.cjs
 |       |   |       ru.d.cts
-|       |   |       ru.d.ts
 |       |   |       ru.js
 |       |   |       sl.cjs
 |       |   |       sl.d.cts
-|       |   |       sl.d.ts
 |       |   |       sl.js
 |       |   |       sv.cjs
 |       |   |       sv.d.cts
-|       |   |       sv.d.ts
 |       |   |       sv.js
 |       |   |       ta.cjs
 |       |   |       ta.d.cts
-|       |   |       ta.d.ts
 |       |   |       ta.js
 |       |   |       th.cjs
 |       |   |       th.d.cts
-|       |   |       th.d.ts
 |       |   |       th.js
 |       |   |       tr.cjs
 |       |   |       tr.d.cts
-|       |   |       tr.d.ts
 |       |   |       tr.js
 |       |   |       ua.cjs
 |       |   |       ua.d.cts
-|       |   |       ua.d.ts
 |       |   |       ua.js
 |       |   |       uk.cjs
 |       |   |       uk.d.cts
-|       |   |       uk.d.ts
 |       |   |       uk.js
 |       |   |       ur.cjs
 |       |   |       ur.d.cts
-|       |   |       ur.d.ts
 |       |   |       ur.js
 |       |   |       uz.cjs
 |       |   |       uz.d.cts
-|       |   |       uz.d.ts
 |       |   |       uz.js
 |       |   |       vi.cjs
 |       |   |       vi.d.cts
-|       |   |       vi.d.ts
 |       |   |       vi.js
 |       |   |       yo.cjs
 |       |   |       yo.d.cts
-|       |   |       yo.d.ts
 |       |   |       yo.js
 |       |   |       zh-CN.cjs
 |       |   |       zh-CN.d.cts
-|       |   |       zh-CN.d.ts
 |       |   |       zh-CN.js
 |       |   |       zh-TW.cjs
 |       |   |       zh-TW.d.cts
-|       |   |       zh-TW.d.ts
 |       |   |       zh-TW.js
 |       |   |       
 |       |   \---mini
@@ -36885,26 +38298,21 @@ C:.
 |       |           external.js
 |       |           index.cjs
 |       |           index.d.cts
-|       |           index.d.ts
 |       |           index.js
 |       |           iso.cjs
 |       |           iso.d.cts
-|       |           iso.d.ts
 |       |           iso.js
 |       |           package.json
 |       |           parse.cjs
 |       |           parse.d.cts
-|       |           parse.d.ts
 |       |           parse.js
 |       |           schemas.cjs
 |       |           schemas.d.cts
-|       |           schemas.d.ts
 |       |           schemas.js
 |       |           
 |       \---v4-mini
 |               index.cjs
 |               index.d.cts
-|               index.d.ts
 |               index.js
 |               package.json
 |               
@@ -36925,6 +38333,25 @@ C:.
     |   |   layout.tsx
     |   |   page.tsx
     |   |   
+    |   +---admin
+    |   |   |   layout.tsx
+    |   |   |   page.tsx
+    |   |   |   
+    |   |   +---stats
+    |   |   |       page.tsx
+    |   |   |       
+    |   |   +---tenants
+    |   |   |   |   page.tsx
+    |   |   |   |   
+    |   |   |   +---new
+    |   |   |   |       page.tsx
+    |   |   |   |       
+    |   |   |   \---[id]
+    |   |   |           page.tsx
+    |   |   |           
+    |   |   \---users
+    |   |           page.tsx
+    |   |           
     |   +---api
     |   |   +---auth
     |   |   |   \---me
@@ -36979,6 +38406,9 @@ C:.
     |   |           page.client.tsx
     |   |           page.tsx
     |   |           
+    |   +---debug
+    |   |       page.tsx
+    |   |       
     |   +---login
     |   |       page.tsx
     |   |       
@@ -36989,6 +38419,10 @@ C:.
     |   |   error-boundary.tsx
     |   |   providers.tsx
     |   |   
+    |   +---admin
+    |   |       TenantForm.tsx
+    |   |       TenantTable.tsx
+    |   |       
     |   +---dashboard
     |   |       ActivityList.tsx
     |   |       RecentSales.tsx
@@ -36998,12 +38432,16 @@ C:.
     |           badge.tsx
     |           button.tsx
     |           card.tsx
+    |           dialog.tsx
+    |           dropdown-menu.tsx
     |           file-uploader.tsx
     |           input.tsx
     |           label.tsx
     |           loading-spinner.tsx
+    |           select.tsx
     |           separator.tsx
     |           sonner.tsx
+    |           table.tsx
     |           
     +---lib
     |   |   utils.ts
@@ -37015,15 +38453,18 @@ C:.
     |   |       helpers.ts
     |   |       patientFiles.ts
     |   |       
-    |   \---supabase
-    |       |   actions.ts
-    |       |   admin.ts
-    |       |   client.ts
-    |       |   middleware.ts
-    |       |   queries.ts
-    |       |   server.ts
-    |       |   
-    |       \---migrations
+    |   +---supabase
+    |   |   |   actions.ts
+    |   |   |   admin.ts
+    |   |   |   client.ts
+    |   |   |   middleware.ts
+    |   |   |   queries.ts
+    |   |   |   server.ts
+    |   |   |   
+    |   |   \---migrations
+    |   \---validations
+    |           tenant.ts
+    |           
     \---types
             index.ts
             storage.ts

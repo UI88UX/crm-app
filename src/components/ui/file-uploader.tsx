@@ -1,7 +1,7 @@
 // src/components/ui/file-uploader.tsx
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect,useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -68,10 +68,25 @@ export function FileUploader({
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
+  const initialFilesRef = useRef<UploadedFile[]>(initialFiles);
+  const isFirstRender = useRef(true);
+
   // به‌روزرسانی files وقتی initialFiles تغییر می‌کند
   useEffect(() => {
-    setFiles(initialFiles);
+    // فقط در صورتی که واقعاً تغییر کرده باشد
+    if (JSON.stringify(initialFilesRef.current) !== JSON.stringify(initialFiles)) {
+      initialFilesRef.current = initialFiles;
+      setFiles(initialFiles);
+    }
   }, [initialFiles]);
+
+  // // یا روش ساده‌تر: فقط در اولین رندر اجرا شود
+  // useEffect(() => {
+  //   if (isFirstRender.current) {
+  //     isFirstRender.current = false;
+  //     setFiles(initialFiles);
+  //   }
+  // }, [initialFiles]);
 
   // آپلود فایل‌ها
   const uploadFiles = useCallback(async (acceptedFiles: File[]) => {
