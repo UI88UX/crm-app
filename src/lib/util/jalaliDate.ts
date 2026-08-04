@@ -2,25 +2,58 @@
 
 import moment from 'moment-jalaali';
 
-// تنظیم locale برای اعداد فارسی
-moment.locale('fa');
+/**
+ * تشخیص اینکه تاریخ میلادی است یا شمسی
+ * اگر سال بین 1300-1500 باشد، احتمالاً شمسی است
+ */
+function isJalaliDate(date: string): boolean {
+  const year = parseInt(date.split('-')[0]);
+  return year >= 1300 && year <= 1500;
+}
 
 /**
- * تبدیل تاریخ میلادی به شمسی (فرمت Jalali)
+ * تبدیل تاریخ به میلادی (اگر شمسی بود)
+ */
+export function normalizeToGregorian(date: string): string | null {
+  if (!date) return null;
+  
+  try {
+    // اگر تاریخ شمسی است، به میلادی تبدیل کن
+    if (isJalaliDate(date)) {
+      const m = moment(date, 'jYYYY-MM-DD');
+      if (m.isValid()) {
+        return m.format('YYYY-MM-DD');
+      }
+    }
+    // اگر میلادی است، همان را برگردان
+    return date;
+  } catch (error) {
+    console.error('Error normalizing date:', error);
+    return null;
+  }
+}
+
+/**
+ * تبدیل تاریخ میلادی به شمسی
  */
 export function toJalali(date: Date | string | null | undefined): string | null {
   if (!date) return null;
   
   try {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    if (isNaN(d.getTime())) return null;
+    // اگر تاریخ به صورت string است و شمسی به نظر می‌رسد
+    if (typeof date === 'string' && isJalaliDate(date)) {
+      // قبلاً شمسی است، همان را برگردان
+      return date;
+    }
     
-    const jalaali = moment(d);
-    if (!jalaali.isValid()) return null;
-    
-    return jalaali.format('jYYYY/jMM/jDD');
+    const m = moment(date);
+    if (!m.isValid()) {
+      console.warn('Invalid date:', date);
+      return null;
+    }
+    return m.format('jYYYY/jMM/jDD');
   } catch (error) {
-    console.error('Error converting to Jalali:', error);
+    console.error('Error in toJalali:', error);
     return null;
   }
 }
@@ -35,22 +68,17 @@ export function toJalaliDisplay(
   if (!date) return null;
   
   try {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    if (isNaN(d.getTime())) return null;
+    const m = moment(date);
+    if (!m.isValid()) return null;
     
-    const jalaali = moment(d);
-    if (!jalaali.isValid()) return null;
-    
-    // فرمت‌های مختلف
     const formats: Record<string, string> = {
       "DD MMM YYYY": "jD jMMMM jYYYY",
       "YYYY/MM/DD": "jYYYY/jMM/jDD",
       "YYYY-MM-DD": "jYYYY-jMM-jDD",
-      "DD/MM/YYYY": "jDD/jMM/jYYYY",
     };
     
     const formatPattern = formats[format] || "jYYYY/jMM/jDD";
-    return jalaali.format(formatPattern);
+    return m.format(formatPattern);
   } catch (error) {
     console.error('Error converting to Jalali display:', error);
     return null;
@@ -64,16 +92,14 @@ export function fromJalali(jalaliDate: string): string | null {
   if (!jalaliDate) return null;
   
   try {
-    const jalaali = moment(jalaliDate, 'jYYYY/jMM/jDD');
-    if (!jalaali.isValid()) return null;
-    
-    return jalaali.format('YYYY-MM-DD');
+    const m = moment(jalaliDate, 'jYYYY/jMM/jDD');
+    if (!m.isValid()) return null;
+    return m.format('YYYY-MM-DD');
   } catch (error) {
     console.error('Error converting from Jalali:', error);
     return null;
   }
 }
-
 /**
  * تبدیل تاریخ شمسی به میلادی با فرمت Date
  */

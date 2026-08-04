@@ -7,6 +7,7 @@ import { z } from "zod";
 import type { PatientFormData, SaleFormData } from "@/types";
 import { createAdminClient } from "./admin";
 import { tenantSchema, type TenantFormData } from "@/lib/validations/tenant";
+import moment from "moment-jalaali";
 
 // ============================================
 // Schemas
@@ -103,36 +104,46 @@ export async function getPatient(id: string) {
 }
 
 export async function createPatient(data: PatientFormData) {
-  const supabase = await createClient();
-  const user = await getCurrentUser();
-  const tenantId = await getCurrentTenantId();
-
-  if (!user) {
-    return { error: "لطفاً وارد حساب کاربری خود شوید." };
-  }
-
-  const validation = patientSchema.safeParse(data);
-  if (!validation.success) {
-    const errors = validation.error.flatten().fieldErrors;
-    const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
-    return { error: firstError, fieldErrors: errors };
-  }
-
-  const { data: result, error } = await supabase
-    .from("patients")
-    .insert({ ...validation.data, tenant_id: tenantId })
-    .select()
-    .single();
-
-  if (error) {
-    if (error.code === "23505") {
-      return { error: "کد ملی قبلاً ثبت شده است." };
+  if (data.birth_date && data.birth_date.includes('/')) {
+    const parts = data.birth_date.split('/');
+    if (parts.length === 3 && parseInt(parts[0]) >= 1300) {
+      // تاریخ شمسی است، به میلادی تبدیل کن
+      const m = moment(data.birth_date, 'jYYYY/MM/DD');
+      if (m.isValid()) {
+        data.birth_date = m.format('YYYY-MM-DD');
+      }
     }
-    return { error: "خطا در ذخیره بیمار: " + error.message };
   }
+const supabase = await createClient();
+const user = await getCurrentUser();
+const tenantId = await getCurrentTenantId();
 
-  revalidatePath("/dashboard/patients");
-  return { data: result, error: null };
+if (!user) {
+  return { error: "لطفاً وارد حساب کاربری خود شوید." };
+}
+
+const validation = patientSchema.safeParse(data);
+if (!validation.success) {
+  const errors = validation.error.flatten().fieldErrors;
+  const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
+  return { error: firstError, fieldErrors: errors };
+}
+
+const { data: result, error } = await supabase
+  .from("patients")
+  .insert({ ...validation.data, tenant_id: tenantId })
+  .select()
+  .single();
+
+if (error) {
+  if (error.code === "23505") {
+    return { error: "کد ملی قبلاً ثبت شده است." };
+  }
+  return { error: "خطا در ذخیره بیمار: " + error.message };
+}
+
+revalidatePath("/dashboard/patients");
+return { data: result, error: null };
 }
 
 export async function updatePatient(id: string, data: PatientFormData) {
@@ -163,22 +174,49 @@ export async function updatePatient(id: string, data: PatientFormData) {
   return { data: result, error: null };
 }
 
+
 export async function deletePatient(id: string) {
   const supabase = await createClient();
-  const tenantId = await getCurrentTenantId();
 
+  // دریافت Tenant ID
+  const tenantId = await getCurrentTenantId();
+  if (!tenantId) {
+    return { error: "Tenant یافت نشد" };
+  }
+
+  // ابتدا بررسی کنید که بیمار وجود دارد و متعلق به Tenant جاری است
+  const { data: patient, error: checkError } = await supabase
+    .from("patients")
+    .select("id, tenant_id")
+    .eq("id", id)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .single();
+
+  if (checkError || !patient) {
+    console.error("Patient not found or access denied:", checkError);
+    return { error: "بیمار یافت نشد یا دسترسی ندارید" };
+  }
+
+  // انجام soft delete با updated_at و deleted_at
   const { error } = await supabase
     .from("patients")
-    .update({ deleted_at: new Date().toISOString() })
+    .update({
+      deleted_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    })
     .eq("id", id)
     .eq("tenant_id", tenantId)
     .is("deleted_at", null);
 
   if (error) {
+    console.error("Delete patient error:", error);
     return { error: "خطا در حذف بیمار: " + error.message };
   }
 
+  // بازآوری کش
   revalidatePath("/dashboard/patients");
+
   return { data: { success: true, id }, error: null };
 }
 //* حذف دائم بیمار(فقط برای super_admin) این تابع از Admin Client استفاده می‌کند تا RLS را دور بزند //* 

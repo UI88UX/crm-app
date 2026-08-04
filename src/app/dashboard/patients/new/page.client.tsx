@@ -307,19 +307,20 @@ export default function NewPatientClient() {
                     <Calendar className="w-4 h-4" />
                     تاریخ تولد
                   </Label>
+
                   <DatePicker
                     calendar={persian}
                     locale={persian_fa}
                     value={birthDatePicker || ""}
                     onChange={(date: any) => {
                       if (date && date.isValid) {
-                        // روش صحیح دریافت تاریخ میلادی
-                        const year = date.year;
-                        const month = date.month;
-                        const day = date.day;
+                        // دریافت تاریخ میلادی از شیء date
+                        const gregorianDate = date.toDate(); // این یک Date object میلادی می‌دهد
+                        const isoDate = gregorianDate.toISOString().split('T')[0]; // YYYY-MM-DD
 
-                        // ساخت تاریخ میلادی
-                        const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        console.log('Selected Jalali:', date.format('YYYY/MM/DD'));
+                        console.log('Saving as Gregorian:', isoDate);
+
                         setFormData(prev => ({ ...prev, birth_date: isoDate }));
                         setBirthDatePicker(date.format("YYYY/MM/DD"));
                       } else {

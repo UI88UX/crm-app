@@ -34,6 +34,7 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
   const [patients, setPatients] = useState<Patient[]>(initialPatients);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDeleting, startDeleteTransition] = useTransition();
+  const [deletingPatientId, setDeletingPatientId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -85,22 +86,25 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
     });
   }, [patients, searchTerm]);
 
-  const handleDeletePatient = (id: string) => {
-    startDeleteTransition(async () => {
-      try {
-        const result = await deletePatient(id);
+  const handleDeletePatient = async (id: string) => {
+    // تنظیم ID بیمار در حال حذف
+    setDeletingPatientId(id);
 
-        if (result?.data) {
-          toast.success("بیمار با موفقیت حذف شد!");
-          setPatients(prev => prev.filter(p => p.id !== id));
-        } else if (result?.error) {
-          toast.error(result.error);
-        }
-      } catch (err) {
-        console.error("Unexpected error:", err);
-        toast.error("خطای غیرمنتظره رخ داد.");
+    try {
+      const result = await deletePatient(id);
+
+      if (result?.data) {
+        toast.success("بیمار با موفقیت حذف شد!");
+        setPatients(prev => prev.filter(p => p.id !== id));
+      } else if (result?.error) {
+        toast.error(result.error);
       }
-    });
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast.error("خطای غیرمنتظره رخ داد.");
+    } finally {
+      setDeletingPatientId(null);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -149,9 +153,9 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
           {error}
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="mr-4"
             onClick={() => setError(null)}
           >
@@ -242,9 +246,9 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
                   onClick={() => handleDeletePatient(patient.id)}
                   variant="destructive"
                   size="sm"
-                  disabled={isDeleting}
+                  disabled={deletingPatientId === patient.id}
                 >
-                  {isDeleting ? (
+                  {deletingPatientId === patient.id ? (
                     <LoadingSpinner size="sm" />
                   ) : (
                     <>

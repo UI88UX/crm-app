@@ -9,13 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { updatePatient, getPatient, deletePatientPermanent } from "@/lib/supabase/actions";
+import { updatePatient, getPatient, deletePatientPermanent, deletePatient } from "@/lib/supabase/actions";
 import { FileUploader } from "@/components/ui/file-uploader";
 import { getPatientFiles, type PatientFile } from "@/src/lib/storage/patientFiles";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import { formatJalaliDateTime, fromJalaliToDate, toJalaliDisplay } from "@/src/lib/util/jalaliDate";
+import { formatJalaliDateTime, fromJalaliToDate, toJalaliDisplay, toJalali } from "@/src/lib/util/jalaliDate";
+import moment from 'moment-jalaali';
 import {
   ArrowRight,
   User,
@@ -99,6 +100,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [birthDatePicker, setBirthDatePicker] = useState<string | null>(null);
   const initialPatientRef = useRef(initialPatient);
+  const hasLoadedRef = useRef(false);
 
   const [formData, setFormData] = useState<Partial<Patient>>(initialPatient || {});
 
@@ -122,31 +124,79 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     checkSuperAdmin();
   }, []);
 
+  const testMoment = () => {
+    const test = moment('1985-05-13');
+    console.log('Test moment:', test.format('jYYYY/jMM/jDD'));
+  };
+
+  // در useEffect یا در یک useEffect جداگانه برای تست:
+  useEffect(() => {
+    testMoment();
+  }, []);
+
   // بارگذاری اطلاعات بیمار
   useEffect(() => {
-    // فقط اگر initialPatient تغییر کرده باشد و قبلاً تنظیم نشده باشد
-    if (initialPatient && initialPatientRef.current !== initialPatient) {
-      setFormData(initialPatient);
-      initialPatientRef.current = initialPatient;
+    if (hasLoadedRef.current) return;
 
-      // تبدیل تاریخ میلادی به شمسی برای DatePicker
+    if (initialPatient) {
+      hasLoadedRef.current = true;
+      setFormData(initialPatient);
+
+      // دیباگ: چاپ تاریخ خام
+      console.log('Raw birth_date:', initialPatient.birth_date);
+
+      // src/app/dashboard/patients/[id]/page.client.tsx
+
+      // در useEffect برای مقداردهی تاریخ تولد:
       if (initialPatient.birth_date) {
-        const jalaliDate = toJalaliDisplay(initialPatient.birth_date, "YYYY/MM/DD");
-        setBirthDatePicker(jalaliDate);
+        try {
+          let birthDate = initialPatient.birth_date;
+
+          // اگر تاریخ به صورت شمسی ذخیره شده، ابتدا به میلادی تبدیل کن
+          if (birthDate && birthDate.startsWith('13')) {
+            // تاریخ شمسی است، به میلادی تبدیل کن
+            const m = moment(birthDate, 'jYYYY-MM-DD');
+            if (m.isValid()) {
+              birthDate = m.format('YYYY-MM-DD');
+              // به‌روزرسانی formData با تاریخ میلادی صحیح
+              setFormData(prev => ({ ...prev, birth_date: birthDate }));
+            }
+          }
+
+          // حالا تاریخ میلادی را به شمسی تبدیل کن برای نمایش
+          const m = moment(birthDate);
+          if (m.isValid()) {
+            const jalaliDate = m.format('jYYYY/jMM/jDD');
+            console.log('Setting birthDatePicker to:', jalaliDate);
+            setBirthDatePicker(jalaliDate);
+          }
+        } catch (error) {
+          console.error('Error setting birth date:', error);
+        }
       }
       return;
     }
 
-    // اگر initialPatient وجود نداشت و patientId داشتیم
-    if (patientId && !initialPatient) {
+    if (patientId) {
       const fetchPatient = async () => {
         try {
           const result = await getPatient(patientId);
           if (result.data) {
+            hasLoadedRef.current = true;
             setFormData(result.data);
+
+
+            // مقداردهی تاریخ تولد برای DatePicker
             if (result.data.birth_date) {
-              const jalaliDate = toJalaliDisplay(result.data.birth_date, "YYYY/MM/DD");
-              setBirthDatePicker(jalaliDate);
+              try {
+                const m = moment(result.data.birth_date);
+                if (m.isValid()) {
+                  const jalaliDate = m.format('jYYYY/jMM/jDD');
+                  setBirthDatePicker(jalaliDate);
+                }
+              } catch (error) {
+                console.error('Error setting birth date:', error);
+              }
             }
           } else if (result.error) {
             setError(result.error);
@@ -225,16 +275,59 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
   }, []);
 
   useEffect(() => {
+    // جلوگیری از اجرای مجدد
+    if (hasLoadedRef.current) return;
+
     if (initialPatient) {
+      hasLoadedRef.current = true;
       setFormData(initialPatient);
-      // تبدیل تاریخ میلادی به شمسی برای DatePicker
+
+      // مقداردهی تاریخ تولد برای DatePicker
       if (initialPatient.birth_date) {
-        const jalaliDate = toJalaliDisplay(initialPatient.birth_date, "YYYY/MM/DD");
-        setBirthDatePicker(jalaliDate);
+        try {
+          // استفاده از toJalali برای تبدیل
+          const jalaliDate = toJalali(initialPatient.birth_date);
+          if (jalaliDate) {
+            setBirthDatePicker(jalaliDate);
+          }
+        } catch (error) {
+          console.error('Error setting birth date:', error);
+        }
       }
       return;
     }
-    // ... بقیه کد
+
+    if (patientId) {
+      const fetchPatient = async () => {
+        try {
+          const result = await getPatient(patientId);
+          if (result.data) {
+            hasLoadedRef.current = true;
+            setFormData(result.data);
+
+            // مقداردهی تاریخ تولد برای DatePicker
+            if (result.data.birth_date) {
+              try {
+                const jalaliDate = toJalali(result.data.birth_date);
+                if (jalaliDate) {
+                  setBirthDatePicker(jalaliDate);
+                }
+              } catch (error) {
+                console.error('Error setting birth date:', error);
+              }
+            }
+          } else if (result.error) {
+            setError(result.error);
+            toast.error("خطا در دریافت اطلاعات بیمار");
+          }
+        } catch (err) {
+          console.error('Error fetching patient:', err);
+          setError('خطا در بارگذاری اطلاعات');
+          toast.error("خطای غیرمنتظره در بارگذاری اطلاعات");
+        }
+      };
+      fetchPatient();
+    }
   }, [patientId, initialPatient]);
 
   // تغییر فیلدها
@@ -295,11 +388,16 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
   const handleDeletePatient = async () => {
     setIsDeleting(true);
     try {
-      const result = await deletePatientPermanent ? null : null; // placeholder
-      // در واقع از deletePatient استفاده می‌شود که در actions.ts موجود است
-      toast.success("بیمار با موفقیت حذف شد!");
-      router.push("/dashboard/patients");
-      router.refresh();
+      const result = await deletePatient(patientId);
+
+      if (result?.data) {
+        toast.success("بیمار با موفقیت حذف شد!");
+        router.push("/dashboard/patients");
+        router.refresh();
+      } else if (result?.error) {
+        toast.error(result.error);
+        setShowDeleteConfirm(false);
+      }
     } catch (error) {
       console.error("Error deleting patient:", error);
       toast.error("خطا در حذف بیمار");
@@ -609,13 +707,22 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
                   locale={persian_fa}
                   value={birthDatePicker || ""}
                   onChange={(date: any) => {
-                    if (date) {
-                      const gregorianDate = date.toGregorian();
-                      const isoDate = `${gregorianDate.year}-${String(gregorianDate.month).padStart(2, '0')}-${String(gregorianDate.day).padStart(2, '0')}`;
-                      setFormData(prev => ({ ...prev, birth_date: isoDate }));
+                    if (date && date.isValid) {
+                      const year = date.year;
+                      const month = String(date.month).padStart(2, '0');
+                      const day = String(date.day).padStart(2, '0');
+                      const isoDate = `${year}-${month}-${day}`;
+
+                      setFormData(prev => ({
+                        ...prev,
+                        birth_date: isoDate
+                      }));
                       setBirthDatePicker(date.format("YYYY/MM/DD"));
                     } else {
-                      setFormData(prev => ({ ...prev, birth_date: null }));
+                      setFormData(prev => ({
+                        ...prev,
+                        birth_date: null
+                      }));
                       setBirthDatePicker(null);
                     }
                   }}
