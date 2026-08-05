@@ -7,7 +7,7 @@ import { deletePatient, getPatients } from "@/lib/supabase/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Search, RefreshCw, UserPlus, Trash2, User, Phone, Calendar, FolderOpen } from "lucide-react";
+import { Search, RefreshCw, UserPlus, Trash2, User, Phone, Calendar, FolderOpen, ShoppingBag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
@@ -23,6 +23,7 @@ interface Patient {
   gender: string;
   created_at: string;
   file_count?: number;
+  sales_count?: number;
 }
 
 interface PatientsPageProps {
@@ -44,19 +45,32 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
     try {
       const result = await getPatients();
       if (result?.data) {
-        // دریافت تعداد فایل‌ها برای هر بیمار
+        // دریافت تعداد فایل‌ها و فروش‌ها برای هر بیمار
         const { getPatientFiles } = await import("@/lib/storage/patientFiles");
-        const patientsWithFiles = await Promise.all(
+
+        const patientsWithData = await Promise.all(
           result.data.map(async (patient: Patient) => {
             try {
+              // دریافت تعداد فایل‌ها
               const { files } = await getPatientFiles(patient.id);
-              return { ...patient, file_count: files.length };
+
+              // دریافت تعداد فروش‌ها
+              const salesResponse = await fetch(`/api/patients/${patient.id}/sales`);
+              const salesResult = await salesResponse.json();
+              const salesCount = salesResult.data?.length || 0;
+
+              return {
+                ...patient,
+                file_count: files.length,
+                sales_count: salesCount
+              };
             } catch {
-              return { ...patient, file_count: 0 };
+              return { ...patient, file_count: 0, sales_count: 0 };
             }
           })
         );
-        setPatients(patientsWithFiles);
+
+        setPatients(patientsWithData);
       } else if (result?.error) {
         console.error("Error refreshing patients:", result.error);
         setError(result.error);
@@ -221,6 +235,13 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
                     <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full flex items-center gap-1">
                       <FolderOpen className="w-3 h-3" />
                       {patient.file_count} فایل
+                    </span>
+                  )}
+
+                  {patient.sales_count !== undefined && patient.sales_count > 0 && (
+                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <ShoppingBag className="w-3 h-3" />
+                      {patient.sales_count} خرید
                     </span>
                   )}
                 </div>
