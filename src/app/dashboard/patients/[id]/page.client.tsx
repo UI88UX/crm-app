@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Plus, Tag } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { updatePatient, getPatient, deletePatientPermanent, deletePatient } from "@/lib/supabase/actions";
@@ -17,6 +18,8 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { formatJalaliDateTime, fromJalaliToDate, toJalaliDisplay, toJalali } from "@/src/lib/util/jalaliDate";
 import moment from 'moment-jalaali';
+import { AppointmentStatusBadge } from "@/components/appointments/AppointmentStatusBadge";
+import { APPOINTMENT_TYPE_MAP } from "@/types";
 import {
   ArrowRight,
   User,
@@ -99,8 +102,11 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
   const [error, setError] = useState<string | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [birthDatePicker, setBirthDatePicker] = useState<string | null>(null);
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
   const initialPatientRef = useRef(initialPatient);
   const hasLoadedRef = useRef(false);
+
 
   const [formData, setFormData] = useState<Partial<Patient>>(initialPatient || {});
 
@@ -144,8 +150,6 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
 
       // دیباگ: چاپ تاریخ خام
       console.log('Raw birth_date:', initialPatient.birth_date);
-
-      // src/app/dashboard/patients/[id]/page.client.tsx
 
       // در useEffect برای مقداردهی تاریخ تولد:
       if (initialPatient.birth_date) {
@@ -258,6 +262,29 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     };
 
     fetchSales();
+  }, [patientId]);
+
+  // بارگذاری نوبت‌های بیمار - بعد از useEffect فروش‌ها
+  useEffect(() => {
+    if (!patientId) return;
+
+    const fetchAppointments = async () => {
+      try {
+        setIsLoadingAppointments(true);
+        const response = await fetch(`/api/appointments?patient_id=${patientId}&limit=10`);
+        const result = await response.json();
+
+        if (result.data) {
+          setAppointments(result.data);
+        }
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
+      } finally {
+        setIsLoadingAppointments(false);
+      }
+    };
+
+    fetchAppointments();
   }, [patientId]);
 
   // بررسی دسترسی super_admin
@@ -889,6 +916,8 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
         </CardContent>
       </Card>
 
+
+
       {/* بخش سمعک‌های خریداری‌شده */}
       <Card>
         <CardHeader>
@@ -964,6 +993,102 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
               <Link href={`/dashboard/sales/new?patientId=${patientId}`}>
                 <Button variant="outline" className="mt-4">
                   ثبت فروش جدید
+                </Button>
+              </Link>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* بخش نوبت‌های بیمار - بین بخش سمعک‌ها و فایل‌ها */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <CalendarIcon className="w-5 h-5" />
+              نوبت‌های بیمار
+              <span className="text-sm font-normal text-gray-500 mr-2">
+                ({appointments.length} نوبت)
+              </span>
+            </CardTitle>
+            <Link href={`/dashboard/appointments/new?patientId=${patientId}`}>
+              <Button size="sm">
+                <Plus className="w-4 h-4 ml-2" />
+                ثبت نوبت
+              </Button>
+            </Link>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {isLoadingAppointments ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+              <span className="mr-2 text-gray-500">در حال بارگذاری نوبت‌ها...</span>
+            </div>
+          ) : appointments.length > 0 ? (
+            <div className="space-y-3">
+              {appointments.map((appointment) => (
+                <div
+                  key={appointment.id}
+                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => router.push(`/dashboard/appointments/${appointment.id}`)}
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium">
+                        {appointment.title || "نوبت بدون عنوان"}
+                      </span>
+                      <AppointmentStatusBadge status={appointment.status} size="sm" />
+                    </div>
+                    <div className="flex items-center gap-4 text-sm flex-wrap">
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <CalendarIcon className="w-3 h-3" />
+                        {toJalaliDisplay(appointment.start_time)}
+                      </span>
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {moment(appointment.start_time).format("HH:mm")} -{" "}
+                        {moment(appointment.end_time).format("HH:mm")}
+                      </span>
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <Tag className="w-3 h-3" />
+                        {APPOINTMENT_TYPE_MAP[appointment.type as keyof typeof APPOINTMENT_TYPE_MAP] || appointment.type}
+                      </span>
+                    </div>
+                    {appointment.description && (
+                      <p className="text-sm text-gray-500 line-clamp-1">
+                        {appointment.description}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex gap-2 mt-2 md:mt-0">
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/dashboard/appointments/${appointment.id}`}>
+                        <Eye className="w-4 h-4 ml-1" />
+                        مشاهده
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              {appointments.length >= 10 && (
+                <div className="text-center">
+                  <Link href={`/dashboard/appointments?patientId=${patientId}`}>
+                    <Button variant="outline" size="sm">
+                      مشاهده همه نوبت‌ها ({appointments.length})
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <CalendarIcon className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+              <p>هیچ نوبتی برای این بیمار ثبت نشده است</p>
+              <Link href={`/dashboard/appointments/new?patientId=${patientId}`}>
+                <Button variant="outline" className="mt-4">
+                  <Plus className="w-4 h-4 ml-2" />
+                  ثبت نوبت جدید
                 </Button>
               </Link>
             </div>

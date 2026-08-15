@@ -1,7 +1,10 @@
+/* src/app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* اضافه کردن فونت Vazir به صورت سراسری */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -63,7 +66,10 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
+    /* استفاده از فونت Vazir با fallback */
+    font-family: var(--font-vazir), system-ui, -apple-system, sans-serif;
   }
 }

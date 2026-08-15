@@ -90,7 +90,15 @@ C:.
 |   |       |       54.pack.gz
 |   |       |       55.pack.gz
 |   |       |       56.pack.gz
+|   |       |       57.pack.gz
+|   |       |       58.pack.gz
+|   |       |       59.pack.gz
 |   |       |       6.pack.gz
+|   |       |       60.pack.gz
+|   |       |       61.pack.gz
+|   |       |       62.pack.gz
+|   |       |       63.pack.gz
+|   |       |       64.pack.gz
 |   |       |       7.pack.gz
 |   |       |       8.pack.gz
 |   |       |       9.pack.gz
@@ -145,9 +153,33 @@ C:.
 |   |               126.pack.gz
 |   |               127.pack.gz
 |   |               128.pack.gz
+|   |               129.pack.gz
 |   |               13.pack.gz
+|   |               130.pack.gz
+|   |               131.pack.gz
+|   |               132.pack.gz
+|   |               133.pack.gz
+|   |               134.pack.gz
+|   |               135.pack.gz
+|   |               136.pack.gz
+|   |               137.pack.gz
+|   |               138.pack.gz
+|   |               139.pack.gz
 |   |               14.pack.gz
+|   |               140.pack.gz
+|   |               141.pack.gz
+|   |               142.pack.gz
+|   |               143.pack.gz
+|   |               144.pack.gz
+|   |               145.pack.gz
+|   |               146.pack.gz
+|   |               147.pack.gz
+|   |               148.pack.gz
+|   |               149.pack.gz
 |   |               15.pack.gz
+|   |               150.pack.gz
+|   |               151.pack.gz
+|   |               152.pack.gz
 |   |               16.pack.gz
 |   |               17.pack.gz
 |   |               18.pack.gz
@@ -256,21 +288,32 @@ C:.
 |   |   |   pages-manifest.json
 |   |   |   server-reference-manifest.js
 |   |   |   server-reference-manifest.json
-|   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_rsc_node_modules_cookie_dist_index-4f4a97.js
-|   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_rsc_node_modules_cookie_dist_index-9a3385.js
+|   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_action-browser_node_modules_jalaal-992a07.js
+|   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_rsc_node_modules_cookie_dist_index-26dde1.js
+|   |   |   vendors-_action-browser_node_modules_moment-jalaali_index_js-_ssr_node_modules_lucide-react_d-2c6c44.js
+|   |   |   vendors-_action-browser_node_modules_moment-jalaali_index_js-_ssr_node_modules_lucide-react_d-83779c.js
+|   |   |   vendors-_action-browser_node_modules_moment-jalaali_index_js.js
+|   |   |   vendors-_action-browser_node_modules_next_dist_lib_batcher_js-_action-browser_node_modules_ne-b3ac32.js
+|   |   |   vendors-_action-browser_node_modules_next_dist_server_app-render_encryption_js-_action-browse-3b6bf6.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_server_app-render_encryption_js-_action-browse-7247da.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_action-ba2834.js
+|   |   |   vendors-_action-browser_node_modules_next_dist_server_web_spec-extension_adapters_headers_js--3f08b6.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_server_web_spec-extension_adapters_headers_js--d6159b.js
 |   |   |   vendors-_action-browser_node_modules_next_dist_shared_lib_errors_constants_js-_action-browser-46c010.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_AuthAdminApi_js-_rsc_node_m-3f3392.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_GoTrueClient_js.js
+|   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_index_js-_action-browser_no-256519.js
+|   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_index_js-_action-browser_no-db7c49.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_index_js-_rsc_node_modules_-38f355.js
 |   |   |   vendors-_action-browser_node_modules_supabase_functions-js_dist_module_FunctionsClient_js-_rs-ce769b.js
 |   |   |   vendors-_action-browser_node_modules_supabase_postgrest-js_dist_index_mjs.js
+|   |   |   vendors-_action-browser_node_modules_supabase_realtime-js_dist_module_index_js-_action-browse-8739cd.js
 |   |   |   vendors-_action-browser_node_modules_supabase_realtime-js_dist_module_index_js-_rsc_node_modu-b3a0e0.js
 |   |   |   vendors-_action-browser_node_modules_supabase_ssr_dist_module_createServerClient_js-_rsc_node-522faa.js
 |   |   |   vendors-_action-browser_node_modules_supabase_storage-js_dist_index_mjs-_rsc_node_modules_sup-97128d.js
 |   |   |   vendors-_action-browser_node_modules_supabase_supabase-js_dist_index_mjs-_rsc_node_modules_su-e7c6f7.js
+|   |   |   vendors-_action-browser_node_modules_supabase_supabase-js_dist_index_mjs.js
+|   |   |   vendors-_action-browser_node_modules_tslib_tslib_es6_mjs-_action-browser_node_modules_zod_v4_-14d38f.js
 |   |   |   vendors-_action-browser_node_modules_tslib_tslib_es6_mjs-_rsc_node_modules_tslib_tslib_es6_mjs.js
 |   |   |   vendors-_action-browser_node_modules_zod_v4_classic_iso_js-_action-browser_node_modules_zod_v-4c2c37.js
 |   |   |   vendors-_action-browser_node_modules_zod_v4_core_api_js-_action-browser_node_modules_zod_v4_c-170bfd.js
@@ -282,39 +325,126 @@ C:.
 |   |   |   vendors-_middleware_node_modules_supabase_phoenix_priv_static_phoenix_mjs-_middleware_node_mo-b5a1e8.js
 |   |   |   vendors-_middleware_node_modules_supabase_realtime-js_dist_module_index_js-_middleware_node_m-9651e7.js
 |   |   |   vendors-_middleware_node_modules_supabase_supabase-js_dist_index_mjs-_middleware_node_modules-66a330.js
+|   |   |   vendors-_rsc_node_modules_cookie_dist_index_js-_rsc_node_modules_iceberg-js_dist_index_mjs.js
+|   |   |   vendors-_rsc_node_modules_next_cache_js-_rsc_node_modules_next_dist_build_webpack_loaders_nex-0d660b.js
 |   |   |   vendors-_rsc_node_modules_next_cache_js-_rsc_node_modules_next_dist_build_webpack_loaders_nex-43e347.js
+|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js-_rsc_node_modules_next_dist_client_compone-6574b0.js
+|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js-_ssr_node_modules_lucide-react_dist_esm_ic-80cabe.js
+|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js-_ssr_node_modules_lucide-react_dist_esm_ic-d4a781.js
+|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js.js
+|   |   |   vendors-_rsc_node_modules_next_dist_api_server_js-_rsc_node_modules_next_dist_server_route-mo-5a80cc.js
 |   |   |   vendors-_rsc_node_modules_next_dist_client_app-dir_link_js-_ssr_node_modules_radix-ui_react-s-1d78ca.js
+|   |   |   vendors-_rsc_node_modules_next_dist_client_components_hooks-server-context_js-_rsc_node_modul-0fbd54.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_api-utils_get-cookie-parser_js-_action-browser_nod-978c9d.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_base-http_helpers_js-_rsc_node_modules_next_dist_s-a04dc8.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--a2441f.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_lib_app-dir-module_js-_rsc_node_modules_next_dist_-210ad9.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_lib_app-dir-module_js-_rsc_node_modules_next_dist_-35b4d6.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_lib_patch-fetch_js-_rsc_node_modules_next_dist_ser-5b7b02.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_server-utils_js-_action-browser_node_modules_next_-3c1ab0.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_server-utils_js-_action-browser_node_modules_next_-7ae1af.js
 |   |   |   vendors-_rsc_node_modules_next_dist_server_server-utils_js-_rsc_node_modules_next_dist_server-451747.js
+|   |   |   vendors-_rsc_node_modules_next_dist_server_web_spec-extension_adapters_headers_js-_rsc_node_m-f51a57.js
 |   |   |   vendors-_rsc_node_modules_supabase_auth-js_dist_module_GoTrueClient_js.js
+|   |   |   vendors-_rsc_node_modules_supabase_auth-js_dist_module_index_js-_rsc_node_modules_supabase_au-45d79f.js
 |   |   |   vendors-_rsc_node_modules_supabase_postgrest-js_dist_index_mjs.js
+|   |   |   vendors-_rsc_node_modules_supabase_realtime-js_dist_module_index_js-_rsc_node_modules_supabas-7b5e74.js
+|   |   |   vendors-_rsc_node_modules_supabase_supabase-js_dist_index_mjs-_rsc_node_modules_tslib_tslib_es6_mjs.js
+|   |   |   vendors-_ssr_node_modules_attr-accept_dist_es_index_js-_ssr_node_modules_jalaali-js_index_js--1dcaff.js
+|   |   |   vendors-_ssr_node_modules_attr-accept_dist_es_index_js-_ssr_node_modules_moment-jalaali_index-2f4a20.js
 |   |   |   vendors-_ssr_node_modules_clsx_dist_clsx_mjs-_ssr_node_modules_next-themes_dist_index_mjs-_rs-538e02.js
+|   |   |   vendors-_ssr_node_modules_moment-jalaali_index_js-_ssr_node_modules_react-date-object_calenda-4c5ac5.js
+|   |   |   vendors-_ssr_node_modules_moment-jalaali_index_js-_ssr_node_modules_react-date-object_calenda-cad158.js
+|   |   |   vendors-_ssr_node_modules_moment-jalaali_index_js.js
+|   |   |   vendors-_ssr_node_modules_moment_moment_js.js
+|   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-15365f.js
+|   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-3fbdaa.js
+|   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-b5fe59.js
 |   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-be31a0.js
+|   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-f16288.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_app-build-id_js-_ssr_node_modules_next_dist_client-2f21f7.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_app-build-id_js-_ssr_node_modules_next_dist_client-701ebc.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_app-build-id_js-_ssr_node_modules_next_dist_client-a1e645.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-2a3650.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-584655.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-bdeff0.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-d64285.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-d8ac72.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_components_links_js-_ssr_node_modules_next_dist_cl-d7fbfb.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_match-segments_js-_ssr_node_modules_nex-066ae8.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_components_match-segments_js-_ssr_node_modules_nex-98c599.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_app_hot-reloader-client_js.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_components_code-fr-d05e44.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_components_termina-a68011.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_container_build-er-f27236.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_dev-overlay_js-_ss-a64026.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_styles_base_js-_ss-257d55.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_utils_css_js-_ssr_nod-7909e7.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_utils_css_js-_ssr_nod-bec560.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-14e420.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-1fd5de.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-4337a3.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-544aab.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-9e21d8.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_dev_dev-build-indicator_internal_handle-dev-build--0c269b.js
+|   |   |   vendors-_ssr_node_modules_next_dist_client_normalize-trailing-slash_js-_ssr_node_modules_next-5f118e.js
+|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_action-browser_node_modules_next-bcdf9b.js
+|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_action-browser_node_modules_next-f4c6aa.js
+|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-b3b8b6.js
 |   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-de8c1f.js
+|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-e71bb1.js
+|   |   |   vendors-_ssr_node_modules_next_dist_compiled_stacktrace-parser_stack-trace-parser_cjs_js-_ssr-35523f.js
 |   |   |   vendors-_ssr_node_modules_next_dist_lib_error-telemetry-utils_js-_ssr_node_modules_next_dist_-14c5c4.js
+|   |   |   vendors-_ssr_node_modules_next_dist_lib_error-telemetry-utils_js-_ssr_node_modules_next_dist_-3e1312.js
+|   |   |   vendors-_ssr_node_modules_next_dist_lib_error-telemetry-utils_js-_ssr_node_modules_next_dist_-dcde55.js
+|   |   |   vendors-_ssr_node_modules_next_dist_lib_metadata_metadata-constants_js-_ssr_node_modules_next-2249ab.js
+|   |   |   vendors-_ssr_node_modules_next_dist_lib_metadata_metadata-constants_js-_ssr_node_modules_next-2d000f.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_rsc_node_modules_-4d53fd.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-0255d3.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-0b9c8d.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-c2c9c9.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-e961d8.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--480668.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--63f9f7.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_dev_hot-reloader-types_js-_ssr_node_modules_next_d-2d5099.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_action-browser_no-d33891.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-07332c.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-6b61e2.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-b64c47.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-d8df9a.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_request_params_js-_ssr_node_modules_next_dist_serv-12163c.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_request_params_js-_ssr_node_modules_next_dist_serv-830067.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_request_params_js-_ssr_node_modules_next_dist_serv-d146d5.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_request_utils_js-_ssr_node_modules_next_dist_serve-dba2d5.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_route-modules_app-page_vendored_contexts_app-route-0cbcb6.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_action-bro-421f82.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_action-bro-4e7456.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_action-bro-7a3c8d.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_action-bro-a8c9ae.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_rsc_node_m-bb42f6.js
+|   |   |   vendors-_ssr_node_modules_next_dist_shared_lib_error-source_js-_ssr_node_modules_next_dist_sh-05eb12.js
 |   |   |   vendors-_ssr_node_modules_next_dist_shared_lib_error-source_js-_ssr_node_modules_next_dist_sh-4f2c13.js
 |   |   |   vendors-_ssr_node_modules_next_dist_shared_lib_error-source_js-_ssr_node_modules_next_dist_sh-76f959.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-label_dist_index_mjs-_ssr_node_modules_lucide-react_-49db2c.js
+|   |   |   vendors-_ssr_node_modules_next_dist_shared_lib_error-source_js-_ssr_node_modules_next_dist_sh-dd8476.js
+|   |   |   vendors-_ssr_node_modules_next_dist_shared_lib_router_utils_add-path-prefix_js-_ssr_node_modu-c92c72.js
+|   |   |   vendors-_ssr_node_modules_react-date-object_calendars_persian_js-_ssr_node_modules_react-date-18bc24.js
+|   |   |   vendors-_ssr_node_modules_react-multi-date-picker_build_index_js-_ssr_node_modules_radix-ui_r-1c0d4a.js
+|   |   |   vendors-_ssr_node_modules_react-multi-date-picker_build_index_js-_ssr_node_modules_radix-ui_r-574ba4.js
 |   |   |   vendors-_ssr_node_modules_sonner_dist_index_mjs.js
+|   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-1a4861.js
+|   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-6c4fda.js
 |   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-8069bc.js
+|   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-c699ee.js
 |   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-fa67db.js
+|   |   |   vendors-_ssr_node_modules_tailwind-merge_dist_bundle-mjs_mjs-_action-browser_node_modules_tsl-4bbdb4.js
+|   |   |   vendors-_ssr_node_modules_tailwind-merge_dist_bundle-mjs_mjs.js
 |   |   |   webpack-runtime.js
-|   |   |   _action-browser_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_-1d69c5.js
+|   |   |   _action-browser_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_-6e56dd.js
+|   |   |   _action-browser_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_-7880a2.js
+|   |   |   _action-browser_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_-c8004c.js
+|   |   |   _rsc_node_modules_next_dist_build_webpack_loaders_next-flight-client-entry-loader_js_modules_-468c2a.js
+|   |   |   _rsc_node_modules_next_dist_build_webpack_loaders_next-flight-client-entry-loader_js_modules_-86d0dc.js
+|   |   |   _rsc_node_modules_next_dist_build_webpack_loaders_next-flight-client-entry-loader_js_modules_-8ef6f5.js
 |   |   |   _ssr_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
 |   |   |   _ssr_src_lib_storage_patientFiles_ts.js
 |   |   |   
@@ -322,18 +452,62 @@ C:.
 |   |   |   |   page.js
 |   |   |   |   page_client-reference-manifest.js
 |   |   |   |   
-|   |   |   \---dashboard
-|   |   |       |   page.js
-|   |   |       |   page_client-reference-manifest.js
-|   |   |       |   
-|   |   |       \---patients
-|   |   |           |   page.js
-|   |   |           |   page_client-reference-manifest.js
-|   |   |           |   
-|   |   |           \---new
-|   |   |                   page.js
-|   |   |                   page_client-reference-manifest.js
-|   |   |                   
+|   |   |   +---api
+|   |   |   |   +---auth
+|   |   |   |   |   \---check-super-admin
+|   |   |   |   |           route.js
+|   |   |   |   |           route_client-reference-manifest.js
+|   |   |   |   |           
+|   |   |   |   +---patients
+|   |   |   |   |   \---[id]
+|   |   |   |   |       \---sales
+|   |   |   |   |               route.js
+|   |   |   |   |               route_client-reference-manifest.js
+|   |   |   |   |               
+|   |   |   |   \---storage
+|   |   |   |       \---upload
+|   |   |   |               route.js
+|   |   |   |               route_client-reference-manifest.js
+|   |   |   |               
+|   |   |   +---dashboard
+|   |   |   |   |   page.js
+|   |   |   |   |   page_client-reference-manifest.js
+|   |   |   |   |   
+|   |   |   |   +---patients
+|   |   |   |   |   |   page.js
+|   |   |   |   |   |   page_client-reference-manifest.js
+|   |   |   |   |   |   
+|   |   |   |   |   \---[id]
+|   |   |   |   |           page.js
+|   |   |   |   |           page_client-reference-manifest.js
+|   |   |   |   |           
+|   |   |   |   +---sales
+|   |   |   |   |   |   page.js
+|   |   |   |   |   |   page_client-reference-manifest.js
+|   |   |   |   |   |   
+|   |   |   |   |   +---new
+|   |   |   |   |   |       page.js
+|   |   |   |   |   |       page_client-reference-manifest.js
+|   |   |   |   |   |       
+|   |   |   |   |   \---[id]
+|   |   |   |   |           page.js
+|   |   |   |   |           page_client-reference-manifest.js
+|   |   |   |   |           
+|   |   |   |   \---users
+|   |   |   |           page.js
+|   |   |   |           page_client-reference-manifest.js
+|   |   |   |           
+|   |   |   +---favicon.ico
+|   |   |   |       route.js
+|   |   |   |       
+|   |   |   +---login
+|   |   |   |       page.js
+|   |   |   |       page_client-reference-manifest.js
+|   |   |   |       
+|   |   |   \---_not-found
+|   |   |           page.js
+|   |   |           page_client-reference-manifest.js
+|   |   |           
 |   |   \---static
 |   |       \---webpack
 |   |               633457081244afec._.hot-update.json
@@ -343,10 +517,16 @@ C:.
 |   |   |   |   app-pages-internals.js
 |   |   |   |   main-app.js
 |   |   |   |   polyfills.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-341bc4.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_attr-accept_dist_es_index_js-_app-pages-browser_node_-3b7304.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_moment-jalaali_index_js-_app-pages-browser_node_modul-0f3b98.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_moment-jalaali_index_js-_app-pages-browser_node_modul-583580.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_moment_moment_js.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-074536.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-0a0a9c.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_build_polyfills_process_js-_app-pages-brows-9224fe.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js-_app-pages-browser_n-79ff02.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js-_app-pages-browser_n-87480c.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_assign-location_js-_app-pages-browse-3c059e.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_components_client-page_js-_app-pages-a7ff94.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_components_links_js-_app-pages-brows-2e6835.js
@@ -370,11 +550,16 @@ C:.
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_next_react-refresh-utils_dist_runt-bc3eeb.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react-dom_cjs_react-dom-client_dev-4d7141.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react_jsx-dev-runtime_js-_app-page-1dda23.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react_jsx-dev-runtime_js-_app-page-3c8f24.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_lib_require-instrumentation-client_js-_app--3ed464.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_radix-ui_react-slot_dist_index_mjs-_app-pages-browser-0a55aa.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_react-multi-date-picker_build_index_js-_app-pages-bro-e5b1b6.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_react-multi-date-picker_build_index_js-_app-pages-bro-f12386.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_sonner_dist_index_mjs.js
 |   |   |   |   webpack.js
 |   |   |   |   _app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
+|   |   |   |   _app-pages-browser_src_components_ui_badge_tsx-_app-pages-browser_src_components_ui_card_tsx--30cb75.js
+|   |   |   |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_card_tsx.js
 |   |   |   |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_input_ts-27e2f0.js
 |   |   |   |   _app-pages-browser_src_lib_storage_patientFiles_ts.js
 |   |   |   |   
@@ -382,16 +567,48 @@ C:.
 |   |   |       |   layout.js
 |   |   |       |   page.js
 |   |   |       |   
-|   |   |       \---dashboard
-|   |   |           |   layout.js
-|   |   |           |   page.js
-|   |   |           |   
-|   |   |           \---patients
-|   |   |               |   page.js
-|   |   |               |   
-|   |   |               \---new
-|   |   |                       page.js
-|   |   |                       
+|   |   |       +---api
+|   |   |       |   +---auth
+|   |   |       |   |   \---check-super-admin
+|   |   |       |   |           route.js
+|   |   |       |   |           
+|   |   |       |   +---patients
+|   |   |       |   |   \---[id]
+|   |   |       |   |       \---sales
+|   |   |       |   |               route.js
+|   |   |       |   |               
+|   |   |       |   \---storage
+|   |   |       |       \---upload
+|   |   |       |               route.js
+|   |   |       |               
+|   |   |       +---dashboard
+|   |   |       |   |   layout.js
+|   |   |       |   |   page.js
+|   |   |       |   |   
+|   |   |       |   +---patients
+|   |   |       |   |   |   page.js
+|   |   |       |   |   |   
+|   |   |       |   |   \---[id]
+|   |   |       |   |           page.js
+|   |   |       |   |           
+|   |   |       |   +---sales
+|   |   |       |   |   |   page.js
+|   |   |       |   |   |   
+|   |   |       |   |   +---new
+|   |   |       |   |   |       page.js
+|   |   |       |   |   |       
+|   |   |       |   |   \---[id]
+|   |   |       |   |           page.js
+|   |   |       |   |           
+|   |   |       |   \---users
+|   |   |       |           page.js
+|   |   |       |           
+|   |   |       +---login
+|   |   |       |       page.js
+|   |   |       |       
+|   |   |       \---_not-found
+|   |   |               page.js
+|   |   |               
 |   |   +---css
 |   |   |   \---app
 |   |   |           layout.css
@@ -401,30 +618,150 @@ C:.
 |   |   |       _ssgManifest.js
 |   |   |       
 |   |   \---webpack
-|   |       |   318da9d9f687269a.webpack.hot-update.json
-|   |       |   3ab14268ca6b4036.webpack.hot-update.json
-|   |       |   4d6240f1f1dbb184.webpack.hot-update.json
+|   |       |   06412f4ee3e94021.webpack.hot-update.json
+|   |       |   0c889c7884901b75.webpack.hot-update.json
+|   |       |   0ded38160966dd81.webpack.hot-update.json
+|   |       |   14ed6a2b3f1b3b67.webpack.hot-update.json
+|   |       |   15fdc51e47671df2.webpack.hot-update.json
+|   |       |   181363c0d2d0b7a4.webpack.hot-update.json
+|   |       |   20c31c8d959a948e.webpack.hot-update.json
+|   |       |   21f31e4b59f7c9c7.webpack.hot-update.json
+|   |       |   26d84e80c4e1414f.webpack.hot-update.json
+|   |       |   2be1876d00999d9a.webpack.hot-update.json
+|   |       |   3ce04efb83913032.webpack.hot-update.json
+|   |       |   425e967c015dc08c.webpack.hot-update.json
+|   |       |   4898c3e4629e19ec.webpack.hot-update.json
+|   |       |   5219f7bd9d67e164.webpack.hot-update.json
+|   |       |   576dfb8631782c9d.webpack.hot-update.json
+|   |       |   60b15abeb5d1949a.webpack.hot-update.json
 |   |       |   633457081244afec._.hot-update.json
-|   |       |   9950159cc0e6ea31.webpack.hot-update.json
-|   |       |   e79803ca71de8b7d.webpack.hot-update.json
-|   |       |   ecd4fb275ce40fe3.webpack.hot-update.json
-|   |       |   f9338158cc229444.webpack.hot-update.json
-|   |       |   webpack.318da9d9f687269a.hot-update.js
-|   |       |   webpack.3ab14268ca6b4036.hot-update.js
-|   |       |   webpack.4d6240f1f1dbb184.hot-update.js
-|   |       |   webpack.9950159cc0e6ea31.hot-update.js
-|   |       |   webpack.e79803ca71de8b7d.hot-update.js
-|   |       |   webpack.ecd4fb275ce40fe3.hot-update.js
-|   |       |   webpack.f9338158cc229444.hot-update.js
+|   |       |   6bcde1b2238206ab.webpack.hot-update.json
+|   |       |   6f94d63ae188604e.webpack.hot-update.json
+|   |       |   758d4e1057f76ed4.webpack.hot-update.json
+|   |       |   79f5799d6a6540a8.webpack.hot-update.json
+|   |       |   8ad372c50f153e0a.webpack.hot-update.json
+|   |       |   8b9941d08dc8b6d0.webpack.hot-update.json
+|   |       |   8d357cab01659c56.webpack.hot-update.json
+|   |       |   924d55a5edf687f4.webpack.hot-update.json
+|   |       |   9485e51f64d23cfb.webpack.hot-update.json
+|   |       |   98ea7d5211f03a0b.webpack.hot-update.json
+|   |       |   a103e273dfe5867b.webpack.hot-update.json
+|   |       |   a229e5a58ce79988.webpack.hot-update.json
+|   |       |   a87f43d7c11ec53b.webpack.hot-update.json
+|   |       |   a93659d037feb810.webpack.hot-update.json
+|   |       |   ab646e35d2694c97.webpack.hot-update.json
+|   |       |   afbd296251cbe952.webpack.hot-update.json
+|   |       |   b18e1252810a7f11.webpack.hot-update.json
+|   |       |   b2ab1a407428dcb0.webpack.hot-update.json
+|   |       |   bbe104b27b62325b.webpack.hot-update.json
+|   |       |   bf6bb727bd902bad.webpack.hot-update.json
+|   |       |   c2010dc39f224207.webpack.hot-update.json
+|   |       |   cf478514ae3e7051.webpack.hot-update.json
+|   |       |   e3bee4707df7de5f.webpack.hot-update.json
+|   |       |   f5a4a5d0af02ee6d.webpack.hot-update.json
+|   |       |   webpack.06412f4ee3e94021.hot-update.js
+|   |       |   webpack.0c889c7884901b75.hot-update.js
+|   |       |   webpack.0ded38160966dd81.hot-update.js
+|   |       |   webpack.14ed6a2b3f1b3b67.hot-update.js
+|   |       |   webpack.15fdc51e47671df2.hot-update.js
+|   |       |   webpack.181363c0d2d0b7a4.hot-update.js
+|   |       |   webpack.20c31c8d959a948e.hot-update.js
+|   |       |   webpack.21f31e4b59f7c9c7.hot-update.js
+|   |       |   webpack.26d84e80c4e1414f.hot-update.js
+|   |       |   webpack.2be1876d00999d9a.hot-update.js
+|   |       |   webpack.3ce04efb83913032.hot-update.js
+|   |       |   webpack.425e967c015dc08c.hot-update.js
+|   |       |   webpack.4898c3e4629e19ec.hot-update.js
+|   |       |   webpack.5219f7bd9d67e164.hot-update.js
+|   |       |   webpack.576dfb8631782c9d.hot-update.js
+|   |       |   webpack.60b15abeb5d1949a.hot-update.js
+|   |       |   webpack.6bcde1b2238206ab.hot-update.js
+|   |       |   webpack.6f94d63ae188604e.hot-update.js
+|   |       |   webpack.758d4e1057f76ed4.hot-update.js
+|   |       |   webpack.79f5799d6a6540a8.hot-update.js
+|   |       |   webpack.8ad372c50f153e0a.hot-update.js
+|   |       |   webpack.8b9941d08dc8b6d0.hot-update.js
+|   |       |   webpack.8d357cab01659c56.hot-update.js
+|   |       |   webpack.924d55a5edf687f4.hot-update.js
+|   |       |   webpack.9485e51f64d23cfb.hot-update.js
+|   |       |   webpack.98ea7d5211f03a0b.hot-update.js
+|   |       |   webpack.a103e273dfe5867b.hot-update.js
+|   |       |   webpack.a229e5a58ce79988.hot-update.js
+|   |       |   webpack.a87f43d7c11ec53b.hot-update.js
+|   |       |   webpack.a93659d037feb810.hot-update.js
+|   |       |   webpack.ab646e35d2694c97.hot-update.js
+|   |       |   webpack.afbd296251cbe952.hot-update.js
+|   |       |   webpack.b18e1252810a7f11.hot-update.js
+|   |       |   webpack.b2ab1a407428dcb0.hot-update.js
+|   |       |   webpack.bbe104b27b62325b.hot-update.js
+|   |       |   webpack.bf6bb727bd902bad.hot-update.js
+|   |       |   webpack.c2010dc39f224207.hot-update.js
+|   |       |   webpack.cf478514ae3e7051.hot-update.js
+|   |       |   webpack.e3bee4707df7de5f.hot-update.js
+|   |       |   webpack.f5a4a5d0af02ee6d.hot-update.js
 |   |       |   
 |   |       \---app
-|   |               layout.318da9d9f687269a.hot-update.js
-|   |               layout.4d6240f1f1dbb184.hot-update.js
-|   |               layout.e79803ca71de8b7d.hot-update.js
-|   |               layout.ecd4fb275ce40fe3.hot-update.js
-|   |               layout.f9338158cc229444.hot-update.js
-|   |               page.3ab14268ca6b4036.hot-update.js
-|   |               
+|   |           |   layout.0c889c7884901b75.hot-update.js
+|   |           |   layout.0ded38160966dd81.hot-update.js
+|   |           |   layout.14ed6a2b3f1b3b67.hot-update.js
+|   |           |   layout.15fdc51e47671df2.hot-update.js
+|   |           |   layout.20c31c8d959a948e.hot-update.js
+|   |           |   layout.21f31e4b59f7c9c7.hot-update.js
+|   |           |   layout.3ce04efb83913032.hot-update.js
+|   |           |   layout.425e967c015dc08c.hot-update.js
+|   |           |   layout.4898c3e4629e19ec.hot-update.js
+|   |           |   layout.5219f7bd9d67e164.hot-update.js
+|   |           |   layout.60b15abeb5d1949a.hot-update.js
+|   |           |   layout.6bcde1b2238206ab.hot-update.js
+|   |           |   layout.6f94d63ae188604e.hot-update.js
+|   |           |   layout.8ad372c50f153e0a.hot-update.js
+|   |           |   layout.8d357cab01659c56.hot-update.js
+|   |           |   layout.924d55a5edf687f4.hot-update.js
+|   |           |   layout.9485e51f64d23cfb.hot-update.js
+|   |           |   layout.98ea7d5211f03a0b.hot-update.js
+|   |           |   layout.a103e273dfe5867b.hot-update.js
+|   |           |   layout.a229e5a58ce79988.hot-update.js
+|   |           |   layout.a87f43d7c11ec53b.hot-update.js
+|   |           |   layout.ab646e35d2694c97.hot-update.js
+|   |           |   layout.afbd296251cbe952.hot-update.js
+|   |           |   layout.b18e1252810a7f11.hot-update.js
+|   |           |   layout.b2ab1a407428dcb0.hot-update.js
+|   |           |   layout.bf6bb727bd902bad.hot-update.js
+|   |           |   layout.c2010dc39f224207.hot-update.js
+|   |           |   layout.cf478514ae3e7051.hot-update.js
+|   |           |   layout.e3bee4707df7de5f.hot-update.js
+|   |           |   layout.f5a4a5d0af02ee6d.hot-update.js
+|   |           |   page.758d4e1057f76ed4.hot-update.js
+|   |           |   
+|   |           +---dashboard
+|   |           |   |   page.2be1876d00999d9a.hot-update.js
+|   |           |   |   
+|   |           |   +---patients
+|   |           |   |       page.0ded38160966dd81.hot-update.js
+|   |           |   |       page.14ed6a2b3f1b3b67.hot-update.js
+|   |           |   |       page.4898c3e4629e19ec.hot-update.js
+|   |           |   |       page.5219f7bd9d67e164.hot-update.js
+|   |           |   |       page.6bcde1b2238206ab.hot-update.js
+|   |           |   |       page.79f5799d6a6540a8.hot-update.js
+|   |           |   |       page.8d357cab01659c56.hot-update.js
+|   |           |   |       page.a87f43d7c11ec53b.hot-update.js
+|   |           |   |       page.afbd296251cbe952.hot-update.js
+|   |           |   |       page.c2010dc39f224207.hot-update.js
+|   |           |   |       page.cf478514ae3e7051.hot-update.js
+|   |           |   |       page.e3bee4707df7de5f.hot-update.js
+|   |           |   |       
+|   |           |   +---sales
+|   |           |   |   \---[id]
+|   |           |   |           page.26d84e80c4e1414f.hot-update.js
+|   |           |   |           
+|   |           |   \---users
+|   |           |           page.2be1876d00999d9a.hot-update.js
+|   |           |           page.79f5799d6a6540a8.hot-update.js
+|   |           |           
+|   |           \---login
+|   |                   page.2be1876d00999d9a.hot-update.js
+|   |                   page.79f5799d6a6540a8.hot-update.js
+|   |                   
 |   \---types
 |       |   cache-life.d.ts
 |       |   package.json
@@ -433,16 +770,45 @@ C:.
 |           |   layout.ts
 |           |   page.ts
 |           |   
-|           \---dashboard
-|               |   layout.ts
-|               |   page.ts
-|               |   
-|               \---patients
-|                   |   page.ts
-|                   |   
-|                   \---new
-|                           page.ts
-|                           
+|           +---api
+|           |   +---auth
+|           |   |   \---check-super-admin
+|           |   |           route.ts
+|           |   |           
+|           |   +---patients
+|           |   |   \---[id]
+|           |   |       \---sales
+|           |   |               route.ts
+|           |   |               
+|           |   \---storage
+|           |       \---upload
+|           |               route.ts
+|           |               
+|           +---dashboard
+|           |   |   layout.ts
+|           |   |   page.ts
+|           |   |   
+|           |   +---patients
+|           |   |   |   page.ts
+|           |   |   |   
+|           |   |   \---[id]
+|           |   |           page.ts
+|           |   |           
+|           |   +---sales
+|           |   |   |   page.ts
+|           |   |   |   
+|           |   |   +---new
+|           |   |   |       page.ts
+|           |   |   |       
+|           |   |   \---[id]
+|           |   |           page.ts
+|           |   |           
+|           |   \---users
+|           |           page.ts
+|           |           
+|           \---login
+|                   page.ts
+|                   
 +---node_modules
 |   |   .package-lock.json
 |   |   
@@ -5248,6 +5614,12 @@ C:.
 |   |   |       package.json
 |   |   |       README.md
 |   |   |       types-metadata.json
+|   |   |       
+|   |   +---moment-jalaali
+|   |   |       index.d.ts
+|   |   |       LICENSE
+|   |   |       package.json
+|   |   |       README.md
 |   |   |       
 |   |   +---node
 |   |   |   |   assert.d.ts
@@ -19402,6 +19774,16 @@ C:.
 |   |   \---test
 |   |           index.js
 |   |           
+|   +---jalaali-js
+|   |   |   index.js
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   \---dist
+|   |           jalaali.js
+|   |           jalaali.min.js
+|   |           
 |   +---jiti
 |   |   |   LICENSE
 |   |   |   package.json
@@ -23403,6 +23785,628 @@ C:.
 |   |           unknown.js
 |   |           whitespace.js
 |   |           
+|   +---moment
+|   |   |   CHANGELOG.md
+|   |   |   ender.js
+|   |   |   LICENSE
+|   |   |   moment.d.ts
+|   |   |   moment.js
+|   |   |   package.js
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   +---dist
+|   |   |   |   moment.js
+|   |   |   |   
+|   |   |   \---locale
+|   |   |           af.js
+|   |   |           ar-dz.js
+|   |   |           ar-kw.js
+|   |   |           ar-ly.js
+|   |   |           ar-ma.js
+|   |   |           ar-ps.js
+|   |   |           ar-sa.js
+|   |   |           ar-tn.js
+|   |   |           ar.js
+|   |   |           az.js
+|   |   |           be.js
+|   |   |           bg.js
+|   |   |           bm.js
+|   |   |           bn-bd.js
+|   |   |           bn.js
+|   |   |           bo.js
+|   |   |           br.js
+|   |   |           bs.js
+|   |   |           ca.js
+|   |   |           cs.js
+|   |   |           cv.js
+|   |   |           cy.js
+|   |   |           da.js
+|   |   |           de-at.js
+|   |   |           de-ch.js
+|   |   |           de.js
+|   |   |           dv.js
+|   |   |           el.js
+|   |   |           en-au.js
+|   |   |           en-ca.js
+|   |   |           en-gb.js
+|   |   |           en-ie.js
+|   |   |           en-il.js
+|   |   |           en-in.js
+|   |   |           en-nz.js
+|   |   |           en-sg.js
+|   |   |           eo.js
+|   |   |           es-do.js
+|   |   |           es-mx.js
+|   |   |           es-us.js
+|   |   |           es.js
+|   |   |           et.js
+|   |   |           eu.js
+|   |   |           fa.js
+|   |   |           fi.js
+|   |   |           fil.js
+|   |   |           fo.js
+|   |   |           fr-ca.js
+|   |   |           fr-ch.js
+|   |   |           fr.js
+|   |   |           fy.js
+|   |   |           ga.js
+|   |   |           gd.js
+|   |   |           gl.js
+|   |   |           gom-deva.js
+|   |   |           gom-latn.js
+|   |   |           gu.js
+|   |   |           he.js
+|   |   |           hi.js
+|   |   |           hr.js
+|   |   |           hu.js
+|   |   |           hy-am.js
+|   |   |           id.js
+|   |   |           is.js
+|   |   |           it-ch.js
+|   |   |           it.js
+|   |   |           ja.js
+|   |   |           jv.js
+|   |   |           ka.js
+|   |   |           kk.js
+|   |   |           km.js
+|   |   |           kn.js
+|   |   |           ko.js
+|   |   |           ku-kmr.js
+|   |   |           ku.js
+|   |   |           ky.js
+|   |   |           lb.js
+|   |   |           lo.js
+|   |   |           lt.js
+|   |   |           lv.js
+|   |   |           me.js
+|   |   |           mi.js
+|   |   |           mk.js
+|   |   |           ml.js
+|   |   |           mn.js
+|   |   |           mr.js
+|   |   |           ms-my.js
+|   |   |           ms.js
+|   |   |           mt.js
+|   |   |           my.js
+|   |   |           nb.js
+|   |   |           ne.js
+|   |   |           nl-be.js
+|   |   |           nl.js
+|   |   |           nn.js
+|   |   |           oc-lnc.js
+|   |   |           pa-in.js
+|   |   |           pl.js
+|   |   |           pt-br.js
+|   |   |           pt.js
+|   |   |           ro.js
+|   |   |           ru.js
+|   |   |           sd.js
+|   |   |           se.js
+|   |   |           si.js
+|   |   |           sk.js
+|   |   |           sl.js
+|   |   |           sq.js
+|   |   |           sr-cyrl.js
+|   |   |           sr.js
+|   |   |           ss.js
+|   |   |           sv.js
+|   |   |           sw.js
+|   |   |           ta.js
+|   |   |           te.js
+|   |   |           tet.js
+|   |   |           tg.js
+|   |   |           th.js
+|   |   |           tk.js
+|   |   |           tl-ph.js
+|   |   |           tlh.js
+|   |   |           tr.js
+|   |   |           tzl.js
+|   |   |           tzm-latn.js
+|   |   |           tzm.js
+|   |   |           ug-cn.js
+|   |   |           uk.js
+|   |   |           ur.js
+|   |   |           uz-latn.js
+|   |   |           uz.js
+|   |   |           vi.js
+|   |   |           x-pseudo.js
+|   |   |           yo.js
+|   |   |           zh-cn.js
+|   |   |           zh-hk.js
+|   |   |           zh-mo.js
+|   |   |           zh-tw.js
+|   |   |           
+|   |   +---locale
+|   |   |       af.js
+|   |   |       ar-dz.js
+|   |   |       ar-kw.js
+|   |   |       ar-ly.js
+|   |   |       ar-ma.js
+|   |   |       ar-ps.js
+|   |   |       ar-sa.js
+|   |   |       ar-tn.js
+|   |   |       ar.js
+|   |   |       az.js
+|   |   |       be.js
+|   |   |       bg.js
+|   |   |       bm.js
+|   |   |       bn-bd.js
+|   |   |       bn.js
+|   |   |       bo.js
+|   |   |       br.js
+|   |   |       bs.js
+|   |   |       ca.js
+|   |   |       cs.js
+|   |   |       cv.js
+|   |   |       cy.js
+|   |   |       da.js
+|   |   |       de-at.js
+|   |   |       de-ch.js
+|   |   |       de.js
+|   |   |       dv.js
+|   |   |       el.js
+|   |   |       en-au.js
+|   |   |       en-ca.js
+|   |   |       en-gb.js
+|   |   |       en-ie.js
+|   |   |       en-il.js
+|   |   |       en-in.js
+|   |   |       en-nz.js
+|   |   |       en-sg.js
+|   |   |       eo.js
+|   |   |       es-do.js
+|   |   |       es-mx.js
+|   |   |       es-us.js
+|   |   |       es.js
+|   |   |       et.js
+|   |   |       eu.js
+|   |   |       fa.js
+|   |   |       fi.js
+|   |   |       fil.js
+|   |   |       fo.js
+|   |   |       fr-ca.js
+|   |   |       fr-ch.js
+|   |   |       fr.js
+|   |   |       fy.js
+|   |   |       ga.js
+|   |   |       gd.js
+|   |   |       gl.js
+|   |   |       gom-deva.js
+|   |   |       gom-latn.js
+|   |   |       gu.js
+|   |   |       he.js
+|   |   |       hi.js
+|   |   |       hr.js
+|   |   |       hu.js
+|   |   |       hy-am.js
+|   |   |       id.js
+|   |   |       is.js
+|   |   |       it-ch.js
+|   |   |       it.js
+|   |   |       ja.js
+|   |   |       jv.js
+|   |   |       ka.js
+|   |   |       kk.js
+|   |   |       km.js
+|   |   |       kn.js
+|   |   |       ko.js
+|   |   |       ku-kmr.js
+|   |   |       ku.js
+|   |   |       ky.js
+|   |   |       lb.js
+|   |   |       lo.js
+|   |   |       lt.js
+|   |   |       lv.js
+|   |   |       me.js
+|   |   |       mi.js
+|   |   |       mk.js
+|   |   |       ml.js
+|   |   |       mn.js
+|   |   |       mr.js
+|   |   |       ms-my.js
+|   |   |       ms.js
+|   |   |       mt.js
+|   |   |       my.js
+|   |   |       nb.js
+|   |   |       ne.js
+|   |   |       nl-be.js
+|   |   |       nl.js
+|   |   |       nn.js
+|   |   |       oc-lnc.js
+|   |   |       pa-in.js
+|   |   |       pl.js
+|   |   |       pt-br.js
+|   |   |       pt.js
+|   |   |       ro.js
+|   |   |       ru.js
+|   |   |       sd.js
+|   |   |       se.js
+|   |   |       si.js
+|   |   |       sk.js
+|   |   |       sl.js
+|   |   |       sq.js
+|   |   |       sr-cyrl.js
+|   |   |       sr.js
+|   |   |       ss.js
+|   |   |       sv.js
+|   |   |       sw.js
+|   |   |       ta.js
+|   |   |       te.js
+|   |   |       tet.js
+|   |   |       tg.js
+|   |   |       th.js
+|   |   |       tk.js
+|   |   |       tl-ph.js
+|   |   |       tlh.js
+|   |   |       tr.js
+|   |   |       tzl.js
+|   |   |       tzm-latn.js
+|   |   |       tzm.js
+|   |   |       ug-cn.js
+|   |   |       uk.js
+|   |   |       ur.js
+|   |   |       uz-latn.js
+|   |   |       uz.js
+|   |   |       vi.js
+|   |   |       x-pseudo.js
+|   |   |       yo.js
+|   |   |       zh-cn.js
+|   |   |       zh-hk.js
+|   |   |       zh-mo.js
+|   |   |       zh-tw.js
+|   |   |       
+|   |   +---min
+|   |   |       locales.js
+|   |   |       locales.min.js
+|   |   |       locales.min.js.map
+|   |   |       moment-with-locales.js
+|   |   |       moment-with-locales.min.js
+|   |   |       moment-with-locales.min.js.map
+|   |   |       moment.min.js
+|   |   |       moment.min.js.map
+|   |   |       
+|   |   +---src
+|   |   |   |   moment.js
+|   |   |   |   
+|   |   |   +---lib
+|   |   |   |   +---create
+|   |   |   |   |       check-overflow.js
+|   |   |   |   |       date-from-array.js
+|   |   |   |   |       from-anything.js
+|   |   |   |   |       from-array.js
+|   |   |   |   |       from-object.js
+|   |   |   |   |       from-string-and-array.js
+|   |   |   |   |       from-string-and-format.js
+|   |   |   |   |       from-string.js
+|   |   |   |   |       local.js
+|   |   |   |   |       parsing-flags.js
+|   |   |   |   |       utc.js
+|   |   |   |   |       valid.js
+|   |   |   |   |       
+|   |   |   |   +---duration
+|   |   |   |   |       abs.js
+|   |   |   |   |       add-subtract.js
+|   |   |   |   |       as.js
+|   |   |   |   |       bubble.js
+|   |   |   |   |       clone.js
+|   |   |   |   |       constructor.js
+|   |   |   |   |       create.js
+|   |   |   |   |       duration.js
+|   |   |   |   |       get.js
+|   |   |   |   |       humanize.js
+|   |   |   |   |       iso-string.js
+|   |   |   |   |       prototype.js
+|   |   |   |   |       valid.js
+|   |   |   |   |       
+|   |   |   |   +---format
+|   |   |   |   |       format.js
+|   |   |   |   |       
+|   |   |   |   +---locale
+|   |   |   |   |       base-config.js
+|   |   |   |   |       calendar.js
+|   |   |   |   |       constructor.js
+|   |   |   |   |       en.js
+|   |   |   |   |       formats.js
+|   |   |   |   |       invalid.js
+|   |   |   |   |       lists.js
+|   |   |   |   |       locale.js
+|   |   |   |   |       locales.js
+|   |   |   |   |       ordinal.js
+|   |   |   |   |       pre-post-format.js
+|   |   |   |   |       prototype.js
+|   |   |   |   |       relative.js
+|   |   |   |   |       set.js
+|   |   |   |   |       
+|   |   |   |   +---moment
+|   |   |   |   |       add-subtract.js
+|   |   |   |   |       calendar.js
+|   |   |   |   |       clone.js
+|   |   |   |   |       compare.js
+|   |   |   |   |       constructor.js
+|   |   |   |   |       creation-data.js
+|   |   |   |   |       diff.js
+|   |   |   |   |       format.js
+|   |   |   |   |       from.js
+|   |   |   |   |       get-set.js
+|   |   |   |   |       locale.js
+|   |   |   |   |       min-max.js
+|   |   |   |   |       moment.js
+|   |   |   |   |       now.js
+|   |   |   |   |       prototype.js
+|   |   |   |   |       start-end-of.js
+|   |   |   |   |       to-type.js
+|   |   |   |   |       to.js
+|   |   |   |   |       valid.js
+|   |   |   |   |       
+|   |   |   |   +---parse
+|   |   |   |   |       regex.js
+|   |   |   |   |       token.js
+|   |   |   |   |       
+|   |   |   |   +---units
+|   |   |   |   |       aliases.js
+|   |   |   |   |       constants.js
+|   |   |   |   |       day-of-month.js
+|   |   |   |   |       day-of-week.js
+|   |   |   |   |       day-of-year.js
+|   |   |   |   |       era.js
+|   |   |   |   |       hour.js
+|   |   |   |   |       millisecond.js
+|   |   |   |   |       minute.js
+|   |   |   |   |       month.js
+|   |   |   |   |       offset.js
+|   |   |   |   |       priorities.js
+|   |   |   |   |       quarter.js
+|   |   |   |   |       second.js
+|   |   |   |   |       timestamp.js
+|   |   |   |   |       timezone.js
+|   |   |   |   |       units.js
+|   |   |   |   |       week-calendar-utils.js
+|   |   |   |   |       week-year.js
+|   |   |   |   |       week.js
+|   |   |   |   |       year.js
+|   |   |   |   |       
+|   |   |   |   \---utils
+|   |   |   |           abs-ceil.js
+|   |   |   |           abs-floor.js
+|   |   |   |           abs-round.js
+|   |   |   |           compare-arrays.js
+|   |   |   |           defaults.js
+|   |   |   |           deprecate.js
+|   |   |   |           extend.js
+|   |   |   |           has-own-prop.js
+|   |   |   |           hooks.js
+|   |   |   |           index-of.js
+|   |   |   |           is-array.js
+|   |   |   |           is-calendar-spec.js
+|   |   |   |           is-date.js
+|   |   |   |           is-function.js
+|   |   |   |           is-leap-year.js
+|   |   |   |           is-moment-input.js
+|   |   |   |           is-number.js
+|   |   |   |           is-object-empty.js
+|   |   |   |           is-object.js
+|   |   |   |           is-string.js
+|   |   |   |           is-undefined.js
+|   |   |   |           keys.js
+|   |   |   |           map.js
+|   |   |   |           mod.js
+|   |   |   |           some.js
+|   |   |   |           to-int.js
+|   |   |   |           zero-fill.js
+|   |   |   |           
+|   |   |   \---locale
+|   |   |           af.js
+|   |   |           ar-dz.js
+|   |   |           ar-kw.js
+|   |   |           ar-ly.js
+|   |   |           ar-ma.js
+|   |   |           ar-ps.js
+|   |   |           ar-sa.js
+|   |   |           ar-tn.js
+|   |   |           ar.js
+|   |   |           az.js
+|   |   |           be.js
+|   |   |           bg.js
+|   |   |           bm.js
+|   |   |           bn-bd.js
+|   |   |           bn.js
+|   |   |           bo.js
+|   |   |           br.js
+|   |   |           bs.js
+|   |   |           ca.js
+|   |   |           cs.js
+|   |   |           cv.js
+|   |   |           cy.js
+|   |   |           da.js
+|   |   |           de-at.js
+|   |   |           de-ch.js
+|   |   |           de.js
+|   |   |           dv.js
+|   |   |           el.js
+|   |   |           en-au.js
+|   |   |           en-ca.js
+|   |   |           en-gb.js
+|   |   |           en-ie.js
+|   |   |           en-il.js
+|   |   |           en-in.js
+|   |   |           en-nz.js
+|   |   |           en-sg.js
+|   |   |           eo.js
+|   |   |           es-do.js
+|   |   |           es-mx.js
+|   |   |           es-us.js
+|   |   |           es.js
+|   |   |           et.js
+|   |   |           eu.js
+|   |   |           fa.js
+|   |   |           fi.js
+|   |   |           fil.js
+|   |   |           fo.js
+|   |   |           fr-ca.js
+|   |   |           fr-ch.js
+|   |   |           fr.js
+|   |   |           fy.js
+|   |   |           ga.js
+|   |   |           gd.js
+|   |   |           gl.js
+|   |   |           gom-deva.js
+|   |   |           gom-latn.js
+|   |   |           gu.js
+|   |   |           he.js
+|   |   |           hi.js
+|   |   |           hr.js
+|   |   |           hu.js
+|   |   |           hy-am.js
+|   |   |           id.js
+|   |   |           is.js
+|   |   |           it-ch.js
+|   |   |           it.js
+|   |   |           ja.js
+|   |   |           jv.js
+|   |   |           ka.js
+|   |   |           kk.js
+|   |   |           km.js
+|   |   |           kn.js
+|   |   |           ko.js
+|   |   |           ku-kmr.js
+|   |   |           ku.js
+|   |   |           ky.js
+|   |   |           lb.js
+|   |   |           lo.js
+|   |   |           lt.js
+|   |   |           lv.js
+|   |   |           me.js
+|   |   |           mi.js
+|   |   |           mk.js
+|   |   |           ml.js
+|   |   |           mn.js
+|   |   |           mr.js
+|   |   |           ms-my.js
+|   |   |           ms.js
+|   |   |           mt.js
+|   |   |           my.js
+|   |   |           nb.js
+|   |   |           ne.js
+|   |   |           nl-be.js
+|   |   |           nl.js
+|   |   |           nn.js
+|   |   |           oc-lnc.js
+|   |   |           pa-in.js
+|   |   |           pl.js
+|   |   |           pt-br.js
+|   |   |           pt.js
+|   |   |           ro.js
+|   |   |           ru.js
+|   |   |           sd.js
+|   |   |           se.js
+|   |   |           si.js
+|   |   |           sk.js
+|   |   |           sl.js
+|   |   |           sq.js
+|   |   |           sr-cyrl.js
+|   |   |           sr.js
+|   |   |           ss.js
+|   |   |           sv.js
+|   |   |           sw.js
+|   |   |           ta.js
+|   |   |           te.js
+|   |   |           tet.js
+|   |   |           tg.js
+|   |   |           th.js
+|   |   |           tk.js
+|   |   |           tl-ph.js
+|   |   |           tlh.js
+|   |   |           tr.js
+|   |   |           tzl.js
+|   |   |           tzm-latn.js
+|   |   |           tzm.js
+|   |   |           ug-cn.js
+|   |   |           uk.js
+|   |   |           ur.js
+|   |   |           uz-latn.js
+|   |   |           uz.js
+|   |   |           vi.js
+|   |   |           x-pseudo.js
+|   |   |           yo.js
+|   |   |           zh-cn.js
+|   |   |           zh-hk.js
+|   |   |           zh-mo.js
+|   |   |           zh-tw.js
+|   |   |           
+|   |   \---ts3.1-typings
+|   |           moment.d.ts
+|   |           
+|   +---moment-jalaali
+|   |   |   .eslintrc.yml
+|   |   |   .travis.yml
+|   |   |   CHANGELOG.md
+|   |   |   index.js
+|   |   |   LICENSE
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   test.js
+|   |   |   umd-build.js
+|   |   |   
+|   |   +---build
+|   |   |       moment-jalaali.js
+|   |   |       
+|   |   \---builder
+|   |           after.js
+|   |           before.js
+|   |           middle.js
+|   |           
+|   +---moment-timezone
+|   |   |   .editorconfig
+|   |   |   changelog.md
+|   |   |   composer.json
+|   |   |   index.d.ts
+|   |   |   index.js
+|   |   |   LICENSE
+|   |   |   moment-timezone-utils.d.ts
+|   |   |   moment-timezone-utils.js
+|   |   |   moment-timezone.js
+|   |   |   package.json
+|   |   |   README.md
+|   |   |   
+|   |   +---builds
+|   |   |       moment-timezone-with-data-10-year-range.js
+|   |   |       moment-timezone-with-data-10-year-range.min.js
+|   |   |       moment-timezone-with-data-1970-2030.js
+|   |   |       moment-timezone-with-data-1970-2030.min.js
+|   |   |       moment-timezone-with-data-2012-2022.js
+|   |   |       moment-timezone-with-data-2012-2022.min.js
+|   |   |       moment-timezone-with-data.js
+|   |   |       moment-timezone-with-data.min.js
+|   |   |       moment-timezone.min.js
+|   |   |       
+|   |   \---data
+|   |       +---meta
+|   |       |       latest.json
+|   |       |       
+|   |       \---packed
+|   |               latest.json
+|   |               
 |   +---ms
 |   |       index.js
 |   |       license.md
@@ -38354,6 +39358,9 @@ C:.
     |   |           
     |   +---api
     |   |   +---auth
+    |   |   |   +---check-super-admin
+    |   |   |   |       route.ts
+    |   |   |   |       
     |   |   |   \---me
     |   |   |           route.ts
     |   |   |           
@@ -38361,8 +39368,11 @@ C:.
     |   |   |   |   route.ts
     |   |   |   |   
     |   |   |   \---[id]
-    |   |   |           route.ts
-    |   |   |           
+    |   |   |       |   route.ts
+    |   |   |       |   
+    |   |   |       \---sales
+    |   |   |               route.ts
+    |   |   |               
     |   |   +---sales
     |   |   |       route.ts
     |   |   |       
@@ -38399,9 +39409,17 @@ C:.
     |   |   |           page.tsx
     |   |   |           
     |   |   +---sales
-    |   |   |       page.client.tsx
-    |   |   |       page.tsx
-    |   |   |       
+    |   |   |   |   page.client.tsx
+    |   |   |   |   page.tsx
+    |   |   |   |   
+    |   |   |   +---new
+    |   |   |   |       page.client.tsx
+    |   |   |   |       page.tsx
+    |   |   |   |       
+    |   |   |   \---[id]
+    |   |   |           page.client.tsx
+    |   |   |           page.tsx
+    |   |   |           
     |   |   \---users
     |   |           page.client.tsx
     |   |           page.tsx
@@ -38462,9 +39480,16 @@ C:.
     |   |   |   server.ts
     |   |   |   
     |   |   \---migrations
+    |   +---util
+    |   |       jalaliDate.ts
+    |   |       
     |   \---validations
+    |           patient.ts
     |           tenant.ts
     |           
+    +---scripts
+    |       fix-patient-dates.ts
+    |       
     \---types
             index.ts
             storage.ts

@@ -50,7 +50,7 @@ async function getCurrentUser() {
   return user;
 }
 
-async function getCurrentTenantId() {
+export async function getCurrentTenantId() {
   const supabase = await createClient();
   const { data: tenantId, error } = await supabase
     .rpc('get_current_tenant_id');
@@ -114,36 +114,36 @@ export async function createPatient(data: PatientFormData) {
       }
     }
   }
-const supabase = await createClient();
-const user = await getCurrentUser();
-const tenantId = await getCurrentTenantId();
+  const supabase = await createClient();
+  const user = await getCurrentUser();
+  const tenantId = await getCurrentTenantId();
 
-if (!user) {
-  return { error: "لطفاً وارد حساب کاربری خود شوید." };
-}
-
-const validation = patientSchema.safeParse(data);
-if (!validation.success) {
-  const errors = validation.error.flatten().fieldErrors;
-  const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
-  return { error: firstError, fieldErrors: errors };
-}
-
-const { data: result, error } = await supabase
-  .from("patients")
-  .insert({ ...validation.data, tenant_id: tenantId })
-  .select()
-  .single();
-
-if (error) {
-  if (error.code === "23505") {
-    return { error: "کد ملی قبلاً ثبت شده است." };
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
   }
-  return { error: "خطا در ذخیره بیمار: " + error.message };
-}
 
-revalidatePath("/dashboard/patients");
-return { data: result, error: null };
+  const validation = patientSchema.safeParse(data);
+  if (!validation.success) {
+    const errors = validation.error.flatten().fieldErrors;
+    const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
+    return { error: firstError, fieldErrors: errors };
+  }
+
+  const { data: result, error } = await supabase
+    .from("patients")
+    .insert({ ...validation.data, tenant_id: tenantId })
+    .select()
+    .single();
+
+  if (error) {
+    if (error.code === "23505") {
+      return { error: "کد ملی قبلاً ثبت شده است." };
+    }
+    return { error: "خطا در ذخیره بیمار: " + error.message };
+  }
+
+  revalidatePath("/dashboard/patients");
+  return { data: result, error: null };
 }
 
 export async function updatePatient(id: string, data: PatientFormData) {
@@ -886,4 +886,433 @@ export async function getAdminStats() {
   }
 
   return { data: data || [], error: null };
+}
+
+// ============================================
+// Appointments
+// ============================================
+
+// ============================================
+// Types
+// ============================================
+
+export type AppointmentStatus =
+  | 'scheduled'
+  | 'pending'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'no_show';
+
+export type AppointmentType =
+  | 'visit'
+  | 'follow_up'
+  | 'test'
+  | 'fitting'
+  | 'consultation'
+  | 'other';
+
+// ============================================
+// Schema
+// ============================================
+
+const appointmentSchema = z.object({
+  patient_id: z.string().uuid("شناسه بیمار نامعتبر است"),
+  start_time: z.string().datetime("زمان شروع نامعتبر است"),
+  end_time: z.string().datetime("زمان پایان نامعتبر است"),
+  type: z.enum(['visit', 'follow_up', 'test', 'fitting', 'consultation', 'other']),
+  status: z.enum(['scheduled', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show']).default('scheduled'),
+  title: z.string().max(200).optional().nullable(),
+  description: z.string().max(500).optional().nullable(),
+  notes: z.string().max(1000).optional().nullable(),
+});
+
+// ============================================
+// Appointments CRUD
+// ============================================
+
+/**
+ * دریافت لیست نوبت‌ها با فیلترهای اختیاری
+ */
+export async function getAppointments(filters?: {
+  patient_id?: string;
+  status?: AppointmentStatus;
+  type?: AppointmentType;
+  start_date?: string;  // YYYY-MM-DD
+  end_date?: string;    // YYYY-MM-DD
+  page?: number;
+  limit?: number;
+}) {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  let query = supabase
+    .from("appointments")
+    .select(`
+      *,
+      patient:patients(id, first_name, last_name, national_code, phone)
+    `)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .order("start_time", { ascending: true });
+
+  // اعمال فیلترها
+  if (filters?.patient_id) {
+    query = query.eq("patient_id", filters.patient_id);
+  }
+
+  if (filters?.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  if (filters?.type) {
+    query = query.eq("type", filters.type);
+  }
+
+  if (filters?.start_date) {
+    query = query.gte("start_time", `${filters.start_date}T00:00:00`);
+  }
+
+  if (filters?.end_date) {
+    query = query.lte("end_time", `${filters.end_date}T23:59:59`);
+  }
+
+  // Pagination
+  const page = filters?.page || 1;
+  const limit = filters?.limit || 50;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  query = query.range(from, to);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    console.error("Error fetching appointments:", error);
+    return { error: error.message, data: [], count: 0 };
+  }
+
+  return { data: data || [], error: null, count: count || 0 };
+}
+
+/**
+ * دریافت نوبت با ID
+ */
+export async function getAppointment(id: string) {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const { data, error } = await supabase
+    .from("appointments")
+    .select(`
+      *,
+      patient:patients(id, first_name, last_name, national_code, phone)
+    `)
+    .eq("id", id)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .single();
+
+  if (error) {
+    return { error: error.message, data: null };
+  }
+
+  return { data, error: null };
+}
+
+/**
+ * دریافت نوبت‌های یک بیمار خاص
+ */
+export async function getPatientAppointments(patientId: string) {
+  return getAppointments({ patient_id: patientId, limit: 100 });
+}
+
+/**
+ * ایجاد نوبت جدید
+ */
+export async function createAppointment(data: {
+  patient_id: string;
+  start_time: string;
+  end_time: string;
+  type: AppointmentType;
+  status?: AppointmentStatus;
+  title?: string | null;
+  description?: string | null;
+  notes?: string | null;
+}) {
+  const supabase = await createClient();
+  const user = await getCurrentUser();
+  const tenantId = await getCurrentTenantId();
+
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  // اعتبارسنجی
+  const validation = appointmentSchema.safeParse({
+    ...data,
+    status: data.status || 'scheduled',
+  });
+
+  if (!validation.success) {
+    const errors = validation.error.flatten().fieldErrors;
+    const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
+    return { error: firstError, fieldErrors: errors };
+  }
+
+
+  // بخش createAppointment - بررسی تداخل
+
+  // بررسی تداخل زمانی - فقط نوبت‌های فعال
+  const { data: conflicting, error: conflictError } = await supabase
+    .from("appointments")
+    .select("id, status, start_time, end_time")
+    .eq("tenant_id", tenantId)
+    .eq("patient_id", data.patient_id)
+    .is("deleted_at", null)
+    .in("status", ["scheduled", "pending", "confirmed", "in_progress"])
+    .or(`start_time.lte.${data.end_time},end_time.gte.${data.start_time}`)
+    .limit(1);
+
+  if (conflictError) {
+    console.error("Error checking appointment conflict:", conflictError);
+  }
+
+  if (conflicting && conflicting.length > 0) {
+    return { error: "بیمار در این زمان نوبت فعال دیگری دارد." };
+  }
+
+  // ایجاد نوبت
+  const { data: result, error } = await supabase
+    .from("appointments")
+    .insert({
+      ...validation.data,
+      tenant_id: tenantId,
+      created_by: user.id,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating appointment:", error);
+    return { error: "خطا در ثبت نوبت: " + error.message };
+  }
+
+  revalidatePath("/dashboard/appointments");
+  revalidatePath(`/dashboard/patients/${data.patient_id}`);
+
+  return { data: result, error: null };
+}
+
+/**
+ * ویرایش نوبت
+ */
+export async function updateAppointment(id: string, data: Partial<{
+  patient_id: string;
+  start_time: string;
+  end_time: string;
+  type: AppointmentType;
+  status: AppointmentStatus;
+  title?: string | null;
+  description?: string | null;
+  notes?: string | null;
+}>) {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const validation = appointmentSchema.partial().safeParse(data);
+  if (!validation.success) {
+    const errors = validation.error.flatten().fieldErrors;
+    const firstError = Object.values(errors).flat()[0] || "داده‌های وارد شده نامعتبر است";
+    return { error: firstError, fieldErrors: errors };
+  }
+
+  // اگر زمان تغییر کرده، تداخل را بررسی کن
+  if (data.start_time || data.end_time || data.patient_id) {
+    // ابتدا نوبت فعلی را بگیر
+    const { data: existing, error: existingError } = await supabase
+      .from("appointments")
+      .select("patient_id, start_time, end_time")
+      .eq("id", id)
+      .eq("tenant_id", tenantId)
+      .is("deleted_at", null)
+      .single();
+
+    if (!existingError && existing) {
+      const patientId = data.patient_id || existing.patient_id;
+      const startTime = data.start_time || existing.start_time;
+      const endTime = data.end_time || existing.end_time;
+
+      const { data: conflicting, error: conflictError } = await supabase
+        .from("appointments")
+        .select("id, status")
+        .eq("tenant_id", tenantId)
+        .eq("patient_id", patientId)
+        .is("deleted_at", null)
+        .neq("id", id)
+        .in("status", ["scheduled", "pending", "confirmed", "in_progress"])
+        .or(`start_time.lte.${endTime},end_time.gte.${startTime}`)
+        .limit(1);
+
+      if (!conflictError && conflicting && conflicting.length > 0) {
+        return { error: "بیمار در این زمان نوبت دیگری دارد." };
+      }
+    }
+  }
+
+  const { data: result, error } = await supabase
+    .from("appointments")
+    .update(validation.data)
+    .eq("id", id)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .select()
+    .single();
+
+  if (error) {
+    return { error: "خطا در ویرایش نوبت: " + error.message };
+  }
+
+  revalidatePath("/dashboard/appointments");
+  revalidatePath(`/dashboard/patients/${result.patient_id}`);
+
+  return { data: result, error: null };
+}
+
+/**
+ * لغو نوبت (با دلیل اختیاری)
+ */
+export async function cancelAppointment(id: string, reason?: string) {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const { data: appointment, error: checkError } = await supabase
+    .from("appointments")
+    .select("patient_id, status")
+    .eq("id", id)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .single();
+
+  if (checkError || !appointment) {
+    return { error: "نوبت یافت نشد یا دسترسی ندارید" };
+  }
+
+  // اگر نوبت قبلاً لغو شده یا انجام شده
+  if (appointment.status === 'cancelled' || appointment.status === 'completed' || appointment.status === 'no_show') {
+    return { error: "نوبت قابل لغو نیست" };
+  }
+
+  const { data: result, error } = await supabase
+    .from("appointments")
+    .update({
+      status: 'cancelled',
+      cancellation_reason: reason || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .select()
+    .single();
+
+  if (error) {
+    return { error: "خطا در لغو نوبت: " + error.message };
+  }
+
+  revalidatePath("/dashboard/appointments");
+  revalidatePath(`/dashboard/patients/${result.patient_id}`);
+
+  return { data: result, error: null };
+}
+
+/**
+ * حذف نوبت (soft delete)
+ */
+export async function deleteAppointment(id: string) {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const { data: appointment, error: checkError } = await supabase
+    .from("appointments")
+    .select("patient_id")
+    .eq("id", id)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .single();
+
+  if (checkError || !appointment) {
+    return { error: "نوبت یافت نشد یا دسترسی ندارید" };
+  }
+
+  const { error } = await supabase
+    .from("appointments")
+    .update({
+      deleted_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null);
+
+  if (error) {
+    return { error: "خطا در حذف نوبت: " + error.message };
+  }
+
+  revalidatePath("/dashboard/appointments");
+  revalidatePath(`/dashboard/patients/${appointment.patient_id}`);
+
+  return { data: { success: true, id }, error: null };
+}
+
+/**
+ * دریافت آمار نوبت‌ها
+ */
+export async function getAppointmentStats() {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString();
+
+  const nextWeek = new Date(today);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  const nextWeekStr = nextWeek.toISOString();
+
+  const { data: stats, error } = await supabase
+    .from("appointments")
+    .select("status", { count: 'exact', head: false })
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .gte("start_time", todayStr)
+    .lte("start_time", nextWeekStr);
+
+  if (error) {
+    return { error: error.message, data: null };
+  }
+
+  // محاسبه آمار
+  const total = stats?.length || 0;
+  const byStatus: Record<string, number> = {};
+
+  stats?.forEach((item: any) => {
+    const status = item.status || 'unknown';
+    byStatus[status] = (byStatus[status] || 0) + 1;
+  });
+
+  return {
+    data: {
+      total,
+      by_status: byStatus,
+      scheduled: byStatus.scheduled || 0,
+      pending: byStatus.pending || 0,
+      confirmed: byStatus.confirmed || 0,
+      in_progress: byStatus.in_progress || 0,
+      completed: byStatus.completed || 0,
+      cancelled: byStatus.cancelled || 0,
+      no_show: byStatus.no_show || 0,
+    },
+    error: null,
+  };
 }
