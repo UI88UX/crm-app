@@ -6,6 +6,7 @@ import {
   getCurrentTenantId,
 } from "@/lib/supabase/actions";
 import { createClient } from "@/lib/supabase/server";
+import { onAppointmentCreated } from '@/lib/sms/event-handlers';
 
 // ============================================
 // GET - دریافت لیست نوبت‌ها
@@ -133,7 +134,7 @@ export async function POST(request: NextRequest) {
     }
     // ایجاد نوبت
     const { data, error } = await supabase
-      .from("appointments")
+      .from('appointments')
       .insert({
         patient_id: body.patient_id,
         start_time: body.start_time,
@@ -150,16 +151,20 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error("Error creating appointment:", error);
       return NextResponse.json(
         { error: error.message },
         { status: 400 }
       );
     }
 
+    // ✅ ارسال پیامک تأیید نوبت (غیرهمزمان)
+    if (data) {
+      onAppointmentCreated(data.id).catch(console.error);
+    }
+
     return NextResponse.json({
       data,
-      message: "نوبت با موفقیت ثبت شد",
+      message: 'نوبت با موفقیت ثبت شد',
     });
   } catch (error) {
     console.error("Error in POST /api/appointments:", error);

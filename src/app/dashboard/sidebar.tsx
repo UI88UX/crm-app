@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MessageSquare, Send } from "lucide-react";
 import {
   LayoutDashboard,
   Users,
@@ -49,6 +50,12 @@ const menuItems = [
     title: "نوبت‌ها",
     href: "/dashboard/appointments",
     icon: Calendar,
+  },
+  {
+    title: "پیامک‌ها",
+    href: "/dashboard/sms/campaigns",
+    icon: MessageSquare,
+    label: "جدید",
   },
 ];
 

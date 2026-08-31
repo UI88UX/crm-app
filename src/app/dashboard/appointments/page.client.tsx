@@ -335,21 +335,12 @@ export function AppointmentsPageClient() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <AppointmentStatusBadge status={appointment.status} size="sm" />
+                        <AppointmentStatusBadge 
+                          status={appointment.status} 
+                          size="sm"
+                          reason={appointment.no_show_reason || appointment.cancellation_reason}
+                        />
                       </TableCell>
-
-                      <TableCell>
-                        <div className="flex flex-col gap-1">
-                          <TableCell>
-                            <AppointmentStatusBadge
-                              status={appointment.status}
-                              size="sm"
-                              reason={appointment.no_show_reason || appointment.cancellation_reason}
-                            />
-                          </TableCell>
-                        </div>
-                      </TableCell>
-
                       <TableCell>
                         <div className="flex flex-wrap items-center gap-1">
                           <AppointmentStatusActions

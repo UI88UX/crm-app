@@ -8,7 +8,13 @@ import type { PatientFormData, SaleFormData } from "@/types";
 import { createAdminClient } from "./admin";
 import { tenantSchema, type TenantFormData } from "@/lib/validations/tenant";
 import moment from "moment-jalaali";
-
+import { addToQueue } from '@/lib/sms/queue';
+import { SmsQueueType } from '@/types/messaging';
+import { 
+  onAppointmentCreated, 
+  onAppointmentCancelled, 
+  onAppointmentNoShow 
+} from '@/lib/sms/event-handlers';
 // ============================================
 // Schemas
 // ============================================
@@ -1315,4 +1321,122 @@ export async function getAppointmentStats() {
     },
     error: null,
   };
+}
+export async function sendAppointmentConfirmation(
+  appointmentId: string,
+  patientPhone: string,
+  patientName: string,
+  clinicName: string,
+  appointmentDate: string,
+  appointmentTime: string
+) {
+  const tenantId = await getCurrentTenantId();
+  
+  const content = `سلام ${patientName} عزیز، نوبت شما برای ${appointmentDate} ساعت ${appointmentTime} در ${clinicName} ثبت شد.`;
+
+  return await addToQueue({
+    tenant_id: tenantId,
+    phone: patientPhone,
+    content,
+    type: 'appointment_confirmation',
+    reference_id: appointmentId,
+    reference_type: 'appointments',
+    priority: 2, // اولویت بالا
+  });
+}
+
+/**
+ * برنامه‌ریزی یادآوری نوبت (۲۴ ساعت قبل)
+ */
+export async function scheduleAppointmentReminder(
+  appointmentId: string,
+  patientPhone: string,
+  patientName: string,
+  appointmentDate: string,
+  appointmentTime: string
+) {
+  const tenantId = await getCurrentTenantId();
+  
+  // ۲۴ ساعت قبل
+  const scheduledAt = new Date();
+  scheduledAt.setHours(scheduledAt.getHours() + 24);
+  
+  const content = `سلام ${patientName} عزیز، فردا ساعت ${appointmentTime} نوبت شنوایی‌سنجی دارید. لطفاً ۱۵ دقیقه زودتر حاضر باشید.`;
+
+  return await addToQueue({
+    tenant_id: tenantId,
+    phone: patientPhone,
+    content,
+    type: 'appointment_reminder',
+    scheduled_at: scheduledAt.toISOString(),
+    reference_id: appointmentId,
+    reference_type: 'appointments',
+    priority: 1,
+  });
+}
+// ============================================
+// SMS Event Handlers - Integration
+// ============================================
+
+/**
+ * ایجاد نوبت با ارسال پیامک
+ */
+export async function createAppointmentWithSms(data: any) {
+  // ... کد ایجاد نوبت (که قبلاً در actions.ts دارید) ...
+  
+  const result = await createAppointment(data);
+  
+  if (result.data) {
+    // ارسال پیامک تأیید نوبت
+    await onAppointmentCreated(result.data.id);
+  }
+  
+  return result;
+}
+
+/**
+ * لغو نوبت با ارسال پیامک
+ */
+export async function cancelAppointmentWithSms(id: string, reason?: string) {
+  const result = await cancelAppointment(id, reason);
+  
+  if (result.data) {
+    // ارسال پیامک لغو نوبت
+    await onAppointmentCancelled(id, reason);
+  }
+  
+  return result;
+}
+
+/**
+ * ثبت عدم مراجعه با ارسال پیامک
+ */
+export async function setAppointmentNoShow(id: string, reason?: string) {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const { data, error } = await supabase
+    .from('appointments')
+    .update({
+      status: 'no_show',
+      no_show_reason: reason || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .eq('tenant_id', tenantId)
+    .is('deleted_at', null)
+    .select()
+    .single();
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  // ارسال پیامک پیگیری عدم مراجعه
+  if (data) {
+    await onAppointmentNoShow(id);
+  }
+
+  revalidatePath('/dashboard/appointments');
+  return { data, error: null };
 }
