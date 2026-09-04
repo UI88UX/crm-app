@@ -10,12 +10,10 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === "production",
   },
   webpack: (config) => {
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: "all",
-        minSize: 20000,
-        maxSize: 244000,
+    config.cache = {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
       },
     };
     return config;
