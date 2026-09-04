@@ -9,7 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { createSale } from "@/lib/supabase/actions";
+
+// ✅ ایمپورت React Query
+import { useCreateSale } from "@/hooks/useSales";
+import { usePatients } from "@/hooks/usePatients"; // ✅ استفاده از usePatients موجود
+
 import { toJalaliDisplay } from "@/lib/util/jalaliDate";
 import { ArrowRight, Package, User, Calendar, DollarSign, Loader2, Hash, FileText } from "lucide-react";
 
@@ -20,16 +24,19 @@ interface Patient {
   national_code: string;
 }
 
-interface NewSaleClientProps {
-  patients: Patient[];
-}
-
-export default function NewSaleClient({ patients }: NewSaleClientProps) {
+export default function NewSaleClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const patientIdFromUrl = searchParams.get('patientId');
   
-  const [isLoading, setIsLoading] = useState(false);
+  // ✅ دریافت لیست بیماران با React Query (از usePatients موجود)
+  const { data: patients = [], isLoading: isLoadingPatients } = usePatients({ 
+    limit: 1000 
+  });
+  
+  // ✅ استفاده از React Query برای ایجاد فروش
+  const createSale = useCreateSale();
+
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
@@ -45,7 +52,7 @@ export default function NewSaleClient({ patients }: NewSaleClientProps) {
 
   // اگر patientId از URL آمده، اطلاعات بیمار را پیدا کن
   useEffect(() => {
-    if (patientIdFromUrl) {
+    if (patientIdFromUrl && patients.length > 0) {
       const patient = patients.find(p => p.id === patientIdFromUrl);
       if (patient) {
         setSelectedPatient(patient);
@@ -61,49 +68,63 @@ export default function NewSaleClient({ patients }: NewSaleClientProps) {
       setErrors(prev => ({ ...prev, [name]: [] }));
     }
     
-    // اگر بیمار انتخاب شد، اطلاعات او را نمایش بده
     if (name === 'patient_id') {
       const patient = patients.find(p => p.id === value);
       setSelectedPatient(patient || null);
     }
   };
 
+  // ✅ ثبت با React Query
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setErrors({});
 
-    try {
-      const dataToSubmit = {
-        patient_id: formData.patient_id,
-        hearing_aid_model: formData.hearing_aid_model.trim(),
-        hearing_aid_serial: formData.hearing_aid_serial.trim(),
-        price: parseFloat(formData.price) || 0,
-        sale_date: formData.sale_date || new Date().toISOString().split('T')[0],
-        warranty_expiry: formData.warranty_expiry || null,
-        notes: formData.notes || null,
-      };
+    // اعتبارسنجی ساده
+    if (!formData.patient_id) {
+      toast.error("لطفاً یک بیمار را انتخاب کنید");
+      return;
+    }
 
-      const result = await createSale(dataToSubmit);
+    if (!formData.hearing_aid_model.trim()) {
+      toast.error("لطفاً مدل سمعک را وارد کنید");
+      return;
+    }
 
-      if (result.error) {
-        if (result.fieldErrors) {
-          setErrors(result.fieldErrors);
-          toast.error("لطفاً فیلدهای مشخص شده را اصلاح کنید.");
-        } else {
-          toast.error(result.error);
-        }
-      } else if (result.data) {
+    if (!formData.hearing_aid_serial.trim()) {
+      toast.error("لطفاً سریال سمعک را وارد کنید");
+      return;
+    }
+
+    if (!formData.price || parseFloat(formData.price) <= 0) {
+      toast.error("لطفاً قیمت معتبر وارد کنید");
+      return;
+    }
+
+    const dataToSubmit = {
+      patient_id: formData.patient_id,
+      hearing_aid_model: formData.hearing_aid_model.trim(),
+      hearing_aid_serial: formData.hearing_aid_serial.trim(),
+      price: parseFloat(formData.price) || 0,
+      sale_date: formData.sale_date || new Date().toISOString().split('T')[0],
+      warranty_expiry: formData.warranty_expiry || null,
+      notes: formData.notes || null,
+    };
+
+    createSale.mutate(dataToSubmit, {
+      onSuccess: () => {
         toast.success("فروش با موفقیت ثبت شد!");
         router.push("/dashboard/sales");
         router.refresh();
-      }
-    } catch (error) {
-      console.error("Error creating sale:", error);
-      toast.error("خطای غیرمنتظره رخ داد.");
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      onError: (error: any) => {
+        if (error.fieldErrors) {
+          setErrors(error.fieldErrors);
+          toast.error("لطفاً فیلدهای مشخص شده را اصلاح کنید.");
+        } else {
+          toast.error(error.message || "خطا در ثبت فروش");
+        }
+      },
+    });
   };
 
   return (
@@ -144,8 +165,11 @@ export default function NewSaleClient({ patients }: NewSaleClientProps) {
                   className="w-full p-2 border rounded-md mt-1 bg-white dark:bg-gray-800"
                   value={formData.patient_id}
                   onChange={handleChange}
+                  disabled={isLoadingPatients}
                 >
-                  <option value="">انتخاب بیمار...</option>
+                  <option value="">
+                    {isLoadingPatients ? "در حال بارگذاری بیماران..." : "انتخاب بیمار..."}
+                  </option>
                   {patients.map((patient) => (
                     <option key={patient.id} value={patient.id}>
                       {patient.first_name} {patient.last_name} - {patient.national_code}
@@ -288,8 +312,8 @@ export default function NewSaleClient({ patients }: NewSaleClientProps) {
             </div>
 
             <div className="flex gap-4 pt-4 border-t flex-wrap">
-              <Button type="submit" disabled={isLoading} className="min-w-[120px]">
-                {isLoading ? (
+              <Button type="submit" disabled={createSale.isPending} className="min-w-[120px]">
+                {createSale.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                     در حال ثبت...

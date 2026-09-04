@@ -32,338 +32,26 @@ C:.
 |   +---cache
 |   |   |   .rscinfo
 |   |   |   
-|   |   +---swc
-|   |   |   \---plugins
-|   |   |       \---v7_windows_x86_64_9.0.0
 |   |   \---webpack
 |   |       +---client-development
 |   |       |       0.pack.gz
 |   |       |       1.pack.gz
-|   |       |       10.pack.gz
-|   |       |       11.pack.gz
-|   |       |       12.pack.gz
-|   |       |       13.pack.gz
-|   |       |       14.pack.gz
-|   |       |       15.pack.gz
-|   |       |       16.pack.gz
-|   |       |       17.pack.gz
-|   |       |       18.pack.gz
-|   |       |       19.pack.gz
 |   |       |       2.pack.gz
-|   |       |       20.pack.gz
-|   |       |       21.pack.gz
-|   |       |       22.pack.gz
-|   |       |       23.pack.gz
-|   |       |       24.pack.gz
-|   |       |       25.pack.gz
-|   |       |       26.pack.gz
-|   |       |       27.pack.gz
-|   |       |       28.pack.gz
-|   |       |       29.pack.gz
 |   |       |       3.pack.gz
-|   |       |       30.pack.gz
-|   |       |       31.pack.gz
-|   |       |       32.pack.gz
-|   |       |       33.pack.gz
-|   |       |       34.pack.gz
-|   |       |       35.pack.gz
-|   |       |       36.pack.gz
-|   |       |       37.pack.gz
-|   |       |       38.pack.gz
-|   |       |       39.pack.gz
 |   |       |       4.pack.gz
-|   |       |       40.pack.gz
-|   |       |       41.pack.gz
-|   |       |       42.pack.gz
-|   |       |       43.pack.gz
-|   |       |       44.pack.gz
-|   |       |       45.pack.gz
-|   |       |       46.pack.gz
-|   |       |       47.pack.gz
-|   |       |       48.pack.gz
-|   |       |       49.pack.gz
-|   |       |       5.pack.gz
-|   |       |       50.pack.gz
-|   |       |       51.pack.gz
-|   |       |       52.pack.gz
-|   |       |       53.pack.gz
-|   |       |       54.pack.gz
-|   |       |       55.pack.gz
-|   |       |       56.pack.gz
-|   |       |       57.pack.gz
-|   |       |       58.pack.gz
-|   |       |       59.pack.gz
-|   |       |       6.pack.gz
-|   |       |       60.pack.gz
-|   |       |       61.pack.gz
-|   |       |       62.pack.gz
-|   |       |       63.pack.gz
-|   |       |       64.pack.gz
-|   |       |       65.pack.gz
-|   |       |       66.pack.gz
-|   |       |       67.pack.gz
-|   |       |       68.pack.gz
-|   |       |       69.pack.gz
-|   |       |       7.pack.gz
-|   |       |       70.pack.gz
-|   |       |       71.pack.gz
-|   |       |       72.pack.gz
-|   |       |       73.pack.gz
-|   |       |       74.pack.gz
-|   |       |       75.pack.gz
-|   |       |       76.pack.gz
-|   |       |       77.pack.gz
-|   |       |       78.pack.gz
-|   |       |       79.pack.gz
-|   |       |       8.pack.gz
-|   |       |       80.pack.gz
-|   |       |       81.pack.gz
-|   |       |       82.pack.gz
-|   |       |       83.pack.gz
-|   |       |       84.pack.gz
-|   |       |       85.pack.gz
-|   |       |       86.pack.gz
-|   |       |       87.pack.gz
-|   |       |       88.pack.gz
-|   |       |       89.pack.gz
-|   |       |       9.pack.gz
-|   |       |       90.pack.gz
-|   |       |       91.pack.gz
-|   |       |       index.pack.gz
-|   |       |       index.pack.gz.old
-|   |       |       
-|   |       +---client-development-fallback
-|   |       |       0.pack.gz
-|   |       |       1.pack.gz
-|   |       |       2.pack.gz
 |   |       |       index.pack.gz
 |   |       |       index.pack.gz.old
 |   |       |       
 |   |       +---edge-server-development
 |   |       |       0.pack.gz
-|   |       |       1.pack.gz
-|   |       |       2.pack.gz
 |   |       |       index.pack.gz
-|   |       |       index.pack.gz.old
 |   |       |       
 |   |       \---server-development
 |   |               0.pack.gz
 |   |               1.pack.gz
-|   |               10.pack.gz
-|   |               100.pack.gz
-|   |               101.pack.gz
-|   |               102.pack.gz
-|   |               103.pack.gz
-|   |               104.pack.gz
-|   |               105.pack.gz
-|   |               106.pack.gz
-|   |               107.pack.gz
-|   |               108.pack.gz
-|   |               109.pack.gz
-|   |               11.pack.gz
-|   |               110.pack.gz
-|   |               111.pack.gz
-|   |               112.pack.gz
-|   |               113.pack.gz
-|   |               114.pack.gz
-|   |               115.pack.gz
-|   |               116.pack.gz
-|   |               117.pack.gz
-|   |               118.pack.gz
-|   |               119.pack.gz
-|   |               12.pack.gz
-|   |               120.pack.gz
-|   |               121.pack.gz
-|   |               122.pack.gz
-|   |               123.pack.gz
-|   |               124.pack.gz
-|   |               125.pack.gz
-|   |               126.pack.gz
-|   |               127.pack.gz
-|   |               128.pack.gz
-|   |               129.pack.gz
-|   |               13.pack.gz
-|   |               130.pack.gz
-|   |               131.pack.gz
-|   |               132.pack.gz
-|   |               133.pack.gz
-|   |               134.pack.gz
-|   |               135.pack.gz
-|   |               136.pack.gz
-|   |               137.pack.gz
-|   |               138.pack.gz
-|   |               139.pack.gz
-|   |               14.pack.gz
-|   |               140.pack.gz
-|   |               141.pack.gz
-|   |               142.pack.gz
-|   |               143.pack.gz
-|   |               144.pack.gz
-|   |               145.pack.gz
-|   |               146.pack.gz
-|   |               147.pack.gz
-|   |               148.pack.gz
-|   |               149.pack.gz
-|   |               15.pack.gz
-|   |               150.pack.gz
-|   |               151.pack.gz
-|   |               152.pack.gz
-|   |               153.pack.gz
-|   |               154.pack.gz
-|   |               155.pack.gz
-|   |               156.pack.gz
-|   |               157.pack.gz
-|   |               158.pack.gz
-|   |               159.pack.gz
-|   |               16.pack.gz
-|   |               160.pack.gz
-|   |               161.pack.gz
-|   |               162.pack.gz
-|   |               163.pack.gz
-|   |               164.pack.gz
-|   |               165.pack.gz
-|   |               166.pack.gz
-|   |               167.pack.gz
-|   |               168.pack.gz
-|   |               169.pack.gz
-|   |               17.pack.gz
-|   |               170.pack.gz
-|   |               171.pack.gz
-|   |               172.pack.gz
-|   |               173.pack.gz
-|   |               174.pack.gz
-|   |               175.pack.gz
-|   |               176.pack.gz
-|   |               177.pack.gz
-|   |               178.pack.gz
-|   |               179.pack.gz
-|   |               18.pack.gz
-|   |               180.pack.gz
-|   |               181.pack.gz
-|   |               182.pack.gz
-|   |               183.pack.gz
-|   |               184.pack.gz
-|   |               185.pack.gz
-|   |               186.pack.gz
-|   |               187.pack.gz
-|   |               188.pack.gz
-|   |               189.pack.gz
-|   |               19.pack.gz
-|   |               190.pack.gz
-|   |               191.pack.gz
-|   |               192.pack.gz
-|   |               193.pack.gz
-|   |               194.pack.gz
-|   |               195.pack.gz
-|   |               196.pack.gz
-|   |               197.pack.gz
-|   |               198.pack.gz
-|   |               199.pack.gz
 |   |               2.pack.gz
-|   |               20.pack.gz
-|   |               200.pack.gz
-|   |               201.pack.gz
-|   |               202.pack.gz
-|   |               203.pack.gz
-|   |               204.pack.gz
-|   |               205.pack.gz
-|   |               206.pack.gz
-|   |               207.pack.gz
-|   |               208.pack.gz
-|   |               209.pack.gz
-|   |               21.pack.gz
-|   |               210.pack.gz
-|   |               211.pack.gz
-|   |               212.pack.gz
-|   |               213.pack.gz
-|   |               214.pack.gz
-|   |               215.pack.gz
-|   |               22.pack.gz
-|   |               23.pack.gz
-|   |               24.pack.gz
-|   |               25.pack.gz
-|   |               26.pack.gz
-|   |               27.pack.gz
-|   |               28.pack.gz
-|   |               29.pack.gz
 |   |               3.pack.gz
-|   |               30.pack.gz
-|   |               31.pack.gz
-|   |               32.pack.gz
-|   |               33.pack.gz
-|   |               34.pack.gz
-|   |               35.pack.gz
-|   |               36.pack.gz
-|   |               37.pack.gz
-|   |               38.pack.gz
-|   |               39.pack.gz
 |   |               4.pack.gz
-|   |               40.pack.gz
-|   |               41.pack.gz
-|   |               42.pack.gz
-|   |               43.pack.gz
-|   |               44.pack.gz
-|   |               45.pack.gz
-|   |               46.pack.gz
-|   |               47.pack.gz
-|   |               48.pack.gz
-|   |               49.pack.gz
-|   |               5.pack.gz
-|   |               50.pack.gz
-|   |               51.pack.gz
-|   |               52.pack.gz
-|   |               53.pack.gz
-|   |               54.pack.gz
-|   |               55.pack.gz
-|   |               56.pack.gz
-|   |               57.pack.gz
-|   |               58.pack.gz
-|   |               59.pack.gz
-|   |               6.pack.gz
-|   |               60.pack.gz
-|   |               61.pack.gz
-|   |               62.pack.gz
-|   |               63.pack.gz
-|   |               64.pack.gz
-|   |               65.pack.gz
-|   |               66.pack.gz
-|   |               67.pack.gz
-|   |               68.pack.gz
-|   |               69.pack.gz
-|   |               7.pack.gz
-|   |               70.pack.gz
-|   |               71.pack.gz
-|   |               72.pack.gz
-|   |               73.pack.gz
-|   |               74.pack.gz
-|   |               75.pack.gz
-|   |               76.pack.gz
-|   |               77.pack.gz
-|   |               78.pack.gz
-|   |               78.pack.gz_
-|   |               79.pack.gz
-|   |               8.pack.gz
-|   |               80.pack.gz
-|   |               81.pack.gz
-|   |               82.pack.gz
-|   |               83.pack.gz
-|   |               84.pack.gz
-|   |               85.pack.gz
-|   |               86.pack.gz
-|   |               87.pack.gz
-|   |               88.pack.gz
-|   |               89.pack.gz
-|   |               9.pack.gz
-|   |               90.pack.gz
-|   |               91.pack.gz
-|   |               92.pack.gz
-|   |               93.pack.gz
-|   |               94.pack.gz
-|   |               95.pack.gz
-|   |               96.pack.gz
-|   |               97.pack.gz
-|   |               98.pack.gz
-|   |               99.pack.gz
 |   |               index.pack.gz
 |   |               index.pack.gz.old
 |   |               
@@ -380,18 +68,14 @@ C:.
 |   |   |   pages-manifest.json
 |   |   |   server-reference-manifest.js
 |   |   |   server-reference-manifest.json
+|   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_action-browser_node_modules_jalaal-86764b.js
 |   |   |   vendors-_action-browser_node_modules_cookie_dist_index_js-_action-browser_node_modules_jalaal-992a07.js
-|   |   |   vendors-_action-browser_node_modules_moment-jalaali_index_js.js
-|   |   |   vendors-_action-browser_node_modules_next_dist_server_app-render_encryption_js-_action-browse-3b6bf6.js
-|   |   |   vendors-_action-browser_node_modules_next_dist_server_web_spec-extension_adapters_headers_js--3f08b6.js
-|   |   |   vendors-_action-browser_node_modules_next_dist_shared_lib_errors_constants_js-_action-browser-46c010.js
+|   |   |   vendors-_action-browser_node_modules_moment-jalaali_index_js-_ssr_node_modules_lucide-react_d-5426f0.js
+|   |   |   vendors-_action-browser_node_modules_moment_moment_js.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_GoTrueClient_js.js
 |   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_index_js-_action-browser_no-256519.js
-|   |   |   vendors-_action-browser_node_modules_supabase_auth-js_dist_module_index_js-_action-browser_no-f25a5a.js
 |   |   |   vendors-_action-browser_node_modules_supabase_postgrest-js_dist_index_mjs.js
 |   |   |   vendors-_action-browser_node_modules_supabase_realtime-js_dist_module_index_js-_action-browse-8739cd.js
-|   |   |   vendors-_action-browser_node_modules_supabase_supabase-js_dist_index_mjs.js
-|   |   |   vendors-_action-browser_node_modules_tslib_tslib_es6_mjs-_action-browser_node_modules_zod_v4_-14d38f.js
 |   |   |   vendors-_action-browser_node_modules_zod_v4_classic_iso_js-_action-browser_node_modules_zod_v-4c2c37.js
 |   |   |   vendors-_action-browser_node_modules_zod_v4_core_api_js-_action-browser_node_modules_zod_v4_c-170bfd.js
 |   |   |   vendors-_middleware_node_modules_cookie_dist_index_js-_middleware_node_modules_iceberg-js_dis-284a52.js
@@ -403,59 +87,29 @@ C:.
 |   |   |   vendors-_middleware_node_modules_supabase_realtime-js_dist_module_index_js-_middleware_node_m-9651e7.js
 |   |   |   vendors-_middleware_node_modules_supabase_supabase-js_dist_index_mjs-_middleware_node_modules-66a330.js
 |   |   |   vendors-_rsc_node_modules_cookie_dist_index_js-_rsc_node_modules_iceberg-js_dist_index_mjs.js
-|   |   |   vendors-_rsc_node_modules_moment-jalaali_index_js.js
-|   |   |   vendors-_rsc_node_modules_next_cache_js-_rsc_node_modules_next_dist_api_navigation_react-serv-15f384.js
-|   |   |   vendors-_rsc_node_modules_next_cache_js-_rsc_node_modules_next_dist_api_navigation_react-serv-eaef5d.js
-|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js-_ssr_node_modules_lucide-react_dist_esm_ic-80cabe.js
-|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js-_ssr_node_modules_lucide-react_dist_esm_ic-d4a781.js
-|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js.js
-|   |   |   vendors-_rsc_node_modules_next_dist_api_server_js-_rsc_node_modules_next_dist_client_componen-263831.js
-|   |   |   vendors-_rsc_node_modules_next_dist_api_server_js-_rsc_node_modules_next_dist_server_route-mo-5a80cc.js
-|   |   |   vendors-_rsc_node_modules_next_dist_client_app-dir_link_js-_ssr_node_modules_radix-ui_react-s-1d78ca.js
+|   |   |   vendors-_rsc_node_modules_next_dist_api_headers_js-_rsc_node_modules_next_dist_api_server_js--477c83.js
 |   |   |   vendors-_rsc_node_modules_next_dist_client_components_hooks-server-context_js-_rsc_node_modul-0fbd54.js
-|   |   |   vendors-_rsc_node_modules_next_dist_client_components_hooks-server-context_js-_rsc_node_modul-925244.js
-|   |   |   vendors-_rsc_node_modules_next_dist_client_components_is-next-router-error_js-_rsc_node_modul-982849.js
-|   |   |   vendors-_rsc_node_modules_next_dist_client_components_is-next-router-error_js-_rsc_node_modul-e62338.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_after_index_js-_rsc_node_modules_next_dist_server_-5a203d.js
 |   |   |   vendors-_rsc_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--a2441f.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--dd1a00.js
 |   |   |   vendors-_rsc_node_modules_next_dist_server_lib_app-dir-module_js-_rsc_node_modules_next_dist_-210ad9.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_lib_app-dir-module_js-_rsc_node_modules_next_dist_-35b4d6.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_lib_patch-fetch_js-_rsc_node_modules_next_dist_ser-5b7b02.js
 |   |   |   vendors-_rsc_node_modules_next_dist_server_server-utils_js-_action-browser_node_modules_next_-3c1ab0.js
 |   |   |   vendors-_rsc_node_modules_next_dist_server_server-utils_js-_action-browser_node_modules_next_-7ae1af.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_server-utils_js-_rsc_node_modules_next_dist_server-451747.js
-|   |   |   vendors-_rsc_node_modules_next_dist_server_web_exports_index_js-_rsc_node_modules_next_dist_s-59296c.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-3fc930.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-440dc7.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-4882f9.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-77d008.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-b533c0.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-d1e486.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-dfe604.js
-|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-fa711c.js
+|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-2446f9.js
+|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-2d1429.js
+|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-c03654.js
+|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-e2b028.js
+|   |   |   vendors-_rsc_node_modules_next_font_google_target_css_path_src_app_layout_tsx_import_Vazirmat-e64fb0.js
 |   |   |   vendors-_rsc_node_modules_supabase_auth-js_dist_module_GoTrueClient_js.js
 |   |   |   vendors-_rsc_node_modules_supabase_auth-js_dist_module_index_js-_rsc_node_modules_supabase_au-45d79f.js
 |   |   |   vendors-_rsc_node_modules_supabase_postgrest-js_dist_index_mjs.js
 |   |   |   vendors-_rsc_node_modules_supabase_realtime-js_dist_module_index_js-_rsc_node_modules_supabas-7b5e74.js
 |   |   |   vendors-_rsc_node_modules_supabase_supabase-js_dist_index_mjs-_rsc_node_modules_tslib_tslib_es6_mjs.js
-|   |   |   vendors-_rsc_node_modules_zod_v4_classic_iso_js-_rsc_node_modules_zod_v4_classic_schemas_js.js
-|   |   |   vendors-_rsc_node_modules_zod_v4_core_api_js-_rsc_node_modules_zod_v4_core_json-schema-proces-9ffa66.js
-|   |   |   vendors-_ssr_node_modules_aria-hidden_dist_es2015_index_js-_ssr_node_modules_get-nonce_dist_e-0561c3.js
-|   |   |   vendors-_ssr_node_modules_clsx_dist_clsx_mjs-_ssr_node_modules_next-themes_dist_index_mjs-_rs-538e02.js
-|   |   |   vendors-_ssr_node_modules_moment-jalaali_index_js-_ssr_node_modules_lucide-react_dist_esm_ico-7ab0c1.js
-|   |   |   vendors-_ssr_node_modules_moment-jalaali_index_js-_ssr_node_modules_lucide-react_dist_esm_ico-8b944a.js
+|   |   |   vendors-_ssr_node_modules_jalaali-js_index_js-_action-browser_node_modules_cookie_dist_index_-49a5f5.js
+|   |   |   vendors-_ssr_node_modules_moment-jalaali_index_js-_action-browser_node_modules_moment-jalaali-34b0af.js
+|   |   |   vendors-_ssr_node_modules_moment-jalaali_index_js-_ssr_node_modules_react-date-object_calenda-4b4bf9.js
+|   |   |   vendors-_ssr_node_modules_moment_moment_js.js
 |   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-3fbdaa.js
-|   |   |   vendors-_ssr_node_modules_next_dist_api_navigation_js-_ssr_node_modules_next_dist_build_webpa-f16288.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_app-build-id_js-_ssr_node_modules_next_dist_client-701ebc.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_app-build-id_js-_ssr_node_modules_next_dist_client-a1e645.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-2a3650.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-560c47.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-584655.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-8ea28b.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-bdeff0.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_assign-location_js-_ssr_node_modules_next_dist_cli-d8ac72.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_components_match-segments_js-_ssr_node_modules_nex-066ae8.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_match-segments_js-_ssr_node_modules_nex-98c599.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_app_hot-reloader-client_js.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_components_code-fr-d05e44.js
@@ -463,113 +117,56 @@ C:.
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_container_build-er-f27236.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_dev-overlay_js-_ss-a64026.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_ui_styles_base_js-_ss-257d55.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_utils_css_js-_ssr_nod-0394f3.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_utils_css_js-_ssr_nod-2373c9.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_utils_css_js-_ssr_nod-7909e7.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_components_react-dev-overlay_utils_css_js-_ssr_nod-bec560.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-14e420.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-1fd5de.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-544aab.js
-|   |   |   vendors-_ssr_node_modules_next_dist_client_components_render-from-template-context_js-_ssr_no-9e21d8.js
 |   |   |   vendors-_ssr_node_modules_next_dist_client_dev_dev-build-indicator_internal_handle-dev-build--0c269b.js
 |   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_action-browser_node_modules_next-bcdf9b.js
 |   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_action-browser_node_modules_next-f4c6aa.js
-|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-2f034b.js
-|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-a242bb.js
-|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-de8c1f.js
-|   |   |   vendors-_ssr_node_modules_next_dist_compiled_anser_index_js-_ssr_node_modules_next_dist_compi-e71bb1.js
 |   |   |   vendors-_ssr_node_modules_next_dist_compiled_stacktrace-parser_stack-trace-parser_cjs_js-_ssr-35523f.js
-|   |   |   vendors-_ssr_node_modules_next_dist_lib_error-telemetry-utils_js-_ssr_node_modules_next_dist_-14c5c4.js
 |   |   |   vendors-_ssr_node_modules_next_dist_lib_error-telemetry-utils_js-_ssr_node_modules_next_dist_-3e1312.js
 |   |   |   vendors-_ssr_node_modules_next_dist_lib_error-telemetry-utils_js-_ssr_node_modules_next_dist_-dcde55.js
-|   |   |   vendors-_ssr_node_modules_next_dist_lib_metadata_metadata-constants_js-_ssr_node_modules_next-2249ab.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_rsc_node_modules_-4d53fd.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-0255d3.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-0b9c8d.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-56e3ab.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-c2c9c9.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_app-render_dynamic-rendering_js-_ssr_node_modules_-e961d8.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--480668.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_create-deduped-by-callsite-server-error-logger_js--63f9f7.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-07332c.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-6e42ad.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-b64c47.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-df8d6c.js
+|   |   |   vendors-_ssr_node_modules_next_dist_server_lib_router-utils_is-postpone_js-_ssr_node_modules_-d8df9a.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_route-modules_app-page_vendored_contexts_app-route-0cbcb6.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_action-bro-421f82.js
 |   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_action-bro-4e7456.js
-|   |   |   vendors-_ssr_node_modules_next_dist_server_web_spec-extension_adapters_reflect_js-_rsc_node_m-bb42f6.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_number_dist_index_mjs-_ssr_node_modules_radix-ui_primitive-bfea5d.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-dialog_dist_index_mjs-_ssr_node_modules_radix-ui_rea-8d4196.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-dialog_dist_index_mjs-_ssr_node_modules_radix-ui_rea-d51b4e.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-dropdown-menu_dist_index_mjs-_ssr_node_modules_lucid-cf878a.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-label_dist_index_mjs-_ssr_node_modules_radix-ui_reac-037134.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-label_dist_index_mjs-_ssr_node_modules_radix-ui_reac-22348e.js
-|   |   |   vendors-_ssr_node_modules_radix-ui_react-select_dist_index_mjs-_ssr_node_modules_radix-ui_rea-e8168e.js
-|   |   |   vendors-_ssr_node_modules_react-date-object_calendars_persian_js-_ssr_node_modules_react-date-8207a0.js
+|   |   |   vendors-_ssr_node_modules_radix-ui_react-label_dist_index_mjs-_ssr_node_modules_radix-ui_reac-a5fe3a.js
 |   |   |   vendors-_ssr_node_modules_sonner_dist_index_mjs.js
 |   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-1a4861.js
-|   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-8069bc.js
-|   |   |   vendors-_ssr_node_modules_swc_helpers_esm__class_private_field_loose_base_js-_ssr_node_module-fa67db.js
 |   |   |   vendors-_ssr_node_modules_tailwind-merge_dist_bundle-mjs_mjs-_action-browser_node_modules_tsl-4bbdb4.js
-|   |   |   vendors-_ssr_node_modules_use-callback-ref_dist_es2015_useMergeRef_js-_ssr_node_modules_use-s-e64cc2.js
-|   |   |   vendors-_ssr_node_modules_zod_v4_classic_iso_js-_ssr_node_modules_zod_v4_classic_schemas_js.js
-|   |   |   vendors-_ssr_node_modules_zod_v4_core_api_js-_ssr_node_modules_zod_v4_core_json-schema-proces-9acb35.js
 |   |   |   webpack-runtime.js
-|   |   |   _action-browser_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_-14f784.js
-|   |   |   _rsc_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_js_actions_-74bf21.js
-|   |   |   _rsc_node_modules_next_dist_build_webpack_loaders_next-flight-client-entry-loader_js_modules_-8333bd.js
-|   |   |   _rsc_node_modules_next_dist_build_webpack_loaders_next-flight-client-entry-loader_js_modules_-856685.js
+|   |   |   _action-browser_node_modules_next_dist_build_webpack_loaders_next-flight-action-entry-loader_-8501bf.js
 |   |   |   _ssr_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
 |   |   |   
 |   |   +---app
-|   |   |   |   page.js
-|   |   |   |   page_client-reference-manifest.js
-|   |   |   |   
 |   |   |   +---api
-|   |   |   |   +---appointments
-|   |   |   |   |   |   route.js
-|   |   |   |   |   |   route_client-reference-manifest.js
-|   |   |   |   |   |   
-|   |   |   |   |   \---[id]
-|   |   |   |   |       |   route.js
-|   |   |   |   |       |   route_client-reference-manifest.js
-|   |   |   |   |       |   
-|   |   |   |   |       \---status
-|   |   |   |   |               route.js
-|   |   |   |   |               route_client-reference-manifest.js
-|   |   |   |   |               
-|   |   |   |   \---patients
-|   |   |   |       \---search
+|   |   |   |   \---sms
+|   |   |   |       +---campaigns
+|   |   |   |       |       route.js
+|   |   |   |       |       route_client-reference-manifest.js
+|   |   |   |       |       
+|   |   |   |       \---stats
 |   |   |   |               route.js
 |   |   |   |               route_client-reference-manifest.js
 |   |   |   |               
-|   |   |   +---dashboard
-|   |   |   |   |   page.js
-|   |   |   |   |   page_client-reference-manifest.js
-|   |   |   |   |   
-|   |   |   |   +---appointments
-|   |   |   |   |   |   page-src_c.js
-|   |   |   |   |   |   page-src_components_appointments_A.js
-|   |   |   |   |   |   page-_.js
-|   |   |   |   |   |   page.js
-|   |   |   |   |   |   page_client-reference-manifest.js
-|   |   |   |   |   |   
-|   |   |   |   |   \---[id]
-|   |   |   |   |           page.js
-|   |   |   |   |           page_client-reference-manifest.js
-|   |   |   |   |           
-|   |   |   |   \---users
-|   |   |   |           page.js
-|   |   |   |           page_client-reference-manifest.js
-|   |   |   |           
-|   |   |   +---favicon.ico
-|   |   |   |       route.js
-|   |   |   |       
-|   |   |   \---login
-|   |   |           page.js
-|   |   |           page_client-reference-manifest.js
-|   |   |           
+|   |   |   \---dashboard
+|   |   |       \---sms
+|   |   |           +---campaigns
+|   |   |           |       page.js
+|   |   |           |       page_client-reference-manifest.js
+|   |   |           |       
+|   |   |           +---reports
+|   |   |           |       page.js
+|   |   |           |       page_client-reference-manifest.js
+|   |   |           |       
+|   |   |           \---settings
+|   |   |                   page.js
+|   |   |                   page_client-reference-manifest.js
+|   |   |                   
 |   |   \---static
 |   |       \---webpack
 |   |               633457081244afec._.hot-update.json
@@ -579,17 +176,10 @@ C:.
 |   |   |   |   app-pages-internals.js
 |   |   |   |   main-app.js
 |   |   |   |   polyfills.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_aria-hidden_dist_es2015_index_js-_app-pages-browser_n-214683.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_moment-jalaali_index_js-_app-pages-browser_node_modul-82f826.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_moment-jalaali_index_js-_app-pages-browser_node_modul-fcc681.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-0a0a9c.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-df82eb.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-facf7f.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_moment-jalaali_index_js-_app-pages-browser_node_modul-e0af9d.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_api_navigation_js-_app-pages-browser_node_m-84728a.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_build_polyfills_process_js-_app-pages-brows-9224fe.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js-_app-pages-browser_n-79ff02.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js-_app-pages-browser_n-87480c.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js-_app-pages-browser_n-bcb5a8.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_app-dir_link_js.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_build_webpack_loaders_next-flight-loader_ac-cb416e.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_assign-location_js-_app-pages-browse-3c059e.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_components_client-page_js-_app-pages-a7ff94.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_client_components_links_js-_app-pages-brows-2e6835.js
@@ -612,65 +202,38 @@ C:.
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_anser_index_js-_app-pages-browser_-ab3fb4.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_next_react-refresh-utils_dist_runt-bc3eeb.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react-dom_cjs_react-dom-client_dev-4d7141.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react_jsx-dev-runtime_js-_app-page-3c8f24.js
+|   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_compiled_react_jsx-dev-runtime_js-_app-page-da5d61.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_dist_lib_require-instrumentation-client_js-_app--3ed464.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_font_google_target_css_path_src_app_layout_tsx_i-228151.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_next_font_google_target_css_path_src_app_layout_tsx_i-c6ab07.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_radix-ui_react-dropdown-menu_dist_index_mjs-_app-page-49d507.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_radix-ui_react-label_dist_index_mjs-_app-pages-browse-a19ac6.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_radix-ui_react-popper_dist_index_mjs-_app-pages-brows-dc2676.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_radix-ui_react-select_dist_index_mjs-_app-pages-brows-dce9f4.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_radix-ui_react-slot_dist_index_mjs-_app-pages-browser-0a55aa.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_react-date-object_calendars_persian_js-_app-pages-bro-b6ca94.js
 |   |   |   |   vendors-_app-pages-browser_node_modules_sonner_dist_index_mjs.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_use-callback-ref_dist_es2015_useMergeRef_js-_app-page-d35f5d.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_zod_v4_classic_iso_js-_app-pages-browser_node_modules-59f0af.js
-|   |   |   |   vendors-_app-pages-browser_node_modules_zod_v4_core_api_js-_app-pages-browser_node_modules_zo-24b31b.js
 |   |   |   |   webpack.js
 |   |   |   |   _app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
-|   |   |   |   _app-pages-browser_src_components_appointments_AppointmentForm_tsx-_app-pages-browser_src_com-f36c44.js
-|   |   |   |   _app-pages-browser_src_components_ui_badge_tsx-_app-pages-browser_src_components_ui_button_ts-7dcc1d.js
-|   |   |   |   _app-pages-browser_src_components_ui_button_tsx-_app-pages-browser_src_components_ui_card_tsx.js
-|   |   |   |   _app-pages-browser_src_lib_util_jalaliDate_ts-_app-pages-browser_src_lib_validations_appointm-c295c8.js
 |   |   |   |   
 |   |   |   \---app
 |   |   |       |   layout.js
-|   |   |       |   page.js
 |   |   |       |   
 |   |   |       +---api
-|   |   |       |   +---appointments
-|   |   |       |   |   |   route.js
-|   |   |       |   |   |   
-|   |   |       |   |   \---[id]
-|   |   |       |   |       |   route.js
-|   |   |       |   |       |   
-|   |   |       |   |       \---status
-|   |   |       |   |               route.js
-|   |   |       |   |               
-|   |   |       |   \---patients
-|   |   |       |       \---search
+|   |   |       |   \---sms
+|   |   |       |       +---campaigns
+|   |   |       |       |       route.js
+|   |   |       |       |       
+|   |   |       |       \---stats
 |   |   |       |               route.js
 |   |   |       |               
-|   |   |       +---dashboard
-|   |   |       |   |   layout.js
-|   |   |       |   |   page.js
-|   |   |       |   |   
-|   |   |       |   +---appointments
-|   |   |       |   |   |   page-src_components_appointments_A.js
-|   |   |       |   |   |   page-src_components_ui_d.js
-|   |   |       |   |   |   page-src_l.js
-|   |   |       |   |   |   page-_.js
-|   |   |       |   |   |   page.js
-|   |   |       |   |   |   
-|   |   |       |   |   \---[id]
-|   |   |       |   |           page.js
-|   |   |       |   |           
-|   |   |       |   \---users
-|   |   |       |           page.js
-|   |   |       |           
-|   |   |       \---login
-|   |   |               page.js
-|   |   |               
+|   |   |       \---dashboard
+|   |   |           |   layout.js
+|   |   |           |   
+|   |   |           \---sms
+|   |   |               +---campaigns
+|   |   |               |       page.js
+|   |   |               |       
+|   |   |               +---reports
+|   |   |               |       page.js
+|   |   |               |       
+|   |   |               \---settings
+|   |   |                       page.js
+|   |   |                       
 |   |   +---css
 |   |   |   \---app
 |   |   |           layout.css
@@ -685,212 +248,49 @@ C:.
 |   |   |       8c96cc4bd2a39381-s.woff2
 |   |   |       
 |   |   \---webpack
-|   |       |   14f8d0399a7ddbe3.webpack.hot-update.json
-|   |       |   153e29ba251a3be2.webpack.hot-update.json
-|   |       |   1f8643a5160f3873.webpack.hot-update.json
-|   |       |   248ee3cabb3e61a6.webpack.hot-update.json
-|   |       |   265994a555228441.webpack.hot-update.json
-|   |       |   3108f95cab286013.webpack.hot-update.json
-|   |       |   349991fa5e88c0e8.webpack.hot-update.json
-|   |       |   38133af4f2bc3c42.webpack.hot-update.json
-|   |       |   3e1e9c2ca03ab9c7.webpack.hot-update.json
-|   |       |   3e3f55d22e92c963.webpack.hot-update.json
-|   |       |   3e71b0bef4ce86bf.webpack.hot-update.json
-|   |       |   43c11195e50d6043.webpack.hot-update.json
-|   |       |   53c8896a4e5abdad.webpack.hot-update.json
-|   |       |   564be048e9d4e7f6.webpack.hot-update.json
-|   |       |   58315e3cca3d71c1.webpack.hot-update.json
-|   |       |   5c11f5b677ffac12.webpack.hot-update.json
+|   |       |   0c5498bbda6a6462.webpack.hot-update.json
+|   |       |   4c10ea0cc8bf7030.webpack.hot-update.json
+|   |       |   4e9eecff66bcd051.webpack.hot-update.json
 |   |       |   633457081244afec._.hot-update.json
-|   |       |   67a9f86024eb17f9.webpack.hot-update.json
-|   |       |   68e4949b176d1590.webpack.hot-update.json
-|   |       |   69b4a58e367f5385.webpack.hot-update.json
-|   |       |   6cd331f69a04f19a.webpack.hot-update.json
-|   |       |   71890cf0a2ed06c2.webpack.hot-update.json
-|   |       |   71ad4542bed9b983.webpack.hot-update.json
-|   |       |   7ba92e727474475a.webpack.hot-update.json
-|   |       |   7e79625689341a6e.webpack.hot-update.json
-|   |       |   86a31e28902b2397.webpack.hot-update.json
-|   |       |   87f34ec64d410a44.webpack.hot-update.json
-|   |       |   91401116edde2415.webpack.hot-update.json
-|   |       |   934831945bdcabd7.webpack.hot-update.json
-|   |       |   9776a889eb91df48.webpack.hot-update.json
-|   |       |   993fbb7f537d44b2.webpack.hot-update.json
-|   |       |   9f470dae60426403.webpack.hot-update.json
-|   |       |   a1a7ed5b694aaa7a.webpack.hot-update.json
-|   |       |   b571bc0494894cb8.webpack.hot-update.json
-|   |       |   b839e3ef98449f17.webpack.hot-update.json
-|   |       |   ca94f8db2c0b1fc7.webpack.hot-update.json
-|   |       |   cfda06babb8bfb71.webpack.hot-update.json
-|   |       |   d564316bea35660c.webpack.hot-update.json
-|   |       |   dc0b68135a6d634c.webpack.hot-update.json
-|   |       |   de78bc1cc0dd21e4.webpack.hot-update.json
-|   |       |   ef39ab88f9cfa6ef.webpack.hot-update.json
-|   |       |   f425db18575d7371.webpack.hot-update.json
-|   |       |   f4b8c090897ea84b.webpack.hot-update.json
-|   |       |   webpack.14f8d0399a7ddbe3.hot-update.js
-|   |       |   webpack.153e29ba251a3be2.hot-update.js
-|   |       |   webpack.1f8643a5160f3873.hot-update.js
-|   |       |   webpack.248ee3cabb3e61a6.hot-update.js
-|   |       |   webpack.265994a555228441.hot-update.js
-|   |       |   webpack.3108f95cab286013.hot-update.js
-|   |       |   webpack.349991fa5e88c0e8.hot-update.js
-|   |       |   webpack.38133af4f2bc3c42.hot-update.js
-|   |       |   webpack.3e1e9c2ca03ab9c7.hot-update.js
-|   |       |   webpack.3e3f55d22e92c963.hot-update.js
-|   |       |   webpack.3e71b0bef4ce86bf.hot-update.js
-|   |       |   webpack.43c11195e50d6043.hot-update.js
-|   |       |   webpack.53c8896a4e5abdad.hot-update.js
-|   |       |   webpack.564be048e9d4e7f6.hot-update.js
-|   |       |   webpack.58315e3cca3d71c1.hot-update.js
-|   |       |   webpack.5c11f5b677ffac12.hot-update.js
-|   |       |   webpack.67a9f86024eb17f9.hot-update.js
-|   |       |   webpack.68e4949b176d1590.hot-update.js
-|   |       |   webpack.69b4a58e367f5385.hot-update.js
-|   |       |   webpack.6cd331f69a04f19a.hot-update.js
-|   |       |   webpack.71890cf0a2ed06c2.hot-update.js
-|   |       |   webpack.71ad4542bed9b983.hot-update.js
-|   |       |   webpack.7ba92e727474475a.hot-update.js
-|   |       |   webpack.7e79625689341a6e.hot-update.js
-|   |       |   webpack.86a31e28902b2397.hot-update.js
-|   |       |   webpack.87f34ec64d410a44.hot-update.js
-|   |       |   webpack.91401116edde2415.hot-update.js
-|   |       |   webpack.934831945bdcabd7.hot-update.js
-|   |       |   webpack.9776a889eb91df48.hot-update.js
-|   |       |   webpack.993fbb7f537d44b2.hot-update.js
-|   |       |   webpack.9f470dae60426403.hot-update.js
-|   |       |   webpack.a1a7ed5b694aaa7a.hot-update.js
-|   |       |   webpack.b571bc0494894cb8.hot-update.js
-|   |       |   webpack.b839e3ef98449f17.hot-update.js
-|   |       |   webpack.ca94f8db2c0b1fc7.hot-update.js
-|   |       |   webpack.cfda06babb8bfb71.hot-update.js
-|   |       |   webpack.d564316bea35660c.hot-update.js
-|   |       |   webpack.dc0b68135a6d634c.hot-update.js
-|   |       |   webpack.de78bc1cc0dd21e4.hot-update.js
-|   |       |   webpack.ef39ab88f9cfa6ef.hot-update.js
-|   |       |   webpack.f425db18575d7371.hot-update.js
-|   |       |   webpack.f4b8c090897ea84b.hot-update.js
-|   |       |   _app-pages-browser_src_components_appointments_AppointmentForm_tsx-_app-pages-browser_src_com-f36c44.91401116edde2415.hot-update.js
-|   |       |   _app-pages-browser_src_lib_util_jalaliDate_ts-_app-pages-browser_src_lib_validations_appointm-c295c8.86a31e28902b2397.hot-update.js
-|   |       |   _app-pages-browser_src_lib_util_jalaliDate_ts-_app-pages-browser_src_lib_validations_appointm-c295c8.87f34ec64d410a44.hot-update.js
+|   |       |   914bf1b0fb21d1c5.webpack.hot-update.json
+|   |       |   b7deb3c7fdadda05.webpack.hot-update.json
+|   |       |   webpack.0c5498bbda6a6462.hot-update.js
+|   |       |   webpack.4c10ea0cc8bf7030.hot-update.js
+|   |       |   webpack.4e9eecff66bcd051.hot-update.js
+|   |       |   webpack.914bf1b0fb21d1c5.hot-update.js
+|   |       |   webpack.b7deb3c7fdadda05.hot-update.js
 |   |       |   
 |   |       \---app
-|   |           |   layout.14f8d0399a7ddbe3.hot-update.js
-|   |           |   layout.1f8643a5160f3873.hot-update.js
-|   |           |   layout.248ee3cabb3e61a6.hot-update.js
-|   |           |   layout.349991fa5e88c0e8.hot-update.js
-|   |           |   layout.3e1e9c2ca03ab9c7.hot-update.js
-|   |           |   layout.3e3f55d22e92c963.hot-update.js
-|   |           |   layout.3e71b0bef4ce86bf.hot-update.js
-|   |           |   layout.58315e3cca3d71c1.hot-update.js
-|   |           |   layout.5c11f5b677ffac12.hot-update.js
-|   |           |   layout.68e4949b176d1590.hot-update.js
-|   |           |   layout.6cd331f69a04f19a.hot-update.js
-|   |           |   layout.71890cf0a2ed06c2.hot-update.js
-|   |           |   layout.7ba92e727474475a.hot-update.js
-|   |           |   layout.7e79625689341a6e.hot-update.js
-|   |           |   layout.86a31e28902b2397.hot-update.js
-|   |           |   layout.91401116edde2415.hot-update.js
-|   |           |   layout.993fbb7f537d44b2.hot-update.js
-|   |           |   layout.9f470dae60426403.hot-update.js
-|   |           |   layout.a1a7ed5b694aaa7a.hot-update.js
-|   |           |   layout.b571bc0494894cb8.hot-update.js
-|   |           |   layout.b839e3ef98449f17.hot-update.js
-|   |           |   layout.d564316bea35660c.hot-update.js
-|   |           |   layout.de78bc1cc0dd21e4.hot-update.js
-|   |           |   layout.f425db18575d7371.hot-update.js
-|   |           |   page.ca94f8db2c0b1fc7.hot-update.js
-|   |           |   page.dc0b68135a6d634c.hot-update.js
-|   |           |   
-|   |           +---dashboard
-|   |           |   |   layout.3108f95cab286013.hot-update.js
-|   |           |   |   layout.43c11195e50d6043.hot-update.js
-|   |           |   |   layout.564be048e9d4e7f6.hot-update.js
-|   |           |   |   layout.5c11f5b677ffac12.hot-update.js
-|   |           |   |   layout.67a9f86024eb17f9.hot-update.js
-|   |           |   |   layout.69b4a58e367f5385.hot-update.js
-|   |           |   |   layout.71ad4542bed9b983.hot-update.js
-|   |           |   |   layout.9776a889eb91df48.hot-update.js
-|   |           |   |   layout.cfda06babb8bfb71.hot-update.js
-|   |           |   |   page.153e29ba251a3be2.hot-update.js
-|   |           |   |   
-|   |           |   +---appointments
-|   |           |   |       page-src_components_appointments_A.248ee3cabb3e61a6.hot-update.js
-|   |           |   |       page-src_components_appointments_A.349991fa5e88c0e8.hot-update.js
-|   |           |   |       page-src_components_appointments_A.3e71b0bef4ce86bf.hot-update.js
-|   |           |   |       page-src_components_appointments_A.6cd331f69a04f19a.hot-update.js
-|   |           |   |       page-src_components_appointments_A.7ba92e727474475a.hot-update.js
-|   |           |   |       page-src_components_appointments_A.7e79625689341a6e.hot-update.js
-|   |           |   |       page-src_components_appointments_A.d564316bea35660c.hot-update.js
-|   |           |   |       page.14f8d0399a7ddbe3.hot-update.js
-|   |           |   |       page.58315e3cca3d71c1.hot-update.js
-|   |           |   |       page.a1a7ed5b694aaa7a.hot-update.js
-|   |           |   |       page.b839e3ef98449f17.hot-update.js
-|   |           |   |       page.f425db18575d7371.hot-update.js
-|   |           |   |       
-|   |           |   \---users
-|   |           |           page.153e29ba251a3be2.hot-update.js
-|   |           |           page.3108f95cab286013.hot-update.js
-|   |           |           page.43c11195e50d6043.hot-update.js
-|   |           |           page.564be048e9d4e7f6.hot-update.js
-|   |           |           page.5c11f5b677ffac12.hot-update.js
-|   |           |           page.67a9f86024eb17f9.hot-update.js
-|   |           |           page.69b4a58e367f5385.hot-update.js
-|   |           |           page.71ad4542bed9b983.hot-update.js
-|   |           |           page.9776a889eb91df48.hot-update.js
-|   |           |           page.cfda06babb8bfb71.hot-update.js
-|   |           |           
-|   |           \---login
-|   |                   page.153e29ba251a3be2.hot-update.js
-|   |                   page.3108f95cab286013.hot-update.js
-|   |                   page.43c11195e50d6043.hot-update.js
-|   |                   page.564be048e9d4e7f6.hot-update.js
-|   |                   page.5c11f5b677ffac12.hot-update.js
-|   |                   page.67a9f86024eb17f9.hot-update.js
-|   |                   page.69b4a58e367f5385.hot-update.js
-|   |                   page.71ad4542bed9b983.hot-update.js
-|   |                   page.9776a889eb91df48.hot-update.js
-|   |                   page.cfda06babb8bfb71.hot-update.js
-|   |                   page.dc0b68135a6d634c.hot-update.js
-|   |                   
+|   |               layout.4c10ea0cc8bf7030.hot-update.js
+|   |               
 |   \---types
 |       |   cache-life.d.ts
 |       |   package.json
 |       |   
 |       \---app
 |           |   layout.ts
-|           |   page.ts
 |           |   
 |           +---api
-|           |   +---appointments
-|           |   |   |   route.ts
-|           |   |   |   
-|           |   |   \---[id]
-|           |   |       |   route.ts
-|           |   |       |   
-|           |   |       \---status
-|           |   |               route.ts
-|           |   |               
-|           |   \---patients
-|           |       \---search
+|           |   \---sms
+|           |       +---campaigns
+|           |       |       route.ts
+|           |       |       
+|           |       \---stats
 |           |               route.ts
 |           |               
-|           +---dashboard
-|           |   |   layout.ts
-|           |   |   page.ts
-|           |   |   
-|           |   +---appointments
-|           |   |   |   page.ts
-|           |   |   |   
-|           |   |   \---[id]
-|           |   |           page.ts
-|           |   |           
-|           |   \---users
-|           |           page.ts
-|           |           
-|           \---login
-|                   page.ts
-|                   
+|           \---dashboard
+|               |   layout.ts
+|               |   
+|               \---sms
+|                   +---campaigns
+|                   |       page.ts
+|                   |       
+|                   +---reports
+|                   |       page.ts
+|                   |       
+|                   \---settings
+|                           page.ts
+|                           
 +---node_modules
 |   |   .package-lock.json
 |   |   
@@ -6564,6 +5964,60 @@ C:.
 |   |   |           index.mjs
 |   |   |           index.mjs.map
 |   |   |           
+|   |   +---react-switch
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
 |   |   +---react-tabs
 |   |   |   |   LICENSE
 |   |   |   |   package.json
@@ -11390,8 +10844,6 @@ C:.
 |   |                       
 |   +---@unrs
 |   |   +---.resolver-binding-win32-x64-msvc-tYHmNAD8
-|   |   +---resolver-binding-wasm32-wasi
-|   |   |   \---node_modules
 |   |   \---resolver-binding-win32-x64-msvc
 |   |           package.json
 |   |           README.md
@@ -50895,6 +50347,17 @@ C:.
     |   |   |   \---me
     |   |   |           route.ts
     |   |   |           
+    |   |   +---cron
+    |   |   |   +---birthday-alerts
+    |   |   |   +---daily-reminders
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   +---process-queue
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   \---send-reminders
+    |   |   |           route.ts
+    |   |   |           
     |   |   +---patients
     |   |   |   |   route.ts
     |   |   |   |   
@@ -50910,20 +50373,62 @@ C:.
     |   |   +---sales
     |   |   |       route.ts
     |   |   |       
+    |   |   +---settings
+    |   |   |   \---sms
+    |   |   |           route.ts
+    |   |   |           
+    |   |   +---sms
+    |   |   |   +---campaigns
+    |   |   |   |   |   route.ts
+    |   |   |   |   |   
+    |   |   |   |   \---[id]
+    |   |   |   |       |   route.ts
+    |   |   |   |       |   
+    |   |   |   |       +---recipients
+    |   |   |   |       |       route.ts
+    |   |   |   |       |       
+    |   |   |   |       \---send
+    |   |   |   |               route.ts
+    |   |   |   |               
+    |   |   |   +---logs
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   +---patients
+    |   |   |   |   \---search
+    |   |   |   |           route.ts
+    |   |   |   |           
+    |   |   |   +---queue
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   +---send
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   +---stats
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   \---templates
+    |   |   |       |   route.ts
+    |   |   |       |   
+    |   |   |       \---[id]
+    |   |   |               route.ts
+    |   |   |               
     |   |   +---stats
     |   |   |       route.ts
     |   |   |       
-    |   |   \---storage
-    |   |       +---delete
-    |   |       |       route.ts
-    |   |       |       
-    |   |       +---singe-url
-    |   |       |   \---[...file-path]
-    |   |       |           route.ts
-    |   |       |           
-    |   |       \---upload
-    |   |               route.ts
-    |   |               
+    |   |   +---storage
+    |   |   |   +---delete
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   +---singe-url
+    |   |   |   |   \---[...file-path]
+    |   |   |   |           route.ts
+    |   |   |   |           
+    |   |   |   \---upload
+    |   |   |           route.ts
+    |   |   |           
+    |   |   \---test-sms
+    |   |           route.ts
+    |   |           
     |   +---dashboard
     |   |   |   layout.tsx
     |   |   |   page.client.tsx
@@ -50966,6 +50471,30 @@ C:.
     |   |   |           page.client.tsx
     |   |   |           page.tsx
     |   |   |           
+    |   |   +---sms
+    |   |   |   |   page.tsx
+    |   |   |   |   
+    |   |   |   +---campaigns
+    |   |   |   |   |   page.tsx
+    |   |   |   |   |   
+    |   |   |   |   +---new
+    |   |   |   |   |       page.tsx
+    |   |   |   |   |       
+    |   |   |   |   \---[id]
+    |   |   |   |       |   page.tsx
+    |   |   |   |       |   
+    |   |   |   |       \---edit
+    |   |   |   |               page.tsx
+    |   |   |   |               
+    |   |   |   +---reports
+    |   |   |   |       page.tsx
+    |   |   |   |       
+    |   |   |   +---settings
+    |   |   |   |       page.tsx
+    |   |   |   |       
+    |   |   |   \---templates
+    |   |   |           page.tsx
+    |   |   |           
     |   |   \---users
     |   |           page.client.tsx
     |   |           page.tsx
@@ -51000,6 +50529,13 @@ C:.
     |   |       RecentSales.tsx
     |   |       StatsCard.tsx
     |   |       
+    |   +---sms
+    |   |       CampaignForm.tsx
+    |   |       CampaignList.tsx
+    |   |       PatientFilter.tsx
+    |   |       StatsCards.tsx
+    |   |       TemplateManager.tsx
+    |   |       
     |   \---ui
     |           badge.tsx
     |           button.tsx
@@ -51014,11 +50550,15 @@ C:.
     |           select.tsx
     |           separator.tsx
     |           sonner.tsx
+    |           switch.tsx
     |           table.tsx
     |           tabs.tsx
     |           textarea.tsx
     |           tooltip.tsx
     |           
+    +---HearingAid.Purchased
+    |       policy.ts
+    |       
     +---hooks
     |       useAppointments.ts
     |       
@@ -51028,6 +50568,20 @@ C:.
     |   +---components
     |   |       FileUploader.ts
     |   |       
+    |   +---sms
+    |   |   |   birthday.ts
+    |   |   |   campaigns.ts
+    |   |   |   event-handlers.ts
+    |   |   |   index.ts
+    |   |   |   policy.ts
+    |   |   |   queue.ts
+    |   |   |   reminders.ts
+    |   |   |   templates.ts
+    |   |   |   
+    |   |   \---providers
+    |   |           base.ts
+    |   |           melipayamak.ts
+    |   |           
     |   +---storage
     |   |       helpers.ts
     |   |       patientFiles.ts
@@ -51041,6 +50595,8 @@ C:.
     |   |   |   server.ts
     |   |   |   
     |   |   \---migrations
+    |   |           YYYYMMDDHHMMSS_sms_system.sql
+    |   |           
     |   +---util
     |   |       jalaliDate.ts
     |   |       
@@ -51054,5 +50610,6 @@ C:.
     |       
     \---types
             index.ts
+            messaging.ts
             storage.ts
             

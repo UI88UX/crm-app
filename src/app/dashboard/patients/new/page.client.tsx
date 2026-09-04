@@ -15,7 +15,8 @@ import { type PatientFile } from "@/lib/storage/patientFiles";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import { fromJalaliToDate, toJalaliDisplay } from "@/lib/util/jalaliDate";
+
+import { useCreatePatient } from "@/hooks/usePatients";
 import {
   ArrowRight,
   User,
@@ -54,13 +55,14 @@ interface FormData {
 
 export default function NewPatientClient() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [createdPatientId, setCreatedPatientId] = useState<string | null>(null);
   const [createdPatientName, setCreatedPatientName] = useState<string>("");
   const [uploadedFiles, setUploadedFiles] = useState<PatientFile[]>([]);
   const [isPatientCreated, setIsPatientCreated] = useState(false);
   const [birthDatePicker, setBirthDatePicker] = useState<string | null>(null);
+
+  const createPatient = useCreatePatient();
 
   const [formData, setFormData] = useState<FormData>({
     first_name: "",
@@ -92,57 +94,48 @@ export default function NewPatientClient() {
   // ارسال فرم
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setErrors({});
 
-    try {
-      const dataToSubmit = {
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        national_code: formData.national_code,
-        phone: formData.phone,
-        email: formData.email || null,
-        birth_date: formData.birth_date || null,
-        gender: formData.gender as 'male' | 'female' | 'other' | null || null,
-        address: formData.address || null,
-        city: formData.city || null,
-        province: formData.province || null,
-        postal_code: formData.postal_code || null,
-        emergency_contact_name: formData.emergency_contact_name || null,
-        emergency_contact_phone: formData.emergency_contact_phone || null,
-        notes: formData.notes || null,
-      };
+    const dataToSubmit = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      national_code: formData.national_code,
+      phone: formData.phone,
+      email: formData.email || null,
+      birth_date: formData.birth_date || null,
+      gender: formData.gender as 'male' | 'female' | 'other' | null || null,
+      address: formData.address || null,
+      city: formData.city || null,
+      province: formData.province || null,
+      postal_code: formData.postal_code || null,
+      emergency_contact_name: formData.emergency_contact_name || null,
+      emergency_contact_phone: formData.emergency_contact_phone || null,
+      notes: formData.notes || null,
+    };
 
-      const result = await createPatient(dataToSubmit);
-
-      if (result.error) {
-        if (result.fieldErrors) {
-          setErrors(result.fieldErrors);
-          toast.error("لطفاً فیلدهای مشخص شده را اصلاح کنید.");
-        } else {
-          toast.error(result.error);
-        }
-      } else if (result.data) {
-        // ذخیره ID و نام بیمار ایجاد شده
-        setCreatedPatientId(result.data.id);
-        setCreatedPatientName(`${result.data.first_name} ${result.data.last_name}`);
+    createPatient.mutate(dataToSubmit, {
+      onSuccess: (data) => {
+        setCreatedPatientId(data.id);
+        setCreatedPatientName(`${data.first_name} ${data.last_name}`);
         setIsPatientCreated(true);
-        toast.success(`بیمار ${result.data.first_name} ${result.data.last_name} با موفقیت ثبت شد!`);
+        toast.success(`بیمار ${data.first_name} ${data.last_name} با موفقیت ثبت شد!`);
 
-        // اسکرول به بخش فایل‌ها
         setTimeout(() => {
           const filesSection = document.getElementById('files-section');
           if (filesSection) {
             filesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         }, 300);
-      }
-    } catch (error) {
-      console.error("Error creating patient:", error);
-      toast.error("خطای غیرمنتظره رخ داد.");
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      onError: (error: any) => {
+        if (error.fieldErrors) {
+          setErrors(error.fieldErrors);
+          toast.error("لطفاً فیلدهای مشخص شده را اصلاح کنید.");
+        } else {
+          toast.error(error.message || "خطا در ایجاد بیمار");
+        }
+      },
+    });
   };
 
   // رفتن به صفحه ویرایش بیمار
@@ -469,8 +462,8 @@ export default function NewPatientClient() {
 
               {/* دکمه‌ها */}
               <div className="flex gap-4 pt-4 border-t">
-                <Button type="submit" disabled={isLoading} className="min-w-[120px]">
-                  {isLoading ? (
+                <Button type="submit" disabled={createPatient.isPending} className="min-w-[120px]">
+                  {createPatient.isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                       در حال ثبت...

@@ -127,7 +127,7 @@ export async function processQueueItem(queueId: string): Promise<{ success: bool
         status: sendResult.success ? 'sent' : 'failed',
         error: sendResult.error || null,
         provider_response: sendResult.providerResponse || null,
-        cost: sendResult.success ? 100 : 0,
+        cost: sendResult.success ? 150 : 0,
       });
   
       // بروزرسانی وضعیت صف
@@ -144,7 +144,7 @@ export async function processQueueItem(queueId: string): Promise<{ success: bool
         })
         .eq('id', queueId);
   
-      // تلاش مجدد در صورت失敗
+      // تلاش مجدد 
       if (!sendResult.success && queueItem.attempts + 1 < queueItem.max_attempts) {
         const retryDelay = 60 * 60 * 1000;
         const retryTime = new Date(Date.now() + retryDelay);

@@ -1,401 +1,385 @@
 // src/app/dashboard/appointments/page.client.tsx
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Calendar, Loader2, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
-import moment from "moment-jalaali";
-
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AppointmentStatusBadge } from "@/components/appointments/AppointmentStatusBadge";
-import { AppointmentStatusActions } from "@/components/appointments/AppointmentStatusActions";
-import { AppointmentForm } from "@/components/appointments/AppointmentForm";
-import { UpcomingAppointmentsAlert } from "@/components/appointments/UpcomingAppointmentsAlert";
+import { toast } from "sonner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import {
+  Calendar as CalendarIcon,
+  Plus,
+  Search,
+  RefreshCw,
+  Eye,
+  Trash2,
+  Clock,
+  User,
+  Phone,
+  Filter,
+  X,
+  CheckCircle,
+  Ban,
+  Clock as ClockIcon,
+  UserCheck,
+  UserX,
+  Calendar
+} from "lucide-react";
+import moment from "moment-jalaali";
 import { toJalaliDisplay } from "@/lib/util/jalaliDate";
-import { APPOINTMENT_TYPE_MAP, APPOINTMENT_STATUSES, APPOINTMENT_TYPES, type Appointment, type AppointmentStatus } from "@/types";
+import {
+  useAppointments,
+  useDeleteAppointment,
+  useUpdateAppointmentStatus,
+} from "@/hooks/useAppointments";
+import { APPOINTMENT_STATUSES, APPOINTMENT_TYPES, type AppointmentStatus } from "@/types";
+import { UpcomingAppointmentsAlert } from "@/components/appointments/UpcomingAppointmentsAlert";
 
-export function AppointmentsPageClient() {
+// کامپوننت نمایش وضعیت نوبت
+function AppointmentStatusBadge({ status }: { status: AppointmentStatus }) {
+  const statusMap: Record<AppointmentStatus, { label: string; color: string }> = {
+    scheduled: { label: "برنامه‌ریزی شده", color: "bg-blue-100 text-blue-700" },
+    pending: { label: "در انتظار", color: "bg-yellow-100 text-yellow-700" },
+    confirmed: { label: "تأیید شده", color: "bg-green-100 text-green-700" },
+    in_progress: { label: "در حال انجام", color: "bg-purple-100 text-purple-700" },
+    completed: { label: "انجام شده", color: "bg-gray-100 text-gray-700" },
+    cancelled: { label: "لغو شده", color: "bg-red-100 text-red-700" },
+    no_show: { label: "عدم حضور", color: "bg-orange-100 text-orange-700" },
+  };
+
+  const info = statusMap[status] || { label: status, color: "bg-gray-100 text-gray-700" };
+  return <Badge className={info.color}>{info.label}</Badge>;
+}
+
+interface FilterState {
+  status: string;
+  type: string;
+  search: string;
+  start_date: string;
+  end_date: string;
+}
+
+export default function AppointmentsPageClient() {
   const router = useRouter();
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [total, setTotal] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [filters, setFilters] = useState<FilterState>({
+    status: "",
+    type: "",
+    search: "",
+    start_date: "",
+    end_date: "",
+  });
+  const [showFilters, setShowFilters] = useState(false);
 
-  // فیلترها
-  const [statusFilter, setStatusFilter] = useState<AppointmentStatus | "all">("all");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
-  const [dateRange, setDateRange] = useState<"today" | "week" | "month" | "all">("all");
-
-  // دریافت نوبت‌ها
-  const loadAppointments = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const params = new URLSearchParams();
-      if (statusFilter !== "all") params.append("status", statusFilter);
-      if (typeFilter !== "all") params.append("type", typeFilter);
-
-      // فیلتر تاریخ
-      if (dateRange !== "all") {
-        const now = new Date();
-        let startDate = "";
-        let endDate = "";
-
-        switch (dateRange) {
-          case "today":
-            startDate = now.toISOString().split('T')[0];
-            endDate = now.toISOString().split('T')[0];
-            break;
-          case "week":
-            const weekStart = new Date(now);
-            weekStart.setDate(now.getDate() - now.getDay());
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-            startDate = weekStart.toISOString().split('T')[0];
-            endDate = weekEnd.toISOString().split('T')[0];
-            break;
-          case "month":
-            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-            const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-            startDate = monthStart.toISOString().split('T')[0];
-            endDate = monthEnd.toISOString().split('T')[0];
-            break;
-        }
-
-        if (startDate) params.append("start_date", startDate);
-        if (endDate) params.append("end_date", endDate);
-      }
-
-      params.append("limit", "100");
-
-      const response = await fetch(`/api/appointments?${params.toString()}`);
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "خطا در دریافت نوبت‌ها");
-      }
-
-      setAppointments(result.data || []);
-      setTotal(result.count || 0);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "خطا در دریافت نوبت‌ها";
-      setError(message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [statusFilter, typeFilter, dateRange]);
-
-  useEffect(() => {
-    loadAppointments();
-  }, [loadAppointments]);
-
-  // فیلتر جستجو
-  const filteredAppointments = appointments.filter((app) => {
-    if (!searchQuery) return true;
-    const query = searchQuery.toLowerCase().trim();
-    const patientName = app.patient
-      ? `${app.patient.first_name} ${app.patient.last_name}`.toLowerCase()
-      : "";
-    const title = app.title?.toLowerCase() || "";
-    return patientName.includes(query) || title.includes(query);
+  // ✅ دریافت نوبت‌ها با React Query
+  const {
+    data: appointments = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+  } = useAppointments({
+    status: filters.status as AppointmentStatus || undefined,
+    start_date: filters.start_date || undefined,
+    end_date: filters.end_date || undefined,
+    limit: 50,
   });
 
-  // آمار
-  const stats = {
-    total: appointments.length,
-    today: appointments.filter(a => new Date(a.start_time).toDateString() === new Date().toDateString()).length,
-    upcoming: appointments.filter(a => new Date(a.start_time) > new Date() && a.status !== "cancelled" && a.status !== "completed").length,
-    completed: appointments.filter(a => a.status === "completed").length,
-  };
+  // ✅ حذف نوبت
+  const deleteAppointment = useDeleteAppointment();
 
-  const handleEdit = (appointment: Appointment) => {
-    setSelectedAppointment(appointment);
-    setShowForm(true);
-  };
+  // ✅ تغییر وضعیت نوبت
+  const updateStatus = useUpdateAppointmentStatus();
 
-  const handleDelete = async (appointment: Appointment) => {
-    if (!confirm(`آیا از حذف نوبت "${appointment.title || 'بدون عنوان'}" اطمینان دارید؟`)) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/appointments/${appointment.id}`, {
-        method: "DELETE",
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "خطا در حذف نوبت");
+  // فیلتر کردن بر اساس جستجو و نوع
+  const filteredAppointments = appointments.filter((appointment) => {
+    // فیلتر جستجو
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      const patientName = 
+        `${appointment.patient?.first_name || ""} ${appointment.patient?.last_name || ""}`.toLowerCase();
+      const title = (appointment.title || "").toLowerCase();
+      
+      if (!patientName.includes(searchLower) && !title.includes(searchLower)) {
+        return false;
       }
+    }
 
-      await loadAppointments();
-    } catch (error) {
-      console.error("Error deleting appointment:", error);
-      alert(error instanceof Error ? error.message : "خطا در حذف نوبت");
+    // فیلتر نوع
+    if (filters.type && appointment.type !== filters.type) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // آمار وضعیت‌ها
+  const statusStats = appointments.reduce((acc, app) => {
+    acc[app.status] = (acc[app.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const handleDelete = (id: string, title: string) => {
+    if (confirm(`آیا از حذف نوبت "${title || 'بدون عنوان'}" اطمینان دارید؟`)) {
+      deleteAppointment.mutate(id);
     }
   };
 
-  const handleFormSuccess = () => {
-    setShowForm(false);
-    setSelectedAppointment(null);
-    loadAppointments();
+  const handleStatusChange = (id: string, status: AppointmentStatus) => {
+    updateStatus.mutate({ id, status });
   };
 
-  if (error) {
+  const resetFilters = () => {
+    setFilters({
+      status: "",
+      type: "",
+      search: "",
+      start_date: "",
+      end_date: "",
+    });
+  };
+
+  if (isError) {
     return (
-      <div className="p-4 md:p-6">
-        <Card>
-          <CardContent className="py-8 text-center">
-            <p className="text-red-500">{error}</p>
-            <Button variant="outline" className="mt-4" onClick={loadAppointments}>
-              تلاش مجدد
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="p-6">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+          <p>خطا در بارگذاری نوبت‌ها: {error?.message || 'خطای ناشناخته'}</p>
+          <Button variant="outline" size="sm" className="mt-2" onClick={() => refetch()}>
+            <RefreshCw className="w-4 h-4 ml-2" />
+            تلاش مجدد
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-3 md:p-6 space-y-4 md:space-y-6">
+    <div className="p-6 space-y-6" dir="rtl">
       {/* هدر */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold">مدیریت نوبت‌ها</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {total > 0 ? `${total} نوبت` : "هیچ نوبتی ثبت نشده است"}
-          </p>
+          <h1 className="text-3xl font-bold">مدیریت نوبت‌ها</h1>
+          <p className="text-gray-500 mt-1">مدیریت نوبت‌های بیماران</p>
         </div>
-        <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 ml-2" />
-          نوبت جدید
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter className="w-4 h-4 ml-2" />
+            فیلترها
+            {Object.values(filters).some(v => v) && (
+              <Badge variant="secondary" className="mr-1">فعال</Badge>
+            )}
+          </Button>
+          <Button
+            onClick={() => refetch()}
+            variant="outline"
+            size="sm"
+            disabled={isFetching}
+          >
+            <RefreshCw className={`w-4 h-4 ml-2 ${isFetching ? 'animate-spin' : ''}`} />
+            {isFetching ? "در حال بارگذاری..." : "بروزرسانی"}
+          </Button>
+          <Link href="/dashboard/appointments/new">
+            <Button size="sm">
+              <Plus className="w-4 h-4 ml-2" />
+              نوبت جدید
+            </Button>
+          </Link>
+        </div>
       </div>
+        <UpcomingAppointmentsAlert />
+
+      {/* فیلترها */}
+      {showFilters && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-1 block">جستجو</label>
+                <div className="relative">
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    placeholder="نام بیمار یا عنوان نوبت..."
+                    value={filters.search}
+                    onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                    className="pr-10"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">وضعیت</label>
+                <select
+                  value={filters.status}
+                  onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                  className="w-full p-2 border rounded-md bg-white"
+                >
+                  <option value="">همه وضعیت‌ها</option>
+                  {APPOINTMENT_STATUSES.map((s) => (
+                    <option key={s.value} value={s.value}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">نوع نوبت</label>
+                <select
+                  value={filters.type}
+                  onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value }))}
+                  className="w-full p-2 border rounded-md bg-white"
+                >
+                  <option value="">همه انواع</option>
+                  {APPOINTMENT_TYPES.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-end gap-2">
+                <Button variant="outline" onClick={resetFilters} className="flex-1">
+                  <X className="w-4 h-4 ml-2" />
+                  پاک کردن
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* آمار سریع */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Card>
-          <CardContent className="p-3 md:p-4 text-center">
-            <p className="text-2xl font-bold">{stats.total}</p>
-            <p className="text-xs text-muted-foreground">کل نوبت‌ها</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-3 md:p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600">{stats.today}</p>
-            <p className="text-xs text-muted-foreground">امروز</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-3 md:p-4 text-center">
-            <p className="text-2xl font-bold text-green-600">{stats.upcoming}</p>
-            <p className="text-xs text-muted-foreground">نوبت‌های آینده</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-3 md:p-4 text-center">
-            <p className="text-2xl font-bold text-gray-600">{stats.completed}</p>
-            <p className="text-xs text-muted-foreground">انجام شده</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* اعلان نوبت‌های نزدیک */}
-      <UpcomingAppointmentsAlert />
-
-      {/* فیلترها و جستجو */}
-      <div className="flex flex-col md:flex-row gap-3">
-        {/* جستجو */}
-        <div className="flex-1 relative">
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="جستجوی بیمار یا عنوان نوبت..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pr-9"
-          />
+      {!isLoading && appointments.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+          {APPOINTMENT_STATUSES.map((s) => (
+            <div key={s.value} className="bg-gray-50 p-2 rounded-lg text-center">
+              <div className="text-xs text-gray-500">{s.label}</div>
+              <div className="text-lg font-bold">{statusStats[s.value] || 0}</div>
+            </div>
+          ))}
         </div>
+      )}
 
-        {/* فیلتر وضعیت */}
-        <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-          {["all", "scheduled", "confirmed", "in_progress", "completed", "cancelled", "no_show"].map((status) => {
-            const label = status === "all" ? "همه" :
-              APPOINTMENT_STATUSES.find(s => s.value === status)?.label || status;
-            const isActive = statusFilter === status;
-            const color = status === "all" ? "" :
-              APPOINTMENT_STATUSES.find(s => s.value === status)?.color || "";
+      {/* لیست نوبت‌ها */}
+      {isLoading ? (
+        <div className="flex justify-center py-12">
+          <LoadingSpinner size="lg" />
+        </div>
+      ) : filteredAppointments.length === 0 ? (
+        <div className="text-center py-12">
+          <CalendarIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500">
+            {filters.search || filters.status || filters.type
+              ? "هیچ نوبتی با این فیلترها یافت نشد"
+              : "هیچ نوبتی ثبت نشده است"}
+          </p>
+          {!filters.search && !filters.status && !filters.type && (
+            <Link href="/dashboard/appointments/new">
+              <Button variant="outline" className="mt-4">
+                <Plus className="w-4 h-4 ml-2" />
+                ثبت اولین نوبت
+              </Button>
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div className="grid gap-3">
+          {filteredAppointments.map((appointment) => {
+            const patientName = 
+              appointment.patient 
+                ? `${appointment.patient.first_name} ${appointment.patient.last_name}`
+                : "بیمار ناشناس";
 
             return (
-              <Button
-                key={status}
-                variant={isActive ? "default" : "outline"}
-                size="sm"
-                onClick={() => setStatusFilter(status as any)}
-                className="whitespace-nowrap text-xs"
-              >
-                {isActive && <div className={`w-1.5 h-1.5 rounded-full ml-1 bg-${color}-500`} />}
-                {label}
-              </Button>
+              <Card key={appointment.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    {/* اطلاعات اصلی */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-medium text-lg">
+                          {appointment.title || "نوبت بدون عنوان"}
+                        </span>
+                        <AppointmentStatusBadge status={appointment.status} />
+                      </div>
+                      
+                      <div className="flex items-center gap-4 text-sm text-gray-600 mt-1 flex-wrap">
+                        <span className="flex items-center gap-1">
+                          <User className="w-3 h-3" />
+                          {patientName}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {toJalaliDisplay(appointment.start_time)}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {moment(appointment.start_time).format("HH:mm")} -{" "}
+                          {moment(appointment.end_time).format("HH:mm")}
+                        </span>
+                        {appointment.patient?.phone && (
+                          <span className="flex items-center gap-1 text-gray-400">
+                            <Phone className="w-3 h-3" />
+                            {appointment.patient.phone}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {appointment.description && (
+                        <p className="text-sm text-gray-500 mt-1 line-clamp-1">
+                          {appointment.description}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* عملیات */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {/* تغییر وضعیت - فقط برای وضعیت‌های فعال */}
+                      {appointment.status !== 'completed' && 
+                       appointment.status !== 'cancelled' && 
+                       appointment.status !== 'no_show' && (
+                        <select
+                          value={appointment.status}
+                          onChange={(e) => handleStatusChange(appointment.id, e.target.value as AppointmentStatus)}
+                          className="text-sm p-1 border rounded bg-white"
+                          disabled={updateStatus.isPending}
+                        >
+                          {APPOINTMENT_STATUSES.map((s) => (
+                            <option key={s.value} value={s.value}>
+                              {s.label}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+
+                      <Link href={`/dashboard/appointments/${appointment.id}`}>
+                        <Button variant="outline" size="sm">
+                          <Eye className="w-4 h-4 ml-1" />
+                          مشاهده
+                        </Button>
+                      </Link>
+                      
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(appointment.id, appointment.title || '')}
+                        disabled={deleteAppointment.isPending}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
-      </div>
-
-      {/* فیلتر تاریخ */}
-      <div className="flex flex-wrap gap-2">
-        <span className="text-sm text-muted-foreground self-center">بازه زمانی:</span>
-        {[
-          { value: "all", label: "همه" },
-          { value: "today", label: "امروز" },
-          { value: "week", label: "این هفته" },
-          { value: "month", label: "این ماه" },
-        ].map((item) => (
-          <Button
-            key={item.value}
-            variant={dateRange === item.value ? "default" : "outline"}
-            size="sm"
-            onClick={() => setDateRange(item.value as any)}
-            className="text-xs"
-          >
-            {item.label}
-          </Button>
-        ))}
-      </div>
-
-      {/* لیست نوبت‌ها */}
-      <Card>
-        <CardContent className="p-0 md:p-4">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : filteredAppointments.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>هیچ نوبتی با این فیلترها یافت نشد</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="min-w-[120px]">بیمار</TableHead>
-                    <TableHead className="min-w-[140px]">تاریخ و زمان</TableHead>
-                    <TableHead className="hidden md:table-cell">نوع</TableHead>
-                    <TableHead className="min-w-[100px]">وضعیت</TableHead>
-                    <TableHead className="text-left min-w-[180px]">عملیات</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredAppointments.map((appointment) => (
-                    <TableRow key={appointment.id} className="hover:bg-muted/50">
-                      <TableCell>
-                        <div className="font-medium text-sm">
-                          {appointment.patient?.first_name} {appointment.patient?.last_name}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {appointment.patient?.national_code}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          {toJalaliDisplay(appointment.start_time)}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {moment(appointment.start_time).format("HH:mm")} -{" "}
-                          {moment(appointment.end_time).format("HH:mm")}
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <Badge variant="outline" className="text-xs">
-                          {APPOINTMENT_TYPE_MAP[appointment.type as keyof typeof APPOINTMENT_TYPE_MAP] || appointment.type}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <AppointmentStatusBadge 
-                          status={appointment.status} 
-                          size="sm"
-                          reason={appointment.no_show_reason || appointment.cancellation_reason}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap items-center gap-1">
-                          <AppointmentStatusActions
-                            appointment={appointment}
-                            onStatusChange={loadAppointments}
-                            size="sm"
-                          />
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                <ChevronLeft className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => router.push(`/dashboard/appointments/${appointment.id}`)}>
-                                مشاهده جزئیات
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleEdit(appointment)}>
-                                ویرایش
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="text-red-600"
-                                onClick={() => handleDelete(appointment)}
-                              >
-                                حذف
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* فرم ثبت/ویرایش */}
-      {showForm && (
-        <AppointmentForm
-          appointment={selectedAppointment}
-          onSuccess={handleFormSuccess}
-          onCancel={() => {
-            setShowForm(false);
-            setSelectedAppointment(null);
-          }}
-          isOpen={showForm}
-          onOpenChange={(open) => {
-            setShowForm(open);
-            if (!open) setSelectedAppointment(null);
-          }}
-        />
       )}
     </div>
   );

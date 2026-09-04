@@ -1,88 +1,57 @@
 // src/app/dashboard/patients/page.client.tsx
 "use client";
 
-import { useState, useTransition, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { deletePatient, getPatients } from "@/lib/supabase/actions";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Search, RefreshCw, UserPlus, Trash2, User, Phone, Calendar, FolderOpen, ShoppingBag } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Pencil } from "lucide-react";
-import Link from "next/link";
+import {
+  Search,
+  RefreshCw,
+  UserPlus,
+  Trash2,
+  User,
+  Phone,
+  Calendar,
+  FolderOpen,
+  ShoppingBag,
+  Pencil
+} from "lucide-react";
 
+// ✅ ایمپورت Hooks جدید
+import { usePatients, useDeletePatient } from "@/hooks/usePatients";
+import type { Patient } from "@/types";
 
-
-interface Patient {
-  id: string;
-  first_name: string;
-  last_name: string;
-  national_code: string;
-  phone: string;
-  gender: string;
-  created_at: string;
-  file_count?: number;
-  sales_count?: number;
+interface PatientsPageClientProps {
+  // ❌ حذف: initialPatients دیگر نیازی نیست
+  // چون داده‌ها از React Query می‌آید
 }
 
-interface PatientsPageProps {
-  initialPatients: Patient[];
-}
-
-export default function PatientsPageClient({ initialPatients }: PatientsPageProps) {
+export default function PatientsPageClient() {
   const router = useRouter();
-  const [patients, setPatients] = useState<Patient[]>(initialPatients);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isDeleting, startDeleteTransition] = useTransition();
-  const [deletingPatientId, setDeletingPatientId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // تابع بروزرسانی لیست بیماران
-  const refreshPatients = async () => {
-    setIsLoading(true);
-    try {
-      const result = await getPatients();
-      if (result?.data) {
-        // دریافت تعداد فایل‌ها و فروش‌ها برای هر بیمار
-        const { getPatientFiles } = await import("@/lib/storage/patientFiles");
+  // ✅ استفاده از useQuery برای دریافت بیماران
+  const {
+    data: patients = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+  } = usePatients({
+    search: searchTerm || undefined,
+    limit: 100,
+  });
 
-        const patientsWithData = await Promise.all(
-          result.data.map(async (patient: Patient) => {
-            try {
-              // دریافت تعداد فایل‌ها
-              const { files } = await getPatientFiles(patient.id);
+  // ✅ استفاده از useMutation برای حذف
+  const deletePatient = useDeletePatient();
 
-              // دریافت تعداد فروش‌ها
-              const salesResponse = await fetch(`/api/patients/${patient.id}/sales`);
-              const salesResult = await salesResponse.json();
-              const salesCount = salesResult.data?.length || 0;
-
-              return {
-                ...patient,
-                file_count: files.length,
-                sales_count: salesCount
-              };
-            } catch {
-              return { ...patient, file_count: 0, sales_count: 0 };
-            }
-          })
-        );
-
-        setPatients(patientsWithData);
-      } else if (result?.error) {
-        console.error("Error refreshing patients:", result.error);
-        setError(result.error);
-      }
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      setError("خطا در بروزرسانی لیست بیماران");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // فیلتر کردن بیماران (اکنون در سمت سرور انجام می‌شود)
+  // اما برای جستجوی لحظه‌ای، همچنان از useMemo استفاده می‌کنیم
   const filteredPatients = useMemo(() => {
     if (!searchTerm.trim()) return patients;
 
@@ -99,27 +68,6 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
       );
     });
   }, [patients, searchTerm]);
-
-  const handleDeletePatient = async (id: string) => {
-    // تنظیم ID بیمار در حال حذف
-    setDeletingPatientId(id);
-
-    try {
-      const result = await deletePatient(id);
-
-      if (result?.data) {
-        toast.success("بیمار با موفقیت حذف شد!");
-        setPatients(prev => prev.filter(p => p.id !== id));
-      } else if (result?.error) {
-        toast.error(result.error);
-      }
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      toast.error("خطای غیرمنتظره رخ داد.");
-    } finally {
-      setDeletingPatientId(null);
-    }
-  };
 
   const formatDate = (dateString: string) => {
     try {
@@ -138,8 +86,29 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
     return genders[gender] || gender;
   };
 
+  // اگر خطا رخ داده باشد
+  if (isError) {
+    return (
+      <div className="p-6 space-y-6" dir="rtl">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+          <p>خطا در بارگذاری بیماران: {error?.message || 'خطای ناشناخته'}</p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => refetch()}
+          >
+            <RefreshCw className="w-4 h-4 ml-2" />
+            تلاش مجدد
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6" dir="rtl">
+      {/* هدر */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold">مدیریت بیماران</h1>
@@ -147,13 +116,13 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
         </div>
         <div className="flex flex-wrap gap-2">
           <Button
-            onClick={refreshPatients}
+            onClick={() => refetch()}
             variant="outline"
             size="sm"
-            disabled={isLoading}
+            disabled={isFetching}
           >
-            <RefreshCw className={`w-4 h-4 ml-2 ${isLoading ? 'animate-spin' : ''}`} />
-            {isLoading ? "در حال بارگذاری..." : "بروزرسانی"}
+            <RefreshCw className={`w-4 h-4 ml-2 ${isFetching ? 'animate-spin' : ''}`} />
+            {isFetching ? "در حال بارگذاری..." : "بروزرسانی"}
           </Button>
           <Link href="/dashboard/patients/new">
             <Button size="sm">
@@ -164,20 +133,7 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
         </div>
       </div>
 
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-          {error}
-          <Button
-            variant="outline"
-            size="sm"
-            className="mr-4"
-            onClick={() => setError(null)}
-          >
-            بستن
-          </Button>
-        </div>
-      )}
-
+      {/* جستجو */}
       <div className="relative w-full md:w-96">
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <Input
@@ -189,6 +145,7 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
         />
       </div>
 
+      {/* آمار */}
       <div className="flex gap-4 text-sm">
         <span className="text-gray-500">
           تعداد کل: <strong className="text-gray-900">{patients.length}</strong>
@@ -198,9 +155,20 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
             نتیجه جستجو: <strong className="text-gray-900">{filteredPatients.length}</strong>
           </span>
         )}
+        {isLoading && (
+          <span className="text-blue-500 flex items-center gap-1">
+            <LoadingSpinner size="sm" />
+            بارگذاری...
+          </span>
+        )}
       </div>
 
-      {filteredPatients.length === 0 ? (
+      {/* لیست بیماران */}
+      {isLoading ? (
+        <div className="flex justify-center py-12">
+          <LoadingSpinner size="lg" />
+        </div>
+      ) : filteredPatients.length === 0 ? (
         <div className="text-center py-12">
           <User className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500">
@@ -218,30 +186,33 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
       ) : (
         <div className="grid gap-4">
           {filteredPatients.map((patient) => (
-            <div key={patient.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+            <div
+              key={patient.id}
+              className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
+            >
               <div className="space-y-2">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-bold text-lg">
                     {patient.first_name} {patient.last_name}
                   </span>
                   <span className="text-sm text-gray-500 bg-gray-200 px-2 py-0.5 rounded">
-                    {getGenderLabel(patient.gender)}
+                    {getGenderLabel(patient.gender || '')}
                   </span>
                   <span className="text-xs text-gray-400">
                     <Calendar className="w-3 h-3 inline ml-1" />
                     {formatDate(patient.created_at)}
                   </span>
-                  {patient.file_count !== undefined && patient.file_count > 0 && (
+                  {/* فایل‌ها و فروش‌ها - در صورت وجود */}
+                  {(patient as any).file_count !== undefined && (patient as any).file_count > 0 && (
                     <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full flex items-center gap-1">
                       <FolderOpen className="w-3 h-3" />
-                      {patient.file_count} فایل
+                      {(patient as any).file_count} فایل
                     </span>
                   )}
-
-                  {patient.sales_count !== undefined && patient.sales_count > 0 && (
+                  {(patient as any).sales_count !== undefined && (patient as any).sales_count > 0 && (
                     <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full flex items-center gap-1">
                       <ShoppingBag className="w-3 h-3" />
-                      {patient.sales_count} خرید
+                      {(patient as any).sales_count} خرید
                     </span>
                   )}
                 </div>
@@ -264,12 +235,16 @@ export default function PatientsPageClient({ initialPatients }: PatientsPageProp
                   </Button>
                 </Link>
                 <Button
-                  onClick={() => handleDeletePatient(patient.id)}
+                  onClick={() => {
+                    if (confirm(`آیا از حذف ${patient.first_name} ${patient.last_name} اطمینان دارید؟`)) {
+                      deletePatient.mutate(patient.id);
+                    }
+                  }}
                   variant="destructive"
                   size="sm"
-                  disabled={deletingPatientId === patient.id}
+                  disabled={deletePatient.isPending && deletePatient.variables === patient.id}
                 >
-                  {deletingPatientId === patient.id ? (
+                  {deletePatient.isPending && deletePatient.variables === patient.id ? (
                     <LoadingSpinner size="sm" />
                   ) : (
                     <>

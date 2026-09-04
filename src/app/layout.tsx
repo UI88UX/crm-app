@@ -1,12 +1,12 @@
 // src/app/layout.tsx
-
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import ClientBody from "./ClientBody";
 import { Providers } from "@/src/components/providers";
-
+import { QueryProvider } from "@/lib/react-query/QueryProvider";
+import { GlobalLoader } from "@/components/ui/global-loader"; 
 // تعریف فونت Vazir
 const vazir = Vazirmatn({
   subsets: ["arabic"],
@@ -27,13 +27,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning className={vazir.variable}>
-      <head>
-        {/* اسکریپت‌های مورد نظر */}
-      </head>
       <body suppressHydrationWarning className="font-vazir antialiased">
-        <Providers>
-          <ClientBody>{children}</ClientBody>
-        </Providers>
+        <QueryProvider>
+          <Providers>
+            <ClientBody>
+              <GlobalLoader /> {/* ✅ اضافه شد */}
+              {children}
+            </ClientBody>
+          </Providers>
+        </QueryProvider>
       </body>
     </html>
   );

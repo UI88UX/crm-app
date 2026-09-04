@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageSquare, Send } from "lucide-react";
+import { MessageSquare, Send,BarChart3, Settings, Gift, Wrench } from "lucide-react";
 import {
   LayoutDashboard,
   Users,
@@ -57,6 +57,17 @@ const menuItems = [
     icon: MessageSquare,
     label: "جدید",
   },
+  {
+    title: "گزارش‌های پیامکی",
+    href: "/dashboard/sms/reports",
+    icon: BarChart3,
+  },
+  {
+    title: "تنظیمات پیامک",
+    href: "/dashboard/sms/settings",
+    icon: Settings,
+  },
+  
 ];
 
 export function Sidebar() {

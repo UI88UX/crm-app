@@ -73,3 +73,12 @@
     font-family: var(--font-vazir), system-ui, -apple-system, sans-serif;
   }
 }
+
+.global-loader-active {
+  cursor: wait !important;
+}
+
+.global-loader-active * {
+  cursor: wait !important;
+}
+

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,9 +19,11 @@ import {
   User,
   FileText,
   Search,
+  Loader2,
 } from "lucide-react";
-import { createSale, deleteSale } from "@/lib/supabase/actions";
-import type { Sale } from "@/types";
+
+// ✅ ایمپورت React Query
+import { useSales, useDeleteSale, useCreateSale } from "@/hooks/useSales";
 
 // تعریف نوع ساده برای Patient
 interface PatientSimple {
@@ -32,16 +34,26 @@ interface PatientSimple {
 }
 
 interface SalesClientProps {
-  sales: Sale[];
   patients: PatientSimple[];
 }
 
-export default function SalesClient({ sales: initialSales, patients }: SalesClientProps) {
-  const [sales, setSales] = useState(initialSales);
-  const [filteredSales, setFilteredSales] = useState(initialSales);
+export default function SalesClient({ patients }: SalesClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  // ✅ استفاده از React Query
+  const { 
+    data: sales = [], 
+    isLoading, 
+    isError, 
+    error, 
+    refetch,
+    isFetching 
+  } = useSales();
+
+  const deleteSale = useDeleteSale();
+  const createSale = useCreateSale();
+
   const [formData, setFormData] = useState({
     patient_id: "",
     hearing_aid_model: "",
@@ -52,16 +64,12 @@ export default function SalesClient({ sales: initialSales, patients }: SalesClie
     notes: "",
   });
 
-  // جستجو در فروش‌ها
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    if (!term.trim()) {
-      setFilteredSales(sales);
-      return;
-    }
+  // ✅ فیلتر کردن با useMemo
+  const filteredSales = useMemo(() => {
+    if (!searchTerm.trim()) return sales;
 
-    const lowercasedTerm = term.toLowerCase().trim();
-    const filtered = sales.filter((sale) => {
+    const lowercasedTerm = searchTerm.toLowerCase().trim();
+    return sales.filter((sale) => {
       const patientName = `${sale.patient?.first_name || ''} ${sale.patient?.last_name || ''}`.toLowerCase();
       const model = sale.hearing_aid_model.toLowerCase();
       const serial = sale.hearing_aid_serial.toLowerCase();
@@ -74,40 +82,38 @@ export default function SalesClient({ sales: initialSales, patients }: SalesClie
         nationalCode.includes(lowercasedTerm)
       );
     });
-    setFilteredSales(filtered);
+  }, [sales, searchTerm]);
+
+  // ✅ جستجو
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
   };
 
-  // ثبت فروش جدید
+  // ✅ ثبت فروش با React Query
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    // اعتبارسنجی فرم
     if (!formData.patient_id) {
       toast.error("لطفاً یک بیمار را انتخاب کنید");
-      setIsLoading(false);
       return;
     }
 
     if (!formData.hearing_aid_model.trim()) {
       toast.error("لطفاً مدل سمعک را وارد کنید");
-      setIsLoading(false);
       return;
     }
 
     if (!formData.hearing_aid_serial.trim()) {
       toast.error("لطفاً سریال سمعک را وارد کنید");
-      setIsLoading(false);
       return;
     }
 
     if (!formData.price || parseFloat(formData.price) <= 0) {
       toast.error("لطفاً قیمت معتبر وارد کنید");
-      setIsLoading(false);
       return;
     }
 
-    const result = await createSale({
+    createSale.mutate({
       patient_id: formData.patient_id,
       hearing_aid_model: formData.hearing_aid_model.trim(),
       hearing_aid_serial: formData.hearing_aid_serial.trim(),
@@ -115,43 +121,18 @@ export default function SalesClient({ sales: initialSales, patients }: SalesClie
       sale_date: formData.sale_date,
       warranty_expiry: formData.warranty_expiry || null,
       notes: formData.notes || null,
+    }, {
+      onSuccess: () => {
+        resetForm();
+        setIsFormOpen(false);
+      }
     });
-
-    if (result.error) {
-      toast.error(result.error);
-    } else if (result.data) {
-      toast.success("فروش با موفقیت ثبت شد");
-      
-      // ساخت شیء فروش با اطلاعات بیمار
-      const selectedPatient = patients.find(p => p.id === formData.patient_id);
-      const newSale = {
-        ...result.data,
-        patient: selectedPatient || undefined
-      };
-      
-      const updatedSales = [newSale, ...sales];
-      setSales(updatedSales);
-      setFilteredSales(updatedSales);
-      resetForm();
-      setIsFormOpen(false);
-    }
-
-    setIsLoading(false);
   };
 
-  // حذف فروش
-  const handleDelete = async (id: string) => {
+  // ✅ حذف با React Query
+  const handleDelete = (id: string) => {
     if (!confirm("آیا از حذف این فروش اطمینان دارید؟")) return;
-
-    const result = await deleteSale(id);
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("فروش با موفقیت حذف شد");
-      const updatedSales = sales.filter(sale => sale.id !== id);
-      setSales(updatedSales);
-      setFilteredSales(updatedSales);
-    }
+    deleteSale.mutate(id);
   };
 
   // ریست فرم
@@ -331,8 +312,15 @@ export default function SalesClient({ sales: initialSales, patients }: SalesClie
               </div>
 
               <div className="flex gap-2">
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "در حال ثبت..." : "ثبت فروش"}
+                <Button type="submit" disabled={createSale.isPending}>
+                  {createSale.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                      در حال ثبت...
+                    </>
+                  ) : (
+                    "ثبت فروش"
+                  )}
                 </Button>
                 <Button 
                   type="button" 
@@ -363,8 +351,12 @@ export default function SalesClient({ sales: initialSales, patients }: SalesClie
           />
         </div>
         <div className="flex gap-4 text-sm">
-          <span className="text-gray-500">تعداد کل: <strong className="text-gray-900">{filteredSales.length}</strong></span>
-          <span className="text-gray-500">مجموع فروش: <strong className="text-green-600">{formatPrice(totalRevenue)} تومان</strong></span>
+          <span className="text-gray-500">
+            تعداد کل: <strong className="text-gray-900">{filteredSales.length}</strong>
+          </span>
+          <span className="text-gray-500">
+            مجموع فروش: <strong className="text-green-600">{formatPrice(totalRevenue)} تومان</strong>
+          </span>
         </div>
       </div>
 
@@ -382,7 +374,11 @@ export default function SalesClient({ sales: initialSales, patients }: SalesClie
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {filteredSales.length === 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : filteredSales.length === 0 ? (
             <div className="text-center py-12">
               <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500">
@@ -457,9 +453,14 @@ export default function SalesClient({ sales: initialSales, patients }: SalesClie
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDelete(sale.id)}
+                      disabled={deleteSale.isPending && deleteSale.variables === sale.id}
                       className="w-full sm:w-auto"
                     >
-                      <Trash2 className="w-4 h-4 ml-1" />
+                      {deleteSale.isPending && deleteSale.variables === sale.id ? (
+                        <Loader2 className="w-4 h-4 ml-1 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4 ml-1" />
+                      )}
                       حذف
                     </Button>
                   </div>

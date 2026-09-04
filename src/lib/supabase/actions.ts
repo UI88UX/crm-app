@@ -10,10 +10,10 @@ import { tenantSchema, type TenantFormData } from "@/lib/validations/tenant";
 import moment from "moment-jalaali";
 import { addToQueue } from '@/lib/sms/queue';
 import { SmsQueueType } from '@/types/messaging';
-import { 
-  onAppointmentCreated, 
-  onAppointmentCancelled, 
-  onAppointmentNoShow 
+import {
+  onAppointmentCreated,
+  onAppointmentCancelled,
+  onAppointmentNoShow
 } from '@/lib/sms/event-handlers';
 // ============================================
 // Schemas
@@ -1331,7 +1331,7 @@ export async function sendAppointmentConfirmation(
   appointmentTime: string
 ) {
   const tenantId = await getCurrentTenantId();
-  
+
   const content = `سلام ${patientName} عزیز، نوبت شما برای ${appointmentDate} ساعت ${appointmentTime} در ${clinicName} ثبت شد.`;
 
   return await addToQueue({
@@ -1356,11 +1356,11 @@ export async function scheduleAppointmentReminder(
   appointmentTime: string
 ) {
   const tenantId = await getCurrentTenantId();
-  
+
   // ۲۴ ساعت قبل
   const scheduledAt = new Date();
   scheduledAt.setHours(scheduledAt.getHours() + 24);
-  
+
   const content = `سلام ${patientName} عزیز، فردا ساعت ${appointmentTime} نوبت شنوایی‌سنجی دارید. لطفاً ۱۵ دقیقه زودتر حاضر باشید.`;
 
   return await addToQueue({
@@ -1383,14 +1383,14 @@ export async function scheduleAppointmentReminder(
  */
 export async function createAppointmentWithSms(data: any) {
   // ... کد ایجاد نوبت (که قبلاً در actions.ts دارید) ...
-  
+
   const result = await createAppointment(data);
-  
+
   if (result.data) {
     // ارسال پیامک تأیید نوبت
     await onAppointmentCreated(result.data.id);
   }
-  
+
   return result;
 }
 
@@ -1399,12 +1399,12 @@ export async function createAppointmentWithSms(data: any) {
  */
 export async function cancelAppointmentWithSms(id: string, reason?: string) {
   const result = await cancelAppointment(id, reason);
-  
+
   if (result.data) {
     // ارسال پیامک لغو نوبت
     await onAppointmentCancelled(id, reason);
   }
-  
+
   return result;
 }
 
@@ -1438,5 +1438,76 @@ export async function setAppointmentNoShow(id: string, reason?: string) {
   }
 
   revalidatePath('/dashboard/appointments');
+  return { data, error: null };
+}
+// ============================================
+// SMS Settings
+// ============================================
+
+/**
+ * دریافت تنظیمات پیامکی Tenant
+ */
+export async function getSmsSettings() {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const { data, error } = await supabase
+    .from('sms_settings')
+    .select('*')
+    .eq('tenant_id', tenantId)
+    .single();
+
+  if (error) {
+    // برگرداندن تنظیمات پیش‌فرض
+    return {
+      data: {
+        is_enabled: true,
+        provider: 'melipayamak',
+        reminder_hours_1: 24,
+        reminder_hours_2: 2,
+        max_messages_per_month: 10,
+        allowed_start_hour: 9,
+        allowed_end_hour: 20,
+        enable_birthday_alerts: true,
+        enable_hearing_aid_followup: true,
+        clinic_name: 'مطب',
+      },
+      error: null,
+    };
+  }
+
+  return { data, error: null };
+}
+
+/**
+ * به‌روزرسانی تنظیمات پیامکی
+ */
+export async function updateSmsSettings(settings: {
+  is_enabled?: boolean;
+  max_messages_per_month?: number;
+  allowed_start_hour?: number;
+  allowed_end_hour?: number;
+  enable_birthday_alerts?: boolean;
+  enable_hearing_aid_followup?: boolean;
+  clinic_name?: string;
+}) {
+  const supabase = await createClient();
+  const tenantId = await getCurrentTenantId();
+
+  const { data, error } = await supabase
+    .from('sms_settings')
+    .update({
+      ...settings,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('tenant_id', tenantId)
+    .select()
+    .single();
+
+  if (error) {
+    return { error: error.message, data: null };
+  }
+
+  revalidatePath('/dashboard/sms/settings');
   return { data, error: null };
 }

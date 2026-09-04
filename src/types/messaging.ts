@@ -135,6 +135,8 @@ export interface SmsCampaign {
 // SMS Settings Types
 // ============================================
 
+// src/types/messaging.ts (اضافه کردن تایپ‌های جدید)
+
 export interface SmsSettings {
   id: string;
   tenant_id: string;
@@ -151,6 +153,16 @@ export interface SmsSettings {
   clinic_name: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface SmsStats {
+  total_sent: number;
+  total_delivered: number;
+  total_failed: number;
+  total_cost: number;
+  delivery_rate: number;
+  this_month_sent: number;
+  last_month_sent: number;
 }
 
 // ============================================

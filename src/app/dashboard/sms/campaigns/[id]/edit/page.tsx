@@ -1,9 +1,13 @@
+// src/app/dashboard/sms/campaigns/[id]/edit/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowRight, Save, Loader2, Users, Send, Calendar } from "lucide-react";
+import { ArrowRight, Save, Loader2, Users, Calendar } from "lucide-react";
 import { toast } from "sonner";
+
+// ✅ ایمپورت React Query
+import { useCampaign, useUpdateCampaign, usePreviewRecipients } from "@/hooks/useSmsCampaigns";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,16 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 
-interface Campaign {
-  id: string;
-  name: string;
-  content: string;
-  filters: any;
-  total_recipients: number;
-  status: string;
-  scheduled_at: string | null;
+interface FilterState {
+  last_visit_days_ago?: number;
+  hearing_aid_brand?: string;
+  hearing_aid_purchased_months_ago?: number;
+  city?: string;
+  gender?: string;
+  consent_to_sms?: boolean;
 }
 
 export default function EditCampaignPage() {
@@ -35,63 +37,41 @@ export default function EditCampaignPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  // Stateهای فرم
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
-  const [filters, setFilters] = useState<any>({});
+  const [filters, setFilters] = useState<FilterState>({});
   const [scheduleLater, setScheduleLater] = useState(false);
   const [scheduledDate, setScheduledDate] = useState("");
-  const [recipientsCount, setRecipientsCount] = useState<number | null>(null);
   const [showRecipients, setShowRecipients] = useState(false);
 
+  // ✅ React Query
+  const { data: campaign, isLoading, isError, error } = useCampaign(id);
+  const updateCampaign = useUpdateCampaign();
+  const { 
+    data: recipientsCount, 
+    refetch: previewRecipients, 
+    isFetching: isPreviewing 
+  } = usePreviewRecipients(filters);
+
+  // پر کردن فرم با داده‌های کمپین
   useEffect(() => {
-    fetchCampaign();
-  }, [id]);
-
-  const fetchCampaign = async () => {
-    try {
-      const response = await fetch(`/api/sms/campaigns/${id}`);
-      const result = await response.json();
-
-      if (response.ok) {
-        setName(result.data.name);
-        setContent(result.data.content);
-        setFilters(result.data.filters || {});
-        if (result.data.scheduled_at) {
-          setScheduleLater(true);
-          setScheduledDate(result.data.scheduled_at);
-        }
-        setRecipientsCount(result.data.total_recipients);
-      } else {
-        toast.error(result.error || "خطا در دریافت اطلاعات");
-        router.push("/dashboard/sms/campaigns");
+    if (campaign) {
+      setName(campaign.name);
+      setContent(campaign.content);
+      setFilters(campaign.filters || {});
+      if (campaign.scheduled_at) {
+        setScheduleLater(true);
+        setScheduledDate(campaign.scheduled_at);
       }
-    } catch (error) {
-      toast.error("خطا در دریافت اطلاعات");
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [campaign]);
 
   const handlePreview = async () => {
-    try {
-      const response = await fetch("/api/sms/patients/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filters }),
-      });
-      const result = await response.json();
-
-      if (response.ok) {
-        setRecipientsCount(result.count || 0);
-        setShowRecipients(true);
-        toast.success(`${result.count || 0} بیمار یافت شد`);
-      } else {
-        toast.error(result.error || "خطا در پیش‌نمایش");
-      }
-    } catch (error) {
-      toast.error("خطا در پیش‌نمایش");
+    setShowRecipients(true);
+    await previewRecipients();
+    if (recipientsCount !== undefined) {
+      toast.success(`${recipientsCount} بیمار یافت شد`);
     }
   };
 
@@ -108,37 +88,36 @@ export default function EditCampaignPage() {
       return;
     }
 
-    setSaving(true);
-    try {
-      const response = await fetch(`/api/sms/campaigns/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          content,
-          filters,
-          scheduled_at: scheduleLater ? scheduledDate : null,
-        }),
-      });
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("کمپین با موفقیت ویرایش شد");
+    updateCampaign.mutate({
+      id,
+      name: name.trim(),
+      content: content.trim(),
+      filters,
+      scheduled_at: scheduleLater ? scheduledDate : null,
+    }, {
+      onSuccess: () => {
         router.push(`/dashboard/sms/campaigns/${id}`);
-      } else {
-        toast.error(result.error || "خطا در ویرایش کمپین");
-      }
-    } catch (error) {
-      toast.error("خطا در ویرایش کمپین");
-    } finally {
-      setSaving(false);
-    }
+      },
+    });
   };
 
-  if (loading) {
+  // بارگذاری
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // خطا
+  if (isError || !campaign) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-500">{error?.message || "کمپین یافت نشد"}</p>
+        <Button variant="link" onClick={() => router.push("/dashboard/sms/campaigns")}>
+          بازگشت به لیست کمپین‌ها
+        </Button>
       </div>
     );
   }
@@ -274,7 +253,7 @@ export default function EditCampaignPage() {
                 <div className="flex items-center gap-2">
                   <Switch
                     checked={filters.consent_to_sms !== false}
-                    onCheckedChange={(checked: boolean) =>
+                    onCheckedChange={(checked) =>
                       setFilters({ ...filters, consent_to_sms: checked })
                     }
                   />
@@ -287,15 +266,20 @@ export default function EditCampaignPage() {
               type="button"
               variant="outline"
               onClick={handlePreview}
+              disabled={isPreviewing}
               className="w-full"
             >
-              <Users className="w-4 h-4 ml-2" />
+              {isPreviewing ? (
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+              ) : (
+                <Users className="w-4 h-4 ml-2" />
+              )}
               پیش‌نمایش تعداد گیرندگان
             </Button>
 
-            {showRecipients && (
+            {showRecipients && recipientsCount !== undefined && (
               <div className="p-4 bg-muted rounded-lg text-center">
-                <span className="text-lg font-bold">{recipientsCount ?? 0}</span>
+                <span className="text-lg font-bold">{recipientsCount}</span>
                 <span className="text-muted-foreground mr-2">بیمار یافت شد</span>
               </div>
             )}
@@ -311,7 +295,7 @@ export default function EditCampaignPage() {
             <div className="flex items-center gap-2">
               <Switch
                 checked={scheduleLater}
-                onCheckedChange={(checked: boolean) => setScheduleLater(checked)}
+                onCheckedChange={(checked) => setScheduleLater(checked)}
               />
               <Label>ارسال در زمان مشخص</Label>
             </div>
@@ -338,8 +322,8 @@ export default function EditCampaignPage() {
 
         {/* دکمه‌ها */}
         <div className="flex gap-4">
-          <Button type="submit" disabled={saving} className="flex-1">
-            {saving ? (
+          <Button type="submit" disabled={updateCampaign.isPending} className="flex-1">
+            {updateCampaign.isPending ? (
               <Loader2 className="w-4 h-4 ml-2 animate-spin" />
             ) : (
               <Save className="w-4 h-4 ml-2" />

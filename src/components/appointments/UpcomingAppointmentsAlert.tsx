@@ -1,44 +1,54 @@
 // src/components/appointments/UpcomingAppointmentsAlert.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Bell, Calendar, Clock, ChevronDown, User, Phone, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import moment from "moment-jalaali";
+import { useQuery } from "@tanstack/react-query";
 import type { Appointment } from "@/types";
 
+// کلیدهای Query
+export const upcomingAppointmentsKeys = {
+  all: ['upcoming-appointments'] as const,
+  list: (startDate: string, endDate: string) => 
+    [...upcomingAppointmentsKeys.all, startDate, endDate] as const,
+};
+
 export function UpcomingAppointmentsAlert() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const today = new Date().toISOString().split('T')[0];
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  // محاسبه تاریخ امروز و فردا
+  const today = new Date().toISOString().split('T')[0];
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
-        const response = await fetch(
-          `/api/appointments?start_date=${today}&end_date=${tomorrowStr}&limit=20`
-        );
-        const result = await response.json();
-
-        if (result.data) {
-          setAppointments(result.data);
-        }
-      } catch (error) {
-        console.error("Error fetching upcoming appointments:", error);
-      } finally {
-        setIsLoading(false);
+  // استفاده از React Query
+  const {
+    data: appointments = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: upcomingAppointmentsKeys.list(today, tomorrowStr),
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/appointments?start_date=${today}&end_date=${tomorrowStr}&limit=20`
+      );
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در دریافت نوبت‌ها');
       }
-    };
-
-    fetchAppointments();
-  }, []);
+      const result = await response.json();
+      return result.data as Appointment[];
+    },
+    staleTime: 2 * 60 * 1000, // 2 دقیقه
+    refetchOnWindowFocus: false,
+    refetchInterval: 5 * 60 * 1000, // هر 5 دقیقه رفرش خودکار
+  });
 
   const handleDismiss = (id: string) => {
     setDismissedIds(prev => new Set([...prev, id]));
@@ -60,9 +70,18 @@ export function UpcomingAppointmentsAlert() {
     );
   }
 
+  if (error) {
+    return (
+      <Card className="p-4 border-red-200 bg-red-50/50">
+        <p className="text-sm text-red-600">خطا در بارگذاری نوبت‌ها</p>
+      </Card>
+    );
+  }
+
   if (visibleAppointments.length === 0) {
     return null;
   }
+
 
   const todayAppointments = visibleAppointments.filter(
     (app) => new Date(app.start_time).toDateString() === new Date().toDateString()

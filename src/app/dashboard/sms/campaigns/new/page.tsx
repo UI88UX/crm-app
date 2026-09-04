@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, Send, Users, Calendar, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+// ✅ ایمپورت React Query
+import { useCreateCampaign, usePreviewRecipients } from "@/hooks/useSmsCampaigns";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch"; // ✅ وارد کردن Switch
+import { Switch } from "@/components/ui/switch";
 
 interface FilterState {
   last_visit_days_ago?: number;
@@ -31,33 +34,29 @@ interface FilterState {
 
 export default function NewCampaignPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [filters, setFilters] = useState<FilterState>({});
-  const [recipientsCount, setRecipientsCount] = useState<number | null>(null);
-  const [showRecipients, setShowRecipients] = useState(false);
   const [scheduleLater, setScheduleLater] = useState(false);
   const [scheduledDate, setScheduledDate] = useState("");
+  const [showRecipients, setShowRecipients] = useState(false);
+
+  // ✅ React Query
+  const createCampaign = useCreateCampaign();
+
+  // ✅ Preview with React Query (manual trigger)
+  const { 
+    data: recipientsCount, 
+    refetch: previewRecipients, 
+    isFetching: isPreviewing 
+  } = usePreviewRecipients(filters);
 
   const handlePreview = async () => {
-    try {
-      const response = await fetch("/api/sms/patients/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filters }),
-      });
-      const result = await response.json();
-
-      if (response.ok) {
-        setRecipientsCount(result.count || 0);
-        setShowRecipients(true);
-        toast.success(`${result.count || 0} بیمار یافت شد`);
-      } else {
-        toast.error(result.error || "خطا در پیش‌نمایش");
-      }
-    } catch (error) {
-      toast.error("خطا در پیش‌نمایش");
+    setShowRecipients(true);
+    await previewRecipients();
+    if (recipientsCount !== undefined) {
+      toast.success(`${recipientsCount} بیمار یافت شد`);
     }
   };
 
@@ -74,31 +73,16 @@ export default function NewCampaignPage() {
       return;
     }
 
-    setLoading(true);
-    try {
-      const response = await fetch("/api/sms/campaigns", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          content,
-          filters,
-          scheduled_at: scheduleLater ? scheduledDate : null,
-        }),
-      });
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("کمپین با موفقیت ایجاد شد");
+    createCampaign.mutate({
+      name: name.trim(),
+      content: content.trim(),
+      filters,
+      scheduled_at: scheduleLater ? scheduledDate : null,
+    }, {
+      onSuccess: () => {
         router.push("/dashboard/sms/campaigns");
-      } else {
-        toast.error(result.error || "خطا در ایجاد کمپین");
-      }
-    } catch (error) {
-      toast.error("خطا در ایجاد کمپین");
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
   };
 
   return (
@@ -235,7 +219,7 @@ export default function NewCampaignPage() {
                 <div className="flex items-center gap-2">
                   <Switch
                     checked={filters.consent_to_sms !== false}
-                    onCheckedChange={(checked: boolean) => // ✅ تایپ مشخص شد
+                    onCheckedChange={(checked) =>
                       setFilters({ ...filters, consent_to_sms: checked })
                     }
                   />
@@ -248,15 +232,20 @@ export default function NewCampaignPage() {
               type="button"
               variant="outline"
               onClick={handlePreview}
+              disabled={isPreviewing}
               className="w-full"
             >
-              <Users className="w-4 h-4 ml-2" />
+              {isPreviewing ? (
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+              ) : (
+                <Users className="w-4 h-4 ml-2" />
+              )}
               پیش‌نمایش تعداد گیرندگان
             </Button>
 
-            {showRecipients && (
+            {showRecipients && recipientsCount !== undefined && (
               <div className="p-4 bg-muted rounded-lg text-center">
-                <span className="text-lg font-bold">{recipientsCount ?? 0}</span>
+                <span className="text-lg font-bold">{recipientsCount}</span>
                 <span className="text-muted-foreground mr-2">بیمار یافت شد</span>
               </div>
             )}
@@ -272,7 +261,7 @@ export default function NewCampaignPage() {
             <div className="flex items-center gap-2">
               <Switch
                 checked={scheduleLater}
-                onCheckedChange={(checked: boolean) => setScheduleLater(checked)} // ✅ تایپ مشخص شد
+                onCheckedChange={(checked) => setScheduleLater(checked)}
               />
               <Label>ارسال در زمان مشخص</Label>
             </div>
@@ -299,8 +288,8 @@ export default function NewCampaignPage() {
 
         {/* دکمه‌ها */}
         <div className="flex gap-4">
-          <Button type="submit" disabled={loading} className="flex-1">
-            {loading ? (
+          <Button type="submit" disabled={createCampaign.isPending} className="flex-1">
+            {createCampaign.isPending ? (
               <Loader2 className="w-4 h-4 ml-2 animate-spin" />
             ) : (
               <Send className="w-4 h-4 ml-2" />

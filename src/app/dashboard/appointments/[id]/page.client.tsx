@@ -1,8 +1,9 @@
-// src/app/dashboard/appointments/[id]/page.client.tsx
+// src/app/dashboard/appointments/[id]/page.client.tsx// src/app/dashboard/appointments/[id]/page.client.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, Calendar, Clock, User, Edit, Trash2, Loader2 } from "lucide-react";
 import moment from "moment-jalaali";
 
@@ -11,114 +12,119 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { AppointmentStatusBadge } from "@/components/appointments/AppointmentStatusBadge";
 import { AppointmentForm } from "@/components/appointments/AppointmentForm";
-import { toJalali, formatJalaliDateTime, toJalaliDisplay } from "@/lib/util/jalaliDate";
-import { APPOINTMENT_TYPE_MAP, APPOINTMENT_STATUSES, type Appointment } from "@/types";
+import { toJalaliDisplay, formatJalaliDateTime } from "@/lib/util/jalaliDate";
+import { APPOINTMENT_TYPE_MAP, type Appointment } from "@/types";
+import { appointmentKeys } from "@/hooks/useAppointments";
+import { toast } from "sonner";
 
 interface AppointmentDetailClientProps {
   id: string;
 }
 
+// کلیدهای Query
+const appointmentDetailKeys = {
+  detail: (id: string) => [...appointmentKeys.details(), id] as const,
+};
+
 export function AppointmentDetailClient({ id }: AppointmentDetailClientProps) {
   const router = useRouter();
-  const [appointment, setAppointment] = useState<Appointment | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [showEditForm, setShowEditForm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
-
-  // دریافت نوبت
-  useEffect(() => {
-    const fetchAppointment = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(`/api/appointments/${id}`);
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error || "خطا در دریافت نوبت");
-        }
-
-        setAppointment(result.data);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "خطا در دریافت نوبت";
-        setError(message);
-      } finally {
-        setIsLoading(false);
+  
+  const {
+    data: appointment,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: appointmentDetailKeys.detail(id),
+    queryFn: async () => {
+      const response = await fetch(`/api/appointments/${id}`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "خطا در دریافت نوبت");
       }
-    };
-
-    if (id) {
-      fetchAppointment();
-    }
-  }, [id]);
-
-  // ویرایش نوبت
-  const handleEditSuccess = (data: Appointment) => {
-    setAppointment(data);
-    setShowEditForm(false);
-  };
+      const result = await response.json();
+      return result.data as Appointment;
+    },
+    enabled: !!id,
+    staleTime: 2 * 60 * 1000,
+  });
 
   // حذف نوبت
-  const handleDelete = async () => {
-    if (!appointment) return;
-    if (!confirm(`آیا از حذف نوبت "${appointment.title || 'بدون عنوان'}" اطمینان دارید؟`)) {
-      return;
-    }
-
-    setIsDeleting(true);
-
-    try {
-      const response = await fetch(`/api/appointments/${appointment.id}`, {
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`/api/appointments/${id}`, {
         method: "DELETE",
       });
-
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || "خطا در حذف نوبت");
+        const error = await response.json();
+        throw new Error(error.error || "خطا در حذف نوبت");
       }
-
+      return id;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.stats() });
+      queryClient.removeQueries({ queryKey: appointmentDetailKeys.detail(id) });
+      toast.success("نوبت با موفقیت حذف شد");
       router.push("/dashboard/appointments");
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "خطا در حذف نوبت";
-      alert(message);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "خطا در حذف نوبت");
+    },
+  });
 
   // لغو نوبت
-  const handleCancel = async () => {
-    if (!appointment) return;
-    if (!confirm(`آیا از لغو نوبت "${appointment.title || 'بدون عنوان'}" اطمینان دارید؟`)) {
-      return;
-    }
-
-    setIsCanceling(true);
-
-    try {
-      const response = await fetch(`/api/appointments/${appointment.id}`, {
+  const cancelMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`/api/appointments/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "cancel", reason: "لغو توسط کاربر" }),
       });
-
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || "خطا در لغو نوبت");
+        const error = await response.json();
+        throw new Error(error.error || "خطا در لغو نوبت");
       }
+      const result = await response.json();
+      return result.data as Appointment;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(appointmentDetailKeys.detail(id), data);
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.stats() });
+      toast.success("نوبت با موفقیت لغو شد");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "خطا در لغو نوبت");
+    },
+  });
 
-      setAppointment(result.data);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "خطا در لغو نوبت";
-      alert(message);
-    } finally {
-      setIsCanceling(false);
+  // ویرایش نوبت
+  const handleEditSuccess = (data: Appointment) => {
+    queryClient.setQueryData(appointmentDetailKeys.detail(id), data);
+    queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() });
+    setShowEditForm(false);
+    toast.success("نوبت با موفقیت ویرایش شد");
+  };
+
+  const handleDelete = () => {
+    if (!appointment) return;
+    if (!confirm(`آیا از حذف نوبت "${appointment.title || 'بدون عنوان'}" اطمینان دارید؟`)) {
+      return;
     }
+    deleteMutation.mutate();
+  };
+
+  const handleCancel = () => {
+    if (!appointment) return;
+    if (!confirm(`آیا از لغو نوبت "${appointment.title || 'بدون عنوان'}" اطمینان دارید؟`)) {
+      return;
+    }
+    cancelMutation.mutate();
   };
 
   if (isLoading) {
@@ -132,7 +138,7 @@ export function AppointmentDetailClient({ id }: AppointmentDetailClientProps) {
   if (error || !appointment) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-500">{error || "نوبت یافت نشد"}</p>
+        <p className="text-red-500">{error?.message || "نوبت یافت نشد"}</p>
         <Button variant="outline" className="mt-4" onClick={() => router.push("/dashboard/appointments")}>
           <ArrowRight className="w-4 h-4 ml-2" />
           بازگشت به لیست نوبت‌ها

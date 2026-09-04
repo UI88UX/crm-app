@@ -5,20 +5,19 @@ import { AppointmentDetailClient } from "./page.client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>; // ✅ اضافه کردن Promise
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params; // ✅ await params
   return {
-    title: `جزئیات نوبت`,
+    title: `جزئیات نوبت ${id}`,
     description: "مشاهده جزئیات نوبت",
   };
 }
 
 export default async function AppointmentDetailPage({ params }: PageProps) {
-  const { id } = await params;
+  const { id } = await params; // ✅ await params
   
   return (
     <Suspense fallback={<LoadingSpinner />}>

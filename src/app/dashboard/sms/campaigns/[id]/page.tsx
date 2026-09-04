@@ -1,28 +1,17 @@
+// src/app/dashboard/sms/campaigns/[id]/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ArrowRight, Send, Users, Calendar, Loader2, Trash2, Pencil, RotateCw } from "lucide-react";
 import { toast } from "sonner";
+
+// ✅ ایمپورت React Query
+import { useCampaign, useSendCampaign, useDeleteCampaign } from "@/hooks/useSmsCampaigns";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toJalaliDisplay } from "@/lib/util/jalaliDate";
-
-interface Campaign {
-  id: string;
-  name: string;
-  content: string;
-  total_recipients: number;
-  sent_count: number;
-  failed_count: number;
-  status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'failed' | 'cancelled';
-  scheduled_at: string | null;
-  sent_at: string | null;
-  created_at: string;
-  filters: any;
-}
 
 const statusColors: Record<string, string> = {
   draft: "bg-gray-100 text-gray-700",
@@ -47,107 +36,27 @@ export default function CampaignDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [campaign, setCampaign] = useState<Campaign | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [resending, setResending] = useState(false);
+  // ✅ React Query
+  const { data: campaign, isLoading, isError, error, refetch } = useCampaign(id);
+  const sendCampaign = useSendCampaign();
+  const deleteCampaign = useDeleteCampaign();
 
-  useEffect(() => {
-    if (id) {
-      fetchCampaign();
-    }
-  }, [id]);
-
-  const fetchCampaign = async () => {
-    try {
-      const response = await fetch(`/api/sms/campaigns/${id}`);
-      const result = await response.json();
-
-      if (response.ok) {
-        setCampaign(result.data);
-      } else {
-        toast.error(result.error || "خطا در دریافت اطلاعات کمپین");
-        router.push("/dashboard/sms/campaigns");
-      }
-    } catch (error) {
-      toast.error("خطا در دریافت اطلاعات کمپین");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSendCampaign = async () => {
+  const handleSend = () => {
     if (!confirm("آیا از ارسال این کمپین اطمینان دارید؟")) return;
-
-    setSending(true);
-    try {
-      const response = await fetch(`/api/sms/campaigns/${id}/send`, {
-        method: "POST",
-      });
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("کمپین با موفقیت ارسال شد");
-        fetchCampaign();
-      } else {
-        toast.error(result.error || "خطا در ارسال کمپین");
-      }
-    } catch (error) {
-      toast.error("خطا در ارسال کمپین");
-    } finally {
-      setSending(false);
-    }
+    sendCampaign.mutate(id);
   };
 
-  const handleResendCampaign = async () => {
-    if (!confirm("آیا از ارسال مجدد این کمپین اطمینان دارید؟")) return;
-
-    setResending(true);
-    try {
-      const response = await fetch(`/api/sms/campaigns/${id}/send`, {
-        method: "POST",
-      });
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("کمپین با موفقیت ارسال مجدد شد");
-        fetchCampaign();
-      } else {
-        toast.error(result.error || "خطا در ارسال مجدد کمپین");
-      }
-    } catch (error) {
-      toast.error("خطا در ارسال مجدد کمپین");
-    } finally {
-      setResending(false);
-    }
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!confirm("آیا از حذف این کمپین اطمینان دارید؟")) return;
-
-    setDeleting(true);
-    try {
-      const response = await fetch(`/api/sms/campaigns/${id}`, {
-        method: "DELETE",
-      });
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("کمپین با موفقیت حذف شد");
+    deleteCampaign.mutate(id, {
+      onSuccess: () => {
         router.push("/dashboard/sms/campaigns");
-      } else {
-        toast.error(result.error || "خطا در حذف کمپین");
-      }
-    } catch (error) {
-      toast.error("خطا در حذف کمپین");
-    } finally {
-      setDeleting(false);
-    }
+      },
+    });
   };
 
-  if (loading) {
+  // بارگذاری
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
@@ -155,16 +64,20 @@ export default function CampaignDetailPage() {
     );
   }
 
-  if (!campaign) {
+  // خطا
+  if (isError || !campaign) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">کمپین یافت نشد</p>
+        <p className="text-red-500">{error?.message || "کمپین یافت نشد"}</p>
         <Button variant="link" onClick={() => router.push("/dashboard/sms/campaigns")}>
           بازگشت به لیست کمپین‌ها
         </Button>
       </div>
     );
   }
+
+  const isSending = sendCampaign.isPending;
+  const isDeleting = deleteCampaign.isPending;
 
   return (
     <div className="p-6 space-y-6 max-w-4xl mx-auto">
@@ -198,9 +111,9 @@ export default function CampaignDetailPage() {
             variant="destructive"
             size="sm"
             onClick={handleDelete}
-            disabled={deleting}
+            disabled={isDeleting}
           >
-            {deleting ? (
+            {isDeleting ? (
               <Loader2 className="w-4 h-4 ml-2 animate-spin" />
             ) : (
               <Trash2 className="w-4 h-4 ml-2" />
@@ -316,11 +229,11 @@ export default function CampaignDetailPage() {
       <div className="flex gap-4">
         {(campaign.status === 'draft' || campaign.status === 'scheduled') && (
           <Button
-            onClick={handleSendCampaign}
-            disabled={sending}
+            onClick={handleSend}
+            disabled={isSending}
             className="flex-1"
           >
-            {sending ? (
+            {isSending ? (
               <Loader2 className="w-4 h-4 ml-2 animate-spin" />
             ) : (
               <Send className="w-4 h-4 ml-2" />
@@ -331,12 +244,15 @@ export default function CampaignDetailPage() {
 
         {(campaign.status === 'sent' || campaign.status === 'failed') && (
           <Button
-            onClick={handleResendCampaign}
-            disabled={resending}
+            onClick={() => {
+              if (!confirm("آیا از ارسال مجدد این کمپین اطمینان دارید؟")) return;
+              sendCampaign.mutate(id);
+            }}
+            disabled={isSending}
             variant="outline"
             className="flex-1"
           >
-            {resending ? (
+            {isSending ? (
               <Loader2 className="w-4 h-4 ml-2 animate-spin" />
             ) : (
               <RotateCw className="w-4 h-4 ml-2" />

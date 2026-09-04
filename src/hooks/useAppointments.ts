@@ -1,234 +1,246 @@
-// src/hooks/useAppointments.ts
-import { useState, useCallback, useEffect } from "react";
-import { toast } from "sonner";
-import type { Appointment, AppointmentFormData, AppointmentStatus, AppointmentType } from "@/types";
+'use client';
 
-interface UseAppointmentsOptions {
-  patientId?: string;
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import type { Appointment, AppointmentStatus, AppointmentType } from '@/types';
+
+// 🔑 کلیدهای Query
+export const appointmentKeys = {
+  all: ['appointments'] as const,
+  lists: () => [...appointmentKeys.all, 'list'] as const,
+  list: (filters?: {
+    patient_id?: string;
+    status?: AppointmentStatus;
+    type?: AppointmentType;
+    start_date?: string;
+    end_date?: string;
+    limit?: number;
+  }) => [...appointmentKeys.lists(), filters] as const,
+  details: () => [...appointmentKeys.all, 'detail'] as const,
+  detail: (id: string) => [...appointmentKeys.details(), id] as const,
+  stats: () => [...appointmentKeys.all, 'stats'] as const,
+};
+
+// 📥 گرفتن لیست نوبت‌ها
+export function useAppointments(filters?: {
+  patient_id?: string;
   status?: AppointmentStatus;
   type?: AppointmentType;
-  startDate?: string;
-  endDate?: string;
-  autoFetch?: boolean;
-}
-
-interface UseAppointmentsReturn {
-  appointments: Appointment[];
-  isLoading: boolean;
-  error: string | null;
-  total: number;
-  fetchAppointments: (options?: UseAppointmentsOptions) => Promise<void>;
-  createAppointment: (data: AppointmentFormData) => Promise<Appointment | null>;
-  updateAppointment: (id: string, data: Partial<AppointmentFormData>) => Promise<Appointment | null>;
-  cancelAppointment: (id: string, reason?: string) => Promise<Appointment | null>;
-  deleteAppointment: (id: string) => Promise<boolean>;
-  getAppointment: (id: string) => Promise<Appointment | null>;
-  refetch: () => Promise<void>;
-}
-
-export function useAppointments(options: UseAppointmentsOptions = {}): UseAppointmentsReturn {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [total, setTotal] = useState<number>(0);
-
-  const { patientId, status, type, startDate, endDate, autoFetch = true } = options;
-
-  const fetchAppointments = useCallback(async (fetchOptions?: UseAppointmentsOptions) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
+  start_date?: string;
+  end_date?: string;
+  limit?: number;
+}) {
+  return useQuery({
+    queryKey: appointmentKeys.list(filters),
+    queryFn: async () => {
       const params = new URLSearchParams();
-      
-      const opts = { ...options, ...fetchOptions };
-      
-      if (opts.patientId) params.append('patient_id', opts.patientId);
-      if (opts.status) params.append('status', opts.status);
-      if (opts.type) params.append('type', opts.type);
-      if (opts.startDate) params.append('start_date', opts.startDate);
-      if (opts.endDate) params.append('end_date', opts.endDate);
+      if (filters?.patient_id) params.set('patient_id', filters.patient_id);
+      if (filters?.status) params.set('status', filters.status);
+      if (filters?.type) params.set('type', filters.type);
+      if (filters?.start_date) params.set('start_date', filters.start_date);
+      if (filters?.end_date) params.set('end_date', filters.end_date);
+      if (filters?.limit) params.set('limit', String(filters.limit));
 
       const response = await fetch(`/api/appointments?${params.toString()}`);
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || 'خطا در دریافت نوبت‌ها');
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در دریافت نوبت‌ها');
       }
+      const result = await response.json();
+      return result.data as Appointment[];
+    },
+    staleTime: 2 * 60 * 1000,
+  });
+}
 
-      setAppointments(result.data || []);
-      setTotal(result.count || 0);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'خطا در دریافت نوبت‌ها';
-      setError(message);
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [options]);
+// 📥 گرفتن یک نوبت
+export function useAppointment(id: string) {
+  return useQuery({
+    queryKey: appointmentKeys.detail(id),
+    queryFn: async () => {
+      const response = await fetch(`/api/appointments/${id}`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در دریافت اطلاعات نوبت');
+      }
+      const result = await response.json();
+      return result.data as Appointment;
+    },
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
+}
 
-  const createAppointment = useCallback(async (data: AppointmentFormData): Promise<Appointment | null> => {
-    setIsLoading(true);
-    setError(null);
+// ➕ ایجاد نوبت جدید
+export function useCreateAppointment() {
+  const queryClient = useQueryClient();
 
-    try {
+  return useMutation({
+    mutationFn: async (data: {
+      patient_id: string;
+      start_time: string;
+      end_time: string;
+      type: AppointmentType;
+      status?: AppointmentStatus;
+      title?: string | null;
+      description?: string | null;
+      notes?: string | null;
+    }) => {
       const response = await fetch('/api/appointments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || 'خطا در ثبت نوبت');
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در ایجاد نوبت');
       }
 
+      const result = await response.json();
+      return result.data as Appointment;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.stats() });
+      if (data.patient_id) {
+        queryClient.invalidateQueries({ 
+          queryKey: ['patient-appointments', data.patient_id] 
+        });
+      }
       toast.success('نوبت با موفقیت ثبت شد');
-      await fetchAppointments();
-      
-      return result.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'خطا در ثبت نوبت';
-      setError(message);
-      toast.error(message);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [fetchAppointments]);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'خطا در ایجاد نوبت');
+    },
+  });
+}
 
-  const updateAppointment = useCallback(async (id: string, data: Partial<AppointmentFormData>): Promise<Appointment | null> => {
-    setIsLoading(true);
-    setError(null);
+// ✏️ ویرایش نوبت
+export function useUpdateAppointment() {
+  const queryClient = useQueryClient();
 
-    try {
+  return useMutation({
+    mutationFn: async ({ id, ...data }: { id: string } & Partial<{
+      patient_id: string;
+      start_time: string;
+      end_time: string;
+      type: AppointmentType;
+      status: AppointmentStatus;
+      title?: string | null;
+      description?: string | null;
+      notes?: string | null;
+    }>) => {
       const response = await fetch(`/api/appointments/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || 'خطا در ویرایش نوبت');
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در ویرایش نوبت');
       }
 
+      const result = await response.json();
+      return result.data as Appointment;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.detail(data.id) });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.stats() });
+      if (data.patient_id) {
+        queryClient.invalidateQueries({ 
+          queryKey: ['patient-appointments', data.patient_id] 
+        });
+      }
       toast.success('نوبت با موفقیت ویرایش شد');
-      await fetchAppointments();
-      
-      return result.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'خطا در ویرایش نوبت';
-      setError(message);
-      toast.error(message);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [fetchAppointments]);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'خطا در ویرایش نوبت');
+    },
+  });
+}
 
-  const cancelAppointment = useCallback(async (id: string, reason?: string): Promise<Appointment | null> => {
-    setIsLoading(true);
-    setError(null);
+// 🗑️ حذف نوبت
+export function useDeleteAppointment() {
+  const queryClient = useQueryClient();
 
-    try {
-      const response = await fetch(`/api/appointments/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'cancel', reason }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'خطا در لغو نوبت');
-      }
-
-      toast.success('نوبت با موفقیت لغو شد');
-      await fetchAppointments();
-      
-      return result.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'خطا در لغو نوبت';
-      setError(message);
-      toast.error(message);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [fetchAppointments]);
-
-  const deleteAppointment = useCallback(async (id: string): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
+  return useMutation({
+    mutationFn: async (id: string) => {
       const response = await fetch(`/api/appointments/${id}`, {
         method: 'DELETE',
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.error || 'خطا در حذف نوبت');
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در حذف نوبت');
       }
 
+      return id;
+    },
+    onSuccess: (id) => {
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.stats() });
+      queryClient.removeQueries({ queryKey: appointmentKeys.detail(id) });
       toast.success('نوبت با موفقیت حذف شد');
-      await fetchAppointments();
-      
-      return true;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'خطا در حذف نوبت';
-      setError(message);
-      toast.error(message);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [fetchAppointments]);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'خطا در حذف نوبت');
+    },
+  });
+}
 
-  const getAppointment = useCallback(async (id: string): Promise<Appointment | null> => {
-    setIsLoading(true);
-    setError(null);
+// 🔄 تغییر وضعیت نوبت
+export function useUpdateAppointmentStatus() {
+  const queryClient = useQueryClient();
 
-    try {
-      const response = await fetch(`/api/appointments/${id}`);
-      const result = await response.json();
+  return useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: AppointmentStatus }) => {
+      const response = await fetch(`/api/appointments/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
 
       if (!response.ok) {
-        throw new Error(result.error || 'خطا در دریافت نوبت');
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در تغییر وضعیت نوبت');
       }
 
+      const result = await response.json();
+      return result.data as Appointment;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.detail(data.id) });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: appointmentKeys.stats() });
+      if (data.patient_id) {
+        queryClient.invalidateQueries({ 
+          queryKey: ['patient-appointments', data.patient_id] 
+        });
+      }
+      toast.success('وضعیت نوبت با موفقیت تغییر کرد');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'خطا در تغییر وضعیت نوبت');
+    },
+  });
+}
+
+// 📊 دریافت آمار نوبت‌ها
+export function useAppointmentStats() {
+  return useQuery({
+    queryKey: appointmentKeys.stats(),
+    queryFn: async () => {
+      const response = await fetch('/api/appointments/stats');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در دریافت آمار نوبت‌ها');
+      }
+      const result = await response.json();
       return result.data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'خطا در دریافت نوبت';
-      setError(message);
-      toast.error(message);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (autoFetch) {
-      fetchAppointments();
-    }
-  }, [autoFetch, fetchAppointments]);
-
-  return {
-    appointments,
-    isLoading,
-    error,
-    total,
-    fetchAppointments,
-    createAppointment,
-    updateAppointment,
-    cancelAppointment,
-    deleteAppointment,
-    getAppointment,
-    refetch: fetchAppointments,
-  };
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 }

@@ -85,10 +85,9 @@ interface Sale {
 
 interface PatientEditClientProps {
   patientId: string;
-  initialPatient: Patient | null;
+  initialPatient?: Patient | null;
 }
-
-export default function PatientEditClient({ patientId, initialPatient }: PatientEditClientProps) {
+export default function PatientEditClient({ patientId, initialPatient = null }: PatientEditClientProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -107,12 +106,11 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
   const initialPatientRef = useRef(initialPatient);
   const hasLoadedRef = useRef(false);
 
-
   const [formData, setFormData] = useState<Partial<Patient>>(initialPatient || {});
 
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
 
-  // در useEffect برای بررسی super_admin
+  // بررسی دسترسی super_admin
   useEffect(() => {
     const checkSuperAdmin = async () => {
       try {
@@ -130,15 +128,43 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     checkSuperAdmin();
   }, []);
 
-  const testMoment = () => {
-    const test = moment('1985-05-13');
-    console.log('Test moment:', test.format('jYYYY/jMM/jDD'));
+  // ✅ تابع کمکی برای تنظیم birthDatePicker از تاریخ تولد
+  const setBirthDateFromDate = (birthDate: string | null) => {
+    if (!birthDate) {
+      setBirthDatePicker(null);
+      return;
+    }
+
+    try {
+      // تاریخ میلادی را به شمسی تبدیل کن برای نمایش در DatePicker
+      const m = moment(birthDate);
+      if (m.isValid()) {
+        const jalaliDate = m.format('jYYYY/jMM/jDD');
+        console.log('Setting birthDatePicker to:', jalaliDate, 'from:', birthDate);
+        setBirthDatePicker(jalaliDate);
+      }
+    } catch (error) {
+      console.error('Error setting birth date picker:', error);
+    }
   };
 
-  // در useEffect یا در یک useEffect جداگانه برای تست:
+  // ✅ همگام‌سازی birthDatePicker با formData.birth_date
   useEffect(() => {
-    testMoment();
-  }, []);
+    if (formData.birth_date) {
+      try {
+        // تبدیل تاریخ میلادی به شمسی برای نمایش در DatePicker
+        const m = moment(formData.birth_date);
+        if (m.isValid()) {
+          const jalaliDate = m.format('jYYYY/jMM/jDD');
+          setBirthDatePicker(jalaliDate);
+        }
+      } catch (error) {
+        console.error('Error syncing birth date picker:', error);
+      }
+    } else {
+      setBirthDatePicker(null);
+    }
+  }, [formData.birth_date]);
 
   // بارگذاری اطلاعات بیمار
   useEffect(() => {
@@ -148,36 +174,8 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
       hasLoadedRef.current = true;
       setFormData(initialPatient);
 
-      // دیباگ: چاپ تاریخ خام
-      console.log('Raw birth_date:', initialPatient.birth_date);
-
-      // در useEffect برای مقداردهی تاریخ تولد:
-      if (initialPatient.birth_date) {
-        try {
-          let birthDate = initialPatient.birth_date;
-
-          // اگر تاریخ به صورت شمسی ذخیره شده، ابتدا به میلادی تبدیل کن
-          if (birthDate && birthDate.startsWith('13')) {
-            // تاریخ شمسی است، به میلادی تبدیل کن
-            const m = moment(birthDate, 'jYYYY-MM-DD');
-            if (m.isValid()) {
-              birthDate = m.format('YYYY-MM-DD');
-              // به‌روزرسانی formData با تاریخ میلادی صحیح
-              setFormData(prev => ({ ...prev, birth_date: birthDate }));
-            }
-          }
-
-          // حالا تاریخ میلادی را به شمسی تبدیل کن برای نمایش
-          const m = moment(birthDate);
-          if (m.isValid()) {
-            const jalaliDate = m.format('jYYYY/jMM/jDD');
-            console.log('Setting birthDatePicker to:', jalaliDate);
-            setBirthDatePicker(jalaliDate);
-          }
-        } catch (error) {
-          console.error('Error setting birth date:', error);
-        }
-      }
+      // تنظیم birthDatePicker از تاریخ تولد
+      setBirthDateFromDate(initialPatient.birth_date);
       return;
     }
 
@@ -189,19 +187,8 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
             hasLoadedRef.current = true;
             setFormData(result.data);
 
-
-            // مقداردهی تاریخ تولد برای DatePicker
-            if (result.data.birth_date) {
-              try {
-                const m = moment(result.data.birth_date);
-                if (m.isValid()) {
-                  const jalaliDate = m.format('jYYYY/jMM/jDD');
-                  setBirthDatePicker(jalaliDate);
-                }
-              } catch (error) {
-                console.error('Error setting birth date:', error);
-              }
-            }
+            // تنظیم birthDatePicker از تاریخ تولد
+            setBirthDateFromDate(result.data.birth_date);
           } else if (result.error) {
             setError(result.error);
             toast.error("خطا در دریافت اطلاعات بیمار");
@@ -264,7 +251,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     fetchSales();
   }, [patientId]);
 
-  // بارگذاری نوبت‌های بیمار - بعد از useEffect فروش‌ها
+  // بارگذاری نوبت‌های بیمار
   useEffect(() => {
     if (!patientId) return;
 
@@ -287,82 +274,43 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
     fetchAppointments();
   }, [patientId]);
 
-  // بررسی دسترسی super_admin
-  useEffect(() => {
-    const checkSuperAdmin = async () => {
-      try {
-        const response = await fetch('/api/auth/check-super-admin');
-        const result = await response.json();
-        setIsSuperAdmin(result.isSuperAdmin || false);
-      } catch (err) {
-        console.error('Error checking super admin:', err);
-      }
-    };
-    checkSuperAdmin();
-  }, []);
-
-  useEffect(() => {
-    // جلوگیری از اجرای مجدد
-    if (hasLoadedRef.current) return;
-
-    if (initialPatient) {
-      hasLoadedRef.current = true;
-      setFormData(initialPatient);
-
-      // مقداردهی تاریخ تولد برای DatePicker
-      if (initialPatient.birth_date) {
-        try {
-          // استفاده از toJalali برای تبدیل
-          const jalaliDate = toJalali(initialPatient.birth_date);
-          if (jalaliDate) {
-            setBirthDatePicker(jalaliDate);
-          }
-        } catch (error) {
-          console.error('Error setting birth date:', error);
-        }
-      }
-      return;
-    }
-
-    if (patientId) {
-      const fetchPatient = async () => {
-        try {
-          const result = await getPatient(patientId);
-          if (result.data) {
-            hasLoadedRef.current = true;
-            setFormData(result.data);
-
-            // مقداردهی تاریخ تولد برای DatePicker
-            if (result.data.birth_date) {
-              try {
-                const jalaliDate = toJalali(result.data.birth_date);
-                if (jalaliDate) {
-                  setBirthDatePicker(jalaliDate);
-                }
-              } catch (error) {
-                console.error('Error setting birth date:', error);
-              }
-            }
-          } else if (result.error) {
-            setError(result.error);
-            toast.error("خطا در دریافت اطلاعات بیمار");
-          }
-        } catch (err) {
-          console.error('Error fetching patient:', err);
-          setError('خطا در بارگذاری اطلاعات');
-          toast.error("خطای غیرمنتظره در بارگذاری اطلاعات");
-        }
-      };
-      fetchPatient();
-    }
-  }, [patientId, initialPatient]);
-
   // تغییر فیلدها
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: [] }));
+    }
+  };
+
+  // تغییر تاریخ تولد
+  // ✅ تابع اصلاح شده برای handleBirthDateChange
+  const handleBirthDateChange = (date: any) => {
+    if (date && date.isValid) {
+      // روش صحیح برای دریافت تاریخ میلادی با در نظر گرفتن منطقه زمانی
+      const gregorianDate = date.toDate();
+
+      // تنظیم ساعت به 12:00:00 برای جلوگیری از مشکل منطقه زمانی
+      gregorianDate.setHours(12, 0, 0, 0);
+
+      // استفاده از toISOString و سپس گرفتن فقط بخش تاریخ
+      const isoDate = gregorianDate.toISOString().split('T')[0];
+
+      console.log('Selected Jalali:', date.format('YYYY/MM/DD'));
+      console.log('Gregorian Date:', gregorianDate);
+      console.log('Saving as Gregorian:', isoDate);
+
+      setFormData(prev => ({
+        ...prev,
+        birth_date: isoDate
+      }));
+      setBirthDatePicker(date.format("YYYY/MM/DD"));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        birth_date: null
+      }));
+      setBirthDatePicker(null);
     }
   };
 
@@ -400,6 +348,39 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
           toast.error(result.error);
         }
       } else if (result.data) {
+        // به‌روزرسانی formData با داده‌های جدید
+        setFormData({
+          first_name: result.data.first_name || '',
+          last_name: result.data.last_name || '',
+          national_code: result.data.national_code || '',
+          phone: result.data.phone || '',
+          email: result.data.email || null,
+          birth_date: result.data.birth_date || null,
+          gender: result.data.gender || null,
+          address: result.data.address || null,
+          city: result.data.city || null,
+          province: result.data.province || null,
+          postal_code: result.data.postal_code || null,
+          emergency_contact_name: result.data.emergency_contact_name || null,
+          emergency_contact_phone: result.data.emergency_contact_phone || null,
+          notes: result.data.notes || null,
+        });
+
+        // ✅ به‌روزرسانی birthDatePicker با تاریخ جدید
+        if (result.data.birth_date) {
+          try {
+            const m = moment(result.data.birth_date);
+            if (m.isValid()) {
+              const jalaliDate = m.format('jYYYY/jMM/jDD');
+              setBirthDatePicker(jalaliDate);
+            }
+          } catch (error) {
+            console.error('Error updating birth date picker:', error);
+          }
+        } else {
+          setBirthDatePicker(null);
+        }
+
         toast.success("اطلاعات بیمار با موفقیت به‌روزرسانی شد!");
         router.refresh();
       }
@@ -462,25 +443,6 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
       setIsDeletingPermanent(false);
     }
   };
-
-  // 3. دکمه در هدر (قبلاً اضافه شده)
-  {
-    isSuperAdmin && (
-      <Button
-        variant="destructive"
-        onClick={handlePermanentDelete}
-        disabled={isDeletingPermanent}
-        className="bg-red-600 hover:bg-red-700"
-      >
-        {isDeletingPermanent ? (
-          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-        ) : (
-          <ShieldAlert className="w-4 h-4 ml-2" />
-        )}
-        حذف دائم
-      </Button>
-    )
-  }
 
   // آیکون بر اساس نوع فایل
   const getFileIcon = (mimetype: string) => {
@@ -733,26 +695,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
                   calendar={persian}
                   locale={persian_fa}
                   value={birthDatePicker || ""}
-                  onChange={(date: any) => {
-                    if (date && date.isValid) {
-                      const year = date.year;
-                      const month = String(date.month).padStart(2, '0');
-                      const day = String(date.day).padStart(2, '0');
-                      const isoDate = `${year}-${month}-${day}`;
-
-                      setFormData(prev => ({
-                        ...prev,
-                        birth_date: isoDate
-                      }));
-                      setBirthDatePicker(date.format("YYYY/MM/DD"));
-                    } else {
-                      setFormData(prev => ({
-                        ...prev,
-                        birth_date: null
-                      }));
-                      setBirthDatePicker(null);
-                    }
-                  }}
+                  onChange={handleBirthDateChange}
                   format="YYYY/MM/DD"
                   placeholder="انتخاب تاریخ تولد"
                   className="w-full p-2 border rounded-md mt-1 bg-white dark:bg-gray-800"
@@ -916,8 +859,6 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
         </CardContent>
       </Card>
 
-
-
       {/* بخش سمعک‌های خریداری‌شده */}
       <Card>
         <CardHeader>
@@ -1000,7 +941,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
         </CardContent>
       </Card>
 
-      {/* بخش نوبت‌های بیمار - بین بخش سمعک‌ها و فایل‌ها */}
+      {/* بخش نوبت‌های بیمار */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -1154,7 +1095,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
             </div>
           )}
 
-          {/* کامپوننت آپلود فایل */}
+          {/* آپلود فایل */}
           <div className="border-t pt-4 mt-4">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               آپلود فایل جدید
@@ -1200,7 +1141,7 @@ export default function PatientEditClient({ patientId, initialPatient }: Patient
         </CardContent>
       </Card>
 
-      {/* اطلاعات اضافی */}
+      {/* اطلاعات ثبت */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
