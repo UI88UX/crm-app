@@ -38,6 +38,7 @@ import {
 } from "@/hooks/useAppointments";
 import { APPOINTMENT_STATUSES, APPOINTMENT_TYPES, type AppointmentStatus } from "@/types";
 import { UpcomingAppointmentsAlert } from "@/components/appointments/UpcomingAppointmentsAlert";
+import { LoadingLink } from "@/components/ui/loading-link";
 
 // کامپوننت نمایش وضعیت نوبت
 function AppointmentStatusBadge({ status }: { status: AppointmentStatus }) {
@@ -160,7 +161,7 @@ export default function AppointmentsPageClient() {
   return (
     <div className="p-6 space-y-6" dir="rtl">
       {/* هدر */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-4">
         <div>
           <h1 className="text-3xl font-bold">مدیریت نوبت‌ها</h1>
           <p className="text-gray-500 mt-1">مدیریت نوبت‌های بیماران</p>
@@ -186,12 +187,12 @@ export default function AppointmentsPageClient() {
             <RefreshCw className={`w-4 h-4 ml-2 ${isFetching ? 'animate-spin' : ''}`} />
             {isFetching ? "در حال بارگذاری..." : "بروزرسانی"}
           </Button>
-          <Link href="/dashboard/appointments/new">
+          <LoadingLink href="/dashboard/appointments/new">
             <Button size="sm">
               <Plus className="w-4 h-4 ml-2" />
               نوبت جدید
             </Button>
-          </Link>
+          </LoadingLink>
         </div>
       </div>
         <UpcomingAppointmentsAlert />

@@ -39,7 +39,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "src/app/api/patients/route.ts"
-  ],
+, "src/scripts/fix-all-routes.js"  ],
   "exclude": [
     "node_modules"
   ]

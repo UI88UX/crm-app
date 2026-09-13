@@ -4,10 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCampaign } from '@/lib/sms/campaigns';
 import { createClient } from '@/lib/supabase/server';
 
+// ✅ تغییر: params به Promise تبدیل شد
 type RouteContext = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 // GET - دریافت جزئیات یک کمپین
@@ -23,7 +24,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = context.params; // ✅ بدون await
+    // ✅ تغییر: await اضافه شد
+    const { id } = await context.params;
     const result = await getCampaign(id);
 
     if (result.error) {
@@ -52,7 +54,8 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = context.params;
+    // ✅ تغییر: await اضافه شد
+    const { id } = await context.params;
     const body = await request.json();
     const { name, content, filters, scheduled_at } = body;
 
@@ -123,7 +126,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = context.params; // ✅ بدون await
+    // ✅ تغییر: await اضافه شد
+    const { id } = await context.params;
 
     const { data: tenantId, error: tenantError } = await supabase
       .rpc('get_current_tenant_id');

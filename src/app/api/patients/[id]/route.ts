@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 // GET /api/patients/[id] - دریافت یک بیمار
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -51,7 +51,7 @@ export async function GET(
 // PUT /api/patients/[id] - ویرایش بیمار
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -101,7 +101,7 @@ export async function PUT(
 // DELETE /api/patients/[id] - حذف بیمار (soft delete)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -142,7 +142,7 @@ export async function DELETE(
 async function getCurrentTenantId(supabase: any) {
   const { data: tenantId, error } = await supabase
     .rpc('get_current_tenant_id');
-  
+
   if (error || !tenantId) return null;
   return tenantId;
 }

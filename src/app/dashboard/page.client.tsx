@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Users, 
-  Calendar, 
-  ShoppingBag, 
+import { UpcomingCallFollowupsAlert } from "@/components/call-followups/UpcomingCallFollowupsAlert";
+import {
+  Users,
+  Calendar,
+  ShoppingBag,
   TrendingUp,
   Activity,
   Plus,
@@ -83,7 +84,7 @@ export default function DashboardClient({ stats, activities, recentSales }: Prop
     },
     {
       title: "درآمد کل",
-      value: stats?.total_revenue 
+      value: stats?.total_revenue
         ? new Intl.NumberFormat('fa-IR').format(stats.total_revenue) + ' تومان'
         : '0 تومان',
       icon: TrendingUp,
@@ -125,7 +126,7 @@ export default function DashboardClient({ stats, activities, recentSales }: Prop
   return (
     <div className="p-6 space-y-6" dir="rtl">
       {/* هدر */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mt-4">
         <div>
           <h1 className="text-3xl font-bold">داشبورد</h1>
           <p className="text-gray-500 mt-1">خلاصه وضعیت مطب شما</p>
@@ -139,6 +140,8 @@ export default function DashboardClient({ stats, activities, recentSales }: Prop
           </Link>
         </div>
       </div>
+
+      <UpcomingCallFollowupsAlert />
 
       {/* کارت‌های آمار */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -171,7 +174,7 @@ export default function DashboardClient({ stats, activities, recentSales }: Prop
                 <p className="text-2xl font-bold">{stats.conversion_rate}%</p>
               </div>
               <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-purple-500 rounded-full transition-all"
                   style={{ width: `${Math.min(stats.conversion_rate, 100)}%` }}
                 />
@@ -197,8 +200,8 @@ export default function DashboardClient({ stats, activities, recentSales }: Prop
             ) : (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {activities.map((activity) => (
-                  <div 
-                    key={activity.id} 
+                  <div
+                    key={activity.id}
                     className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                   >
                     <div className="flex items-center gap-2">
@@ -233,8 +236,8 @@ export default function DashboardClient({ stats, activities, recentSales }: Prop
             ) : (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {recentSales.map((sale) => (
-                  <div 
-                    key={sale.id} 
+                  <div
+                    key={sale.id}
                     className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                   >
                     <div>

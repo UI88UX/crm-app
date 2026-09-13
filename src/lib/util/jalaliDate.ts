@@ -16,7 +16,7 @@ function isJalaliDate(date: string): boolean {
  */
 export function normalizeToGregorian(date: string): string | null {
   if (!date) return null;
-  
+
   try {
     // اگر تاریخ شمسی است، به میلادی تبدیل کن
     if (isJalaliDate(date)) {
@@ -38,14 +38,14 @@ export function normalizeToGregorian(date: string): string | null {
  */
 export function toJalali(date: Date | string | null | undefined): string | null {
   if (!date) return null;
-  
+
   try {
     // اگر تاریخ به صورت string است و شمسی به نظر می‌رسد
     if (typeof date === 'string' && isJalaliDate(date)) {
       // قبلاً شمسی است، همان را برگردان
       return date;
     }
-    
+
     const m = moment(date);
     if (!m.isValid()) {
       console.warn('Invalid date:', date);
@@ -66,17 +66,18 @@ export function toJalaliDisplay(
   format: string = "DD MMM YYYY"
 ): string | null {
   if (!date) return null;
-  
+
   try {
     const m = moment(date);
     if (!m.isValid()) return null;
-    
+
     const formats: Record<string, string> = {
       "DD MMM YYYY": "jD jMMMM jYYYY",
       "YYYY/MM/DD": "jYYYY/jMM/jDD",
       "YYYY-MM-DD": "jYYYY-jMM-jDD",
+      "HH:mm": "HH:mm"
     };
-    
+
     const formatPattern = formats[format] || "jYYYY/jMM/jDD";
     return m.format(formatPattern);
   } catch (error) {
@@ -90,7 +91,7 @@ export function toJalaliDisplay(
  */
 export function fromJalali(jalaliDate: string): string | null {
   if (!jalaliDate) return null;
-  
+
   try {
     const m = moment(jalaliDate, 'jYYYY/jMM/jDD');
     if (!m.isValid()) return null;
@@ -105,7 +106,7 @@ export function fromJalali(jalaliDate: string): string | null {
  */
 export function fromJalaliToDate(jalaliDate: string): Date | null {
   if (!jalaliDate) return null;
-  
+
   try {
     const isoDate = fromJalali(jalaliDate);
     if (!isoDate) return null;
@@ -121,14 +122,14 @@ export function fromJalaliToDate(jalaliDate: string): Date | null {
  */
 export function formatJalaliDateTime(date: Date | string | null | undefined): string | null {
   if (!date) return null;
-  
+
   try {
     const d = typeof date === 'string' ? new Date(date) : date;
     if (isNaN(d.getTime())) return null;
-    
+
     const jalaali = moment(d);
     if (!jalaali.isValid()) return null;
-    
+
     return jalaali.format('jYYYY/jMM/jDD - HH:mm');
   } catch (error) {
     console.error('Error formatting Jalali date time:', error);
@@ -141,11 +142,11 @@ export function formatJalaliDateTime(date: Date | string | null | undefined): st
  */
 export function formatTime(date: Date | string | null | undefined): string | null {
   if (!date) return null;
-  
+
   try {
     const d = typeof date === 'string' ? new Date(date) : date;
     if (isNaN(d.getTime())) return null;
-    
+
     const hours = d.getHours().toString().padStart(2, '0');
     const minutes = d.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
@@ -160,14 +161,14 @@ export function formatTime(date: Date | string | null | undefined): string | nul
  */
 export function getJalaliMonthName(date: Date | string | null | undefined): string | null {
   if (!date) return null;
-  
+
   try {
     const d = typeof date === 'string' ? new Date(date) : date;
     if (isNaN(d.getTime())) return null;
-    
+
     const jalaali = moment(d);
     if (!jalaali.isValid()) return null;
-    
+
     return jalaali.format('jMMMM');
   } catch (error) {
     console.error('Error getting Jalali month name:', error);

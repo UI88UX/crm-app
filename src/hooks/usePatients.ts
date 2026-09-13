@@ -3,24 +3,35 @@
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
-import type { Patient, PatientFormData } from '@/types';
+import type { Patient, PatientFormData, CallResult} from '@/types';
 
 const supabase = createClient();
 
-// 🔑 کلیدهای Query
 export const patientKeys = {
   all: ['patients'] as const,
   lists: () => [...patientKeys.all, 'list'] as const,
-  list: (filters?: { search?: string; limit?: number; offset?: number }) =>
-    [...patientKeys.lists(), filters] as const,
+  list: (filters?: {
+    search?: string;
+    limit?: number;
+    offset?: number;
+    call_result?: CallResult;
+    has_pending_followup?: boolean;
+    next_call_due?: 'today' | 'overdue' | 'tomorrow';
+  }) => [...patientKeys.lists(), filters] as const,
   details: () => [...patientKeys.all, 'detail'] as const,
   detail: (id: string) => [...patientKeys.details(), id] as const,
-  // ✅ اضافه کردن کلید جستجو
   search: (query: string) => [...patientKeys.all, 'search', query] as const,
 };
 
 // 📥 گرفتن لیست بیماران با فیلتر
-export function usePatients(filters?: { search?: string; limit?: number; offset?: number }) {
+export function usePatients(filters?: {
+  search?: string;
+  limit?: number;
+  offset?: number;
+  call_result?: CallResult;
+  has_pending_followup?: boolean;
+  next_call_due?: 'today' | 'overdue' | 'tomorrow';
+}) {
   return useQuery({
     queryKey: patientKeys.list(filters),
     queryFn: async () => {
@@ -28,6 +39,11 @@ export function usePatients(filters?: { search?: string; limit?: number; offset?
       if (filters?.search) params.set('search', filters.search);
       if (filters?.limit) params.set('limit', String(filters.limit));
       if (filters?.offset) params.set('offset', String(filters.offset));
+      if (filters?.call_result) params.set('call_result', filters.call_result);
+      if (filters?.has_pending_followup !== undefined) {
+        params.set('has_pending_followup', String(filters.has_pending_followup));
+      }
+      if (filters?.next_call_due) params.set('next_call_due', filters.next_call_due);
 
       const response = await fetch(`/api/patients?${params.toString()}`);
       if (!response.ok) {
@@ -36,7 +52,7 @@ export function usePatients(filters?: { search?: string; limit?: number; offset?
       }
       return response.json() as Promise<Patient[]>;
     },
-    staleTime: 2 * 60 * 1000, // 2 دقیقه
+    staleTime: 2 * 60 * 1000,
   });
 }
 
@@ -168,3 +184,4 @@ export function useDeletePatient() {
     },
   });
 }
+

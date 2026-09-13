@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -23,9 +23,9 @@ export async function POST(
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      message: 'کمپین با موفقیت ارسال شد' 
+      message: 'کمپین با موفقیت ارسال شد'
     });
   } catch (error) {
     return NextResponse.json(

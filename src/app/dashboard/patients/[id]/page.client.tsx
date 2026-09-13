@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Tag } from "lucide-react";
+import { Plus, Tag, CheckCircle2, ChevronDown, ChevronUp, History } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { updatePatient, getPatient, deletePatientPermanent, deletePatient } from "@/lib/supabase/actions";
@@ -20,6 +20,12 @@ import { formatJalaliDateTime, fromJalaliToDate, toJalaliDisplay, toJalali } fro
 import moment from 'moment-jalaali';
 import { AppointmentStatusBadge } from "@/components/appointments/AppointmentStatusBadge";
 import { APPOINTMENT_TYPE_MAP } from "@/types";
+
+import { CallFollowupForm } from "@/components/call-followups/CallFollowupForm";
+import { CompleteCallFollowupDialog } from "@/components/call-followups/CompleteCallFollowupDialog";
+import { CallFollowupCard } from "@/components/call-followups/CallFollowupCard";
+import { usePatientCallFollowups, useCancelCallFollowup } from "@/hooks/useCallFollowups";
+import type { CallFollowup } from "@/types";
 import {
   ArrowRight,
   User,
@@ -105,6 +111,33 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
   const [isLoadingAppointments, setIsLoadingAppointments] = useState(false);
   const initialPatientRef = useRef(initialPatient);
   const hasLoadedRef = useRef(false);
+  // ✅ State پیگیری تلفنی
+  const [showHistory, setShowHistory] = useState(false);
+  const [showFollowupForm, setShowFollowupForm] = useState(false);
+  const [selectedFollowupForComplete, setSelectedFollowupForComplete] =
+    useState<CallFollowup | null>(null);
+  // ✅ React Query
+  const {
+    data: callFollowups = [],
+    isLoading: isLoadingFollowups,
+  } = usePatientCallFollowups(patientId);
+
+  const cancelFollowup = useCancelCallFollowup();
+
+  // ✅ جدا کردن پیگیری‌های فعال و تاریخچه
+  const activeFollowups = callFollowups.filter(
+    (f) => f.status === 'pending' || f.status === 'rescheduled'
+  );
+  const historyFollowups = callFollowups.filter(
+    (f) => f.status === 'completed' || f.status === 'cancelled'
+  );
+
+  // ✅ هندلر لغو
+  const handleCancelFollowup = (followup: CallFollowup) => {
+    if (confirm('آیا از لغو این قرار تماس اطمینان دارید؟')) {
+      cancelFollowup.mutate(followup.id);
+    }
+  };
 
   const [formData, setFormData] = useState<Partial<Patient>>(initialPatient || {});
 
@@ -1094,6 +1127,143 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
               </p>
             </div>
           )}
+
+          {/* ============================================ */}
+          {/* بخش پیگیری‌های تلفنی */}
+          {/* ============================================ */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <CardTitle className="flex items-center gap-2">
+                  <Phone className="w-5 h-5" />
+                  پیگیری‌های تلفنی
+                  {activeFollowups.length > 0 && (
+                    <span className="text-sm font-normal text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                      {activeFollowups.length} فعال
+                    </span>
+                  )}
+                  <span className="text-sm font-normal text-gray-500">
+                    ({callFollowups.length} کل)
+                  </span>
+                </CardTitle>
+
+                <Button
+                  size="sm"
+                  onClick={() => setShowFollowupForm(true)}
+                  disabled={showFollowupForm || activeFollowups.length > 0}
+                  title={
+                    activeFollowups.length > 0
+                      ? 'ابتدا پیگیری فعال را تکمیل یا لغو کنید'
+                      : undefined
+                  }
+                >
+                  <Plus className="w-4 h-4 ml-2" />
+                  ثبت قرار تماس
+                </Button>
+              </div>
+
+              {activeFollowups.length > 0 && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  ⚠️ برای ثبت قرار تماس جدید، ابتدا پیگیری فعال فعلی را تکمیل یا لغو کنید
+                </p>
+              )}
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              {/* فرم ثبت پیگیری جدید */}
+              {showFollowupForm && (
+                <CallFollowupForm
+                  patientId={patientId}
+                  patientName={`${formData.first_name || ''} ${formData.last_name || ''}`.trim()}
+                  onSuccess={() => setShowFollowupForm(false)}
+                  onCancel={() => setShowFollowupForm(false)}
+                />
+              )}
+
+              {isLoadingFollowups ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+                  <span className="mr-2 text-gray-500">در حال بارگذاری پیگیری‌ها...</span>
+                </div>
+              ) : callFollowups.length === 0 && !showFollowupForm ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Phone className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                  <p>هیچ پیگیری تلفنی برای این بیمار ثبت نشده است</p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    با دکمه‌ی بالا می‌توانید یک قرار تماس تعیین کنید
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* پیگیری‌های فعال */}
+                  {activeFollowups.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-blue-500" />
+                        پیگیری‌های فعال ({activeFollowups.length})
+                      </h4>
+                      {activeFollowups.map((followup) => (
+                        <CallFollowupCard
+                          key={followup.id}
+                          followup={followup}
+                          onComplete={(f) => setSelectedFollowupForComplete(f)}
+                          onCancel={handleCancelFollowup}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* تاریخچه collapsible */}
+                  {historyFollowups.length > 0 && (
+                    <div className="border-t pt-4">
+                      <button
+                        type="button"
+                        onClick={() => setShowHistory(!showHistory)}
+                        className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors group"
+                      >
+                        <div className="flex items-center gap-2">
+                          <History className="w-4 h-4 text-gray-500" />
+                          <span className="text-sm font-semibold text-gray-700">
+                            تاریخچه پیگیری‌ها
+                          </span>
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                            {historyFollowups.length}
+                          </span>
+                        </div>
+                        {showHistory ? (
+                          <ChevronUp className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                        )}
+                      </button>
+
+                      {showHistory && (
+                        <div className="mt-2 space-y-1.5 pr-2 border-r-2 border-gray-200 dark:border-gray-700 mr-1">
+                          {historyFollowups.map((followup) => (
+                            <CallFollowupCard
+                              key={followup.id}
+                              followup={followup}
+                              compact
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* دیالوگ ثبت نتیجه */}
+          <CompleteCallFollowupDialog
+            followup={selectedFollowupForComplete}
+            open={!!selectedFollowupForComplete}
+            onOpenChange={(open) => {
+              if (!open) setSelectedFollowupForComplete(null);
+            }}
+            onSuccess={() => setSelectedFollowupForComplete(null)}
+          />
 
           {/* آپلود فایل */}
           <div className="border-t pt-4 mt-4">

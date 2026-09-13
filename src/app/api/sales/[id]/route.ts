@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // GET /api/sales/[id] - دریافت یک فروش
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -61,7 +61,7 @@ export async function GET(
 // PUT /api/sales/[id] - ویرایش فروش
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -129,7 +129,7 @@ export async function PUT(
 // DELETE /api/sales/[id] - حذف فروش (soft delete)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -144,8 +144,8 @@ export async function DELETE(
 
     const { error } = await supabase
       .from("sales")
-      .update({ 
-        deleted_at: new Date().toISOString() 
+      .update({
+        deleted_at: new Date().toISOString()
       })
       .eq("id", params.id)
       .eq("tenant_id", tenantId)
@@ -172,7 +172,7 @@ export async function DELETE(
 async function getCurrentTenantId(supabase: any) {
   const { data: tenantId, error } = await supabase
     .rpc('get_current_tenant_id');
-  
+
   if (error || !tenantId) return null;
   return tenantId;
 }

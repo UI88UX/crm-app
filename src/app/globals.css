@@ -74,11 +74,11 @@
   }
 }
 
-.global-loader-active {
+/* .global-loader-active {
   cursor: wait !important;
 }
 
 .global-loader-active * {
   cursor: wait !important;
-}
+} */
 

@@ -4,12 +4,12 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!user) {
       return NextResponse.json(
         { error: "لطفاً وارد حساب کاربری خود شوید." },

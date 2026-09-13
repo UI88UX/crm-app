@@ -23,6 +23,9 @@ export interface Patient {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  last_call_result: CallResult | null;   // ← جدید
+  last_call_at: string | null;            // ← جدید
+  next_call_due_at: string | null;        // ← جدید
 }
 
 export interface Sale {
@@ -196,4 +199,128 @@ export const APPOINTMENT_TYPE_MAP: Record<AppointmentType, string> = {
   fitting: 'تنظیم سمعک',
   consultation: 'مشاوره',
   other: 'سایر',
+};
+
+// ============================================
+// Call Followup Types (پیگیری تلفنی)
+// ============================================
+
+export type CallFollowupStatus =
+  | 'pending'      // در انتظار تماس
+  | 'completed'    // تماس انجام شد
+  | 'cancelled'    // لغو شده
+  | 'rescheduled'; // به تعویق افتاده
+
+export type CallResult =
+  | 'positive'        // مشاوره موفق
+  | 'negative'        // مشاوره ناموفق
+  | 'no_answer'       // عدم پاسخگویی
+  | 'callback'        // نیاز به تماس مجدد
+  | 'not_interested'; // عدم تمایل به ادامه
+
+export interface CallFollowup {
+  id: string;
+  tenant_id: string;
+  patient_id: string;
+  patient?: Pick<Patient, 'id' | 'first_name' | 'last_name' | 'national_code' | 'phone'>;
+
+  due_date: string;          // ISO datetime
+  completed_at: string | null;
+
+  status: CallFollowupStatus;
+  result: CallResult | null;
+
+  notes: string | null;       // یادداشت قبل از تماس
+  call_notes: string | null;  // یادداشت بعد از تماس
+  next_followup_date: string | null;
+
+  reminder_sent: boolean;
+  reminder_sent_at: string | null;
+
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface CallFollowupFormData {
+  patient_id: string;
+  due_date: string;
+  notes?: string | null;
+}
+
+export interface CompleteCallFollowupFormData {
+  result: CallResult;
+  call_notes?: string | null;
+  next_followup_date?: string | null; // اجباری اگر result === 'callback'
+}
+
+// ============================================
+// Call Result Constants
+// ============================================
+
+export const CALL_RESULTS: {
+  value: CallResult;
+  label: string;
+  shortLabel: string;
+  color: 'green' | 'red' | 'gray' | 'blue' | 'orange';
+  emoji: string;
+  description: string;
+}[] = [
+  {
+    value: 'positive',
+    label: 'مشاوره موفق',
+    shortLabel: 'موفق',
+    color: 'green',
+    emoji: '✅',
+    description: 'بیمار برای ادامه همکاری اعلام آمادگی کرد',
+  },
+  {
+    value: 'negative',
+    label: 'مشاوره ناموفق',
+    shortLabel: 'ناموفق',
+    color: 'red',
+    emoji: '❌',
+    description: 'مشاوره نتیجه نداد و بیمار منصرف شد',
+  },
+  {
+    value: 'no_answer',
+    label: 'عدم پاسخگویی',
+    shortLabel: 'بی‌پاسخ',
+    color: 'gray',
+    emoji: '📵',
+    description: 'بیمار به تماس پاسخ نداد',
+  },
+  {
+    value: 'callback',
+    label: 'نیاز به تماس مجدد',
+    shortLabel: 'تماس مجدد',
+    color: 'blue',
+    emoji: '🔄',
+    description: 'نیاز به پیگیری مجدد در تاریخ مشخص',
+  },
+  {
+    value: 'not_interested',
+    label: 'عدم تمایل به ادامه',
+    shortLabel: 'بی‌تمایل',
+    color: 'orange',
+    emoji: '🚫',
+    description: 'بیمار تمایلی به ادامه همکاری نداشت',
+  },
+];
+
+export const CALL_RESULT_MAP: Record<CallResult, typeof CALL_RESULTS[number]> =
+  CALL_RESULTS.reduce((acc, item) => {
+    acc[item.value] = item;
+    return acc;
+  }, {} as Record<CallResult, typeof CALL_RESULTS[number]>);
+
+export const CALL_FOLLOWUP_STATUS_MAP: Record<
+  CallFollowupStatus,
+  { label: string; color: string }
+> = {
+  pending: { label: 'در انتظار تماس', color: 'blue' },
+  completed: { label: 'انجام شده', color: 'green' },
+  cancelled: { label: 'لغو شده', color: 'gray' },
+  rescheduled: { label: 'به تعویق افتاده', color: 'orange' },
 };

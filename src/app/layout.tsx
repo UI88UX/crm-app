@@ -6,7 +6,6 @@ import "./globals.css";
 import ClientBody from "./ClientBody";
 import { Providers } from "@/src/components/providers";
 import { QueryProvider } from "@/lib/react-query/QueryProvider";
-import { GlobalLoader } from "@/components/ui/global-loader"; 
 // تعریف فونت Vazir
 const vazir = Vazirmatn({
   subsets: ["arabic"],
@@ -31,7 +30,6 @@ export default function RootLayout({
         <QueryProvider>
           <Providers>
             <ClientBody>
-              <GlobalLoader /> {/* ✅ اضافه شد */}
               {children}
             </ClientBody>
           </Providers>

@@ -1,23 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactStrictMode: false, // غیرفعال برای سرعت بیشتر
+  reactStrictMode: false,
   experimental: {
-    optimizeCss: true, // بهینه‌سازی CSS
+    optimizeCss: true,
   },
-  // حذف گزینه‌های deprecated
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  webpack: (config) => {
-    config.cache = {
-      type: 'filesystem',
-      buildDependencies: {
-        config: [__filename],
-      },
-    };
-    return config;
-  },
+  // typescript: {
+  //   // ! هشدار: این کار type-check رو کاملاً غیرفعال می‌کنه
+  //   // فقط برای دیباگ موقت استفاده کن
+  //   ignoreBuildErrors: true,
+  // },
 };
 
 export default nextConfig;
