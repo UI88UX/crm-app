@@ -205,3 +205,102 @@ export function getJalaliPickerProps() {
     };
   }
 }
+// ============================================
+// تابع جدید: فرمت تاریخ با Intl (فارسی و دقیق)
+// ============================================
+/**
+ * فرمت تاریخ به شمسی با استفاده از Intl
+ * مزیت: بدون وابستگی به locale moment — همیشه فارسی و دقیق
+ *
+ * @param date - تاریخ (Date یا string)
+ * @param format - 'short' | 'long' | 'full'
+ * @returns رشته تاریخ شمسی
+ *
+ * مثال‌ها:
+ *   'short' → '۱۴۰۴/۰۵/۱۵'
+ *   'long'  → '۱۵ مرداد ۱۴۰۴'
+ *   'full'  → 'پنجشنبه ۱۵ مرداد ۱۴۰۴'
+ */
+export function formatJalaliDateIntl(
+  date: Date | string | null | undefined,
+  format: 'short' | 'long' | 'full' = 'long'
+): string | null {
+  if (!date) return null;
+
+  try {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(d.getTime())) return null;
+
+    let options: Intl.DateTimeFormatOptions;
+
+    switch (format) {
+      case 'short':
+        options = {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          calendar: 'persian',
+        } as Intl.DateTimeFormatOptions;
+        break;
+      case 'full':
+        options = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          calendar: 'persian',
+        } as Intl.DateTimeFormatOptions;
+        break;
+      case 'long':
+      default:
+        options = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          calendar: 'persian',
+        } as Intl.DateTimeFormatOptions;
+        break;
+    }
+
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian', options).format(d);
+  } catch (error) {
+    console.error('Error in formatJalaliDateIntl:', error);
+    return null;
+  }
+}
+
+/**
+ * فرمت تاریخ + ساعت به شمسی با Intl
+ */
+export function formatJalaliDateTimeIntl(
+  date: Date | string | null | undefined
+): string | null {
+  if (!date) return null;
+
+  try {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(d.getTime())) return null;
+
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      calendar: 'persian',
+    } as Intl.DateTimeFormatOptions).format(d);
+  } catch (error) {
+    console.error('Error in formatJalaliDateTimeIntl:', error);
+    return null;
+  }
+}
+
+/**
+ * فرمت عدد به فارسی
+ */
+export function toPersianNumber(num: number | string | null | undefined): string {
+  if (num === null || num === undefined) return '۰';
+  const n = typeof num === 'string' ? parseFloat(num) : num;
+  if (isNaN(n)) return '۰';
+  return n.toLocaleString('fa-IR');
+}

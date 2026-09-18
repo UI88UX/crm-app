@@ -1,241 +1,299 @@
+// src/app/page.tsx
 import Link from "next/link";
 import {
   ArrowLeft,
-  Boxes,
-  CheckCircle2,
-  Database,
-  FileLock2,
-  KeyRound,
-  LayoutDashboard,
-  PanelsTopLeft,
+  Users,
+  Calendar,
+  ShoppingBag,
+  Phone,
+  BarChart3,
+  MessageSquare,
   ShieldCheck,
-  TriangleAlert,
+  Clock,
+  Bell,
+  UserCog,
+  LayoutDashboard,
+  Mail,
 } from "lucide-react";
-import { Badge } from "@/src/components/ui/badge";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/src/components/ui/card";
-import { Separator } from "@/src/components/ui/separator";
+} from "@/components/ui/card";
 
-// این یک Server Component است، پس می‌تواند متغیرهای محیطی سرور را بخواند.
-function getEnvStatus() {
-  return [
-    {
-      key: "NEXT_PUBLIC_SUPABASE_URL",
-      label: "آدرس پروژه Supabase",
-      ok: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-      scope: "عمومی",
-    },
-    {
-      key: "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-      label: "کلید anon (عمومی)",
-      ok: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
-      scope: "عمومی",
-    },
-    {
-      key: "SUPABASE_SERVICE_ROLE_KEY",
-      label: "کلید service role (محرمانه)",
-      ok: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
-      scope: "سرور",
-    },
-    {
-      key: "BACKUP_CRON_SECRET",
-      label: "راز بکاپ/کرون",
-      ok: Boolean(process.env.BACKUP_CRON_SECRET),
-      scope: "سرور",
-    },
-  ];
-}
-
-const SCAFFOLD_STEPS = [
+// ============================================
+// Features
+// ============================================
+const FEATURES = [
   {
-    icon: Boxes,
-    title: "Next.js 15 · App Router · TypeScript",
-    desc: "ساختار پروژه با Tailwind و shadcn/ui آماده شد.",
+    icon: Users,
+    title: "مدیریت بیماران",
+    desc: "پرونده کامل بیماران با اطلاعات تماس، سوابق و تاریخچه درمان.",
+    color: "text-blue-600 dark:text-blue-400",
+    bg: "bg-blue-100 dark:bg-blue-950/40",
   },
   {
-    icon: Database,
-    title: "کلاینت‌های Supabase",
-    desc: "client / server / admin به‌صورت جداگانه پیاده‌سازی شدند.",
+    icon: Calendar,
+    title: "نوبت‌دهی هوشمند",
+    desc: "ثبت نوبت، مدیریت تقویم و جلوگیری از تداخل زمانی.",
+    color: "text-purple-600 dark:text-purple-400",
+    bg: "bg-purple-100 dark:bg-purple-950/40",
+  },
+  {
+    icon: ShoppingBag,
+    title: "مدیریت فروش",
+    desc: "ثبت فروش سمعک، گارانتی و پیگیری دوره‌ای مشتریان.",
+    color: "text-emerald-600 dark:text-emerald-400",
+    bg: "bg-emerald-100 dark:bg-emerald-950/40",
+  },
+  {
+    icon: Phone,
+    title: "پیگیری تلفنی",
+    desc: "یادآوری خودکار تماس با بیماران و ثبت نتیجه پیگیری.",
+    color: "text-orange-600 dark:text-orange-400",
+    bg: "bg-orange-100 dark:bg-orange-950/40",
+  },
+  {
+    icon: MessageSquare,
+    title: "کمپین پیامکی",
+    desc: "ارسال پیامک گروهی، یادآوری نوبت و تبریک تولد.",
+    color: "text-pink-600 dark:text-pink-400",
+    bg: "bg-pink-100 dark:bg-pink-950/40",
+  },
+  {
+    icon: BarChart3,
+    title: "گزارش‌های تحلیلی",
+    desc: "داشبورد آماری با نمودارهای فروش و نرخ تبدیل بیماران.",
+    color: "text-indigo-600 dark:text-indigo-400",
+    bg: "bg-indigo-100 dark:bg-indigo-950/40",
+  },
+];
+
+// ============================================
+// Benefits
+// ============================================
+const BENEFITS = [
+  {
+    icon: Clock,
+    title: "صرفه‌جویی در زمان",
+    desc: "اتوماسیون کارهای تکراری و تمرکز روی بیمار",
+  },
+  {
+    icon: Bell,
+    title: "یادآوری خودکار",
+    desc: "پیامک نوبت، تولد و پیگیری دوره‌ای بدون دخالت دستی",
+  },
+  {
+    icon: UserCog,
+    title: "مدیریت کاربران",
+    desc: "تعریف دسترسی سفارشی برای هر عضو تیم مطب",
   },
   {
     icon: ShieldCheck,
-    title: "Middleware محافظت از مسیرها",
-    desc: "تازه‌سازی session و هدایت کاربر مهمان به /login.",
-  },
-  {
-    icon: PanelsTopLeft,
-    title: "Providerها",
-    desc: "ThemeProvider و Toaster در layout ریشه فعال شدند.",
+    title: "امنیت داده‌ها",
+    desc: "اطلاعات هر مطب به‌صورت کاملاً مجزا نگهداری می‌شود",
   },
 ];
 
 export default function Home() {
-  const env = getEnvStatus();
-  const configuredCount = env.filter((e) => e.ok).length;
-  const allConfigured = configuredCount === env.length;
-
   return (
     <div
       dir="rtl"
-      className="relative min-h-screen overflow-hidden bg-background text-foreground"
+      className="relative min-h-screen bg-background text-foreground overflow-hidden"
     >
-      {/* پس‌زمینه: شبکه نقطه‌ای + هاله رنگی */}
+      {/* پس‌زمینه تزئینی */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.4] [background-image:radial-gradient(hsl(var(--foreground)/0.12)_1px,transparent_1px)] [background-size:22px_22px]"
+        className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:radial-gradient(hsl(var(--foreground)/0.1)_1px,transparent_1px)] [background-size:24px_24px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-32 right-0 h-96 w-96 rounded-full bg-emerald-500/20 blur-[120px]"
+        className="pointer-events-none absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-emerald-500/15 blur-[140px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-40 left-0 h-96 w-96 rounded-full bg-sky-500/10 blur-[120px]"
+        className="pointer-events-none absolute -bottom-40 left-0 h-[500px] w-[500px] rounded-full bg-sky-500/10 blur-[140px]"
       />
 
-      <main className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-5 py-10 sm:px-8">
-        {/* نوار بالا */}
-        <header className="flex items-center justify-between">
+      {/* ============ Header ============ */}
+      <header className="relative z-10 border-b border-border/50 bg-background/60 backdrop-blur-sm">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-foreground text-background shadow-sm">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
               <LayoutDashboard className="h-5 w-5" />
             </div>
             <div className="leading-tight">
-              <p className="text-sm font-semibold tracking-tight">سامانه CRM</p>
-              <p className="text-xs text-muted-foreground">
-                مدیریت ارتباط با مشتری
+              <p className="text-base font-bold tracking-tight">
+                CRM شنوایی‌سنجی
               </p>
+              <p className="text-xs text-muted-foreground">مدیریت مطب</p>
             </div>
           </div>
-          <Badge
-            variant="outline"
-            className="gap-1.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            مرحله ۰ — راه‌اندازی
-          </Badge>
-        </header>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/contact">تماس با ما</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link href="/login">ورود</Link>
+            </Button>
+          </div>
+        </div>
+      </header>
 
-        {/* بخش معرفی */}
-        <section className="mt-14 max-w-2xl sm:mt-20">
-          <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-5xl">
-            ساختار اولیه پروژه با موفقیت آماده شد
-          </h1>
-          <p className="mt-4 text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
-            پایه‌ی فنی CRM شما روی Next.js و Supabase بنا شد. برای فعال‌شدن احراز
-            هویت و دیتابیس، کافی است کلیدهای Supabase را در فایل{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[0.8em]">
-              .env.local
-            </code>{" "}
-            قرار دهید.
-          </p>
-        </section>
+      {/* ============ Hero ============ */}
+      <section className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-12 text-center">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl tracking-tight text-balance leading-tight">
+          مدیریت هوشمند
+          <br />
+          <span className="bg-gradient-to-l from-emerald-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent">
+            مطب شنوایی‌سنجی
+          </span>
+        </h1>
 
-        {/* کارت‌ها */}
-        <section className="mt-12 grid flex-1 gap-5 lg:grid-cols-5">
-          {/* چک‌لیست ساخت */}
-          <Card className="lg:col-span-3">
-            <CardHeader>
-              <CardTitle className="text-lg">آنچه پیاده‌سازی شد</CardTitle>
-              <CardDescription>
-                اجزای اصلی مرحله صفر که آماده استفاده‌اند.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-1">
-              {SCAFFOLD_STEPS.map((step, i) => (
-                <div key={step.title}>
-                  <div className="flex items-start gap-3 py-2.5">
-                    <div className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-muted">
-                      <step.icon className="h-[18px] w-[18px] text-foreground/80" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="flex items-center gap-2 text-sm font-medium">
-                        {step.title}
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      </p>
-                      <p className="mt-0.5 text-sm text-muted-foreground">
-                        {step.desc}
-                      </p>
-                    </div>
-                  </div>
-                  {i < SCAFFOLD_STEPS.length - 1 && <Separator />}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+        <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-7">
+          سامانه‌ای کامل برای مدیریت بیماران، نوبت‌دهی، فروش سمعک، پیگیری تلفنی
+          و ارسال پیامک — همه در یک مکان.
+        </p>
 
-          {/* وضعیت متغیرهای محیطی */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <KeyRound className="h-4 w-4" />
-                متغیرهای محیطی
-              </CardTitle>
-              <CardDescription>
-                {allConfigured
-                  ? "همه‌ی کلیدها تنظیم شده‌اند."
-                  : `${configuredCount} از ${env.length} کلید تنظیم شده است.`}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2.5">
-              {env.map((item) => (
-                <div
-                  key={item.key}
-                  className="flex items-center justify-between gap-2 rounded-lg border bg-card/50 px-3 py-2"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">{item.label}</p>
-                    <p className="truncate font-mono text-[11px] text-muted-foreground">
-                      {item.key}
-                    </p>
-                  </div>
-                  {item.ok ? (
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />
-                  ) : (
-                    <TriangleAlert className="h-5 w-5 shrink-0 text-amber-500" />
-                  )}
-                </div>
-              ))}
-
-              {!allConfigured && (
-                <p className="flex items-start gap-2 rounded-lg bg-amber-500/10 px-3 py-2.5 text-xs leading-5 text-amber-700 dark:text-amber-400">
-                  <FileLock2 className="mt-0.5 h-4 w-4 shrink-0" />
-                  فایل{" "}
-                  <code className="font-mono">.env.local.example</code> را به{" "}
-                  <code className="font-mono">.env.local</code> کپی و مقادیر را
-                  پر کنید.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* دکمه‌های اقدام */}
-        <section className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button asChild size="lg" className="group">
-            <Link href="/dashboard">
-              ورود به داشبورد
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Button asChild size="lg" className="group w-full sm:w-auto">
+            <Link href="/login">
+              ورود به سامانه
               <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/login">صفحه ورود</Link>
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
+            <Link href="/contact">
+              <Mail className="h-4 w-4 ml-2" />
+              تماس با ما
+            </Link>
           </Button>
-        </section>
+        </div>
+      </section>
 
-        <footer className="mt-10 border-t pt-5 text-center text-xs text-muted-foreground">
-          ساخته‌شده با Next.js + Supabase · آماده برای مرحله بعد (احراز هویت)
-        </footer>
-      </main>
+      {/* ============ Features ============ */}
+      <section className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight">
+            همه امکانات در یک سامانه
+          </h2>
+          <p className="mt-3 text-muted-foreground max-w-xl mx-auto text-pretty">
+            طراحی‌شده برای رفع نیازهای واقعی مطب‌های شنوایی‌سنجی
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {FEATURES.map((feature) => (
+            <Card
+              key={feature.title}
+              className="group hover:shadow-md transition-shadow border-border/60"
+            >
+              <CardHeader className="pb-3">
+                <div
+                  className={`grid h-11 w-11 place-items-center rounded-xl ${feature.bg} mb-3 transition-transform group-hover:scale-110`}
+                >
+                  <feature.icon className={`h-5 w-5 ${feature.color}`} />
+                </div>
+                <CardTitle className="text-base font-semibold">
+                  {feature.title}
+                </CardTitle>
+                <CardDescription className="text-sm leading-6">
+                  {feature.desc}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* ============ Benefits ============ */}
+      <section className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pb-16 sm:pb-24">
+        <Card className="border-border/60 bg-gradient-to-br from-background to-muted/30">
+          <CardContent className="p-6 sm:p-10">
+            <div className="text-center mb-8">
+              <h2 className="text-xl sm:text-3xl font-bold tracking-tight">
+                چرا این سامانه؟
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {BENEFITS.map((benefit) => (
+                <div
+                  key={benefit.title}
+                  className="flex flex-col items-center text-center gap-3"
+                >
+                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-primary/10">
+                    <benefit.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <p className="font-semibold text-sm">{benefit.title}</p>
+                  <p className="text-xs text-muted-foreground leading-5">
+                    {benefit.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* ============ CTA ============ */}
+      <section className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 pb-20">
+        <Card className="border-0 bg-gradient-to-l from-emerald-600 via-emerald-700 to-teal-700 text-white overflow-hidden relative">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-20 [background-image:radial-gradient(white_1px,transparent_1px)] [background-size:20px_20px]"
+          />
+          <CardContent className="relative p-8 sm:p-12 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+              آماده شروع هستید؟
+            </h2>
+            <p className="text-white/90 mb-8 max-w-md mx-auto text-sm sm:text-base">
+              وارد سامانه شوید و مطب خود را هوشمند مدیریت کنید.
+            </p>
+            <Button
+              asChild
+              size="lg"
+              variant="secondary"
+              className="group bg-white text-emerald-700 hover:bg-white/90"
+            >
+              <Link href="/login">
+                ورود به سامانه
+                <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* ============ Footer ============ */}
+      <footer className="relative z-10 border-t border-border/50 py-6 sm:py-8">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-muted-foreground">
+          <p>
+            © {new Date().getFullYear()} CRM شنوایی‌سنجی — همه حقوق محفوظ است
+          </p>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/contact"
+              className="hover:text-foreground transition-colors"
+            >
+              تماس با ما
+            </Link>
+            <Link
+              href="/login"
+              className="hover:text-foreground transition-colors"
+            >
+              ورود
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

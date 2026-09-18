@@ -420,9 +420,24 @@ export async function getDashboardStats() {
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
+  const email = formData.get("email") as string;
 
+  // ۱. اول بررسی کن که کاربر غیرفعال نباشه
+  const { data: isActive } = await supabase.rpc("is_user_active", {
+    p_email: email,
+  });
+
+  if (isActive === false) {
+    return {
+      error:
+        "حساب کاربری شما غیرفعال است. لطفاً با مدیر مطب تماس بگیرید.",
+      code: "ACCOUNT_DISABLED",
+    };
+  }
+
+  // ۲. حالا signIn
   const { error } = await supabase.auth.signInWithPassword({
-    email: formData.get("email") as string,
+    email,
     password: formData.get("password") as string,
   });
 

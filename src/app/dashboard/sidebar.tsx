@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   MessageSquare,
   BarChart3,
@@ -21,6 +22,8 @@ import { logout } from "@/src/lib/supabase/actions";
 import { CallFollowupBell } from "@/components/call-followups/CallFollowupBell";
 import { cn } from "@/lib/utils";
 import { LoadingLink } from "@/components/ui/loading-link";
+import { useCurrentPermissions } from "@/hooks/useCurrentPermissions";
+import { canAccessRoute } from "@/lib/auth/permissions";
 
 const menuItems = [
   {
@@ -32,10 +35,6 @@ const menuItems = [
     title: "بیماران",
     href: "/dashboard/patients",
     icon: Users,
-    items: [
-      { title: "لیست بیماران", href: "/dashboard/patients" },
-      { title: "ثبت بیمار جدید", href: "/dashboard/patients/new" },
-    ],
   },
   {
     title: "مدیریت کاربران",
@@ -76,7 +75,20 @@ const menuItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
+
+  const { data: perms } = useCurrentPermissions();
+
+  // ✅ فیلتر کردن منوها بر اساس دسترسی
+  const visibleMenuItems = menuItems.filter((item) => {
+    if (!perms) return false; // تا وقتی perms لود نشده، هیچی نشون نده
+    return canAccessRoute(
+      item.href,
+      perms.role,
+      perms.permissions
+    );
+  });
 
   // ✅ بستن خودکار در تغییر مسیر (در موبایل)
   useEffect(() => {
@@ -96,10 +108,13 @@ export function Sidebar() {
   }, [isOpen]);
 
   const handleLogout = async () => {
+    // ۱. پاک کردن cache
+    queryClient.clear();
+    // ۲. logout
     await logout();
   };
 
-  // محتوای مشترک sidebar (کد DRY)
+  // محتوای مشترک sidebar
   const sidebarContent = (
     <>
       {/* لوگو + دکمه بستن در موبایل */}
@@ -128,7 +143,7 @@ export function Sidebar() {
 
       {/* منو */}
       <nav className="flex-1 space-y-1 overflow-y-auto">
-        {menuItems.map((item) => {
+        {visibleMenuItems.map((item) => {
           const isActive =
             item.href === "/dashboard"
               ? pathname === "/dashboard"
@@ -163,7 +178,7 @@ export function Sidebar() {
 
   return (
     <>
-      {/* ✅ Header موبایل با دکمه همبرگری */}
+      {/* Header موبایل */}
       <header className="lg:hidden fixed top-0 right-0 left-0 z-30 bg-gray-900 text-white h-14 flex items-center justify-between px-4 shadow-md">
         <button
           onClick={() => setIsOpen(true)}
@@ -181,7 +196,7 @@ export function Sidebar() {
         </div>
       </header>
 
-      {/* ✅ Overlay در موبایل */}
+      {/* Overlay در موبایل */}
       {isOpen && (
         <div
           className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity"
@@ -190,13 +205,11 @@ export function Sidebar() {
         />
       )}
 
-      {/* ✅ Sidebar */}
+      {/* Sidebar */}
       <aside
         className={cn(
           "fixed right-0 top-0 w-64 bg-gray-900 text-white h-screen flex flex-col p-4 z-50 transition-transform duration-300 ease-in-out",
-          // دسکتاپ: همیشه نمایش
           "lg:translate-x-0",
-          // موبایل: بر اساس state
           isOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
         )}
       >

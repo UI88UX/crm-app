@@ -11,7 +11,7 @@ import { useCampaign, useSendCampaign, useDeleteCampaign } from "@/hooks/useSmsC
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { toJalaliDisplay } from "@/lib/util/jalaliDate";
+import { formatJalaliDateIntl  } from "@/lib/util/jalaliDate";
 
 const statusColors: Record<string, string> = {
   draft: "bg-gray-100 text-gray-700",
@@ -208,18 +208,18 @@ export default function CampaignDetailPage() {
         <CardContent className="space-y-2">
           <div className="flex justify-between">
             <span className="text-muted-foreground">تاریخ ایجاد:</span>
-            <span>{toJalaliDisplay(campaign.created_at)}</span>
+            <span>{formatJalaliDateIntl (campaign.created_at)}</span>
           </div>
           {campaign.scheduled_at && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">زمان برنامه‌ریزی:</span>
-              <span>{toJalaliDisplay(campaign.scheduled_at)}</span>
+              <span>{formatJalaliDateIntl (campaign.scheduled_at)}</span>
             </div>
           )}
           {campaign.sent_at && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">تاریخ ارسال:</span>
-              <span>{toJalaliDisplay(campaign.sent_at)}</span>
+              <span>{formatJalaliDateIntl (campaign.sent_at)}</span>
             </div>
           )}
         </CardContent>
