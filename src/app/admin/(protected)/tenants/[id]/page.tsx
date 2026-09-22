@@ -1,19 +1,23 @@
-// app/admin/tenants/[id]/page.tsx
+// src/app/admin/(protected)/tenants/[id]/page.tsx
 import { TenantForm } from "@/components/admin/TenantForm";
+import { TenantHeader } from "@/components/admin/TenantHeader";
+import { TenantTabs } from "@/components/admin/TenantTabs";
 import { getTenant } from "@/lib/supabase/actions";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { TenantFormData } from "@/lib/validations/tenant";
 
-export default async function EditTenantPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default async function EditTenantPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
+
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -52,13 +56,13 @@ export default async function EditTenantPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">ویرایش مطب</h1>
-        <p className="text-muted-foreground">
-          اطلاعات مطب "{tenant.name}" را ویرایش کنید
-        </p>
-      </div>
+      {/* 🆕 Header */}
+      <TenantHeader tenant={tenant} />
 
+      {/* 🆕 Tabs */}
+      <TenantTabs tenantId={id} />
+
+      {/* ✅ فرم موجود (بدون تغییر) */}
       <TenantForm initialData={initialData} isEdit={true} />
     </div>
   );

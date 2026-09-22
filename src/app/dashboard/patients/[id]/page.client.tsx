@@ -964,7 +964,7 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
             <div className="text-center py-8 text-gray-500">
               <ShoppingBag className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p>هیچ سمعکی برای این بیمار ثبت نشده است</p>
-              <Link href={`/dashboard/sales/new?patientId=${patientId}`}>
+              <Link href={`/dashboard/sales/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
                 <Button variant="outline" className="mt-4">
                   ثبت فروش جدید
                 </Button>
@@ -985,7 +985,7 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
                 ({appointments.length} نوبت)
               </span>
             </CardTitle>
-            <Link href={`/dashboard/appointments/new?patientId=${patientId}`}>
+            <Link href={`/dashboard/appointments/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
               <Button size="sm">
                 <Plus className="w-4 h-4 ml-2" />
                 ثبت نوبت
@@ -1059,7 +1059,7 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
             <div className="text-center py-8 text-gray-500">
               <CalendarIcon className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p>هیچ نوبتی برای این بیمار ثبت نشده است</p>
-              <Link href={`/dashboard/appointments/new?patientId=${patientId}`}>
+              <Link href={`/dashboard/appointments/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
                 <Button variant="outline" className="mt-4">
                   <Plus className="w-4 h-4 ml-2" />
                   ثبت نوبت جدید

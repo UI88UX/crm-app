@@ -35,7 +35,8 @@ import type { User } from '@/types/user';
 import { formatJalaliDateIntl } from '@/lib/util/jalaliDate';
 import { cn } from '@/lib/utils';
 import { ConfirmUserActionDialog } from './ConfirmUserActionDialog';
-import { UserPermissionsDialog } from './UserPermissionsDialog';
+import { EditUserDialog } from './EditUserDialog';
+import { Pencil } from 'lucide-react';
 
 interface UserTableProps {
   users: User[];
@@ -105,7 +106,7 @@ export function UserTable({
   currentUserId,
   loading = false,
 }: UserTableProps) {
-  const [permissionsUser, setPermissionsUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
   const deactivate = useDeactivateUser();
   const reactivate = useReactivateUser();
@@ -292,10 +293,10 @@ export function UserTable({
                               <>
                                 {user.role === 'user' && (
                                   <DropdownMenuItem
-                                    onClick={() => setPermissionsUser(user)}
+                                    onClick={() => setEditingUser(user)}
                                   >
-                                    <ShieldCheck className="h-4 w-4 ml-2" />
-                                    ویرایش دسترسی‌ها
+                                    <Pencil className="h-4 w-4 ml-2" />
+                                    ویرایش کاربر
                                   </DropdownMenuItem>
                                 )}
                                 <DropdownMenuItem
@@ -417,10 +418,10 @@ export function UserTable({
                       variant="outline"
                       size="sm"
                       className="w-full"
-                      onClick={() => setPermissionsUser(user)}
+                      onClick={() => setEditingUser(user)}
                     >
                       <ShieldCheck className="h-4 w-4 ml-2" />
-                      ویرایش دسترسی‌ها
+                      ویرایش کاربر
                     </Button>
                     <Button
                       variant="outline"
@@ -463,11 +464,12 @@ export function UserTable({
         loading={isLoading}
       />
 
-      {/* 🆕 Dialog ویرایش permissions */}
-      <UserPermissionsDialog
-        user={permissionsUser}
-        open={!!permissionsUser}
-        onOpenChange={(open) => !open && setPermissionsUser(null)}
+      {/* Dialog ویرایش کاربر */}
+      <EditUserDialog
+        user={editingUser}
+        open={!!editingUser}
+        onOpenChange={(open) => !open && setEditingUser(null)}
+        currentUserId={currentUserId}
       />
     </>
   );

@@ -9,7 +9,7 @@ export default async function StatsPage() {
 
   // تبدیل stats به آرایه با استفاده از as any[]
   const statsArray = (stats as any[]) || [];
-  
+
   // محاسبه مجموع کل
   const totalPatients = statsArray.reduce((sum: number, s: any) => sum + (s.total_patients || 0), 0);
   const totalSales = statsArray.reduce((sum: number, s: any) => sum + (s.total_sales || 0), 0);
@@ -87,6 +87,7 @@ export default async function StatsPage() {
                   <TableRow className="bg-gray-50 hover:bg-gray-50">
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">مطب</TableHead>
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">بیماران</TableHead>
+                    <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">کاربران</TableHead>
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">فروش</TableHead>
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">درآمد</TableHead>
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">نرخ تبدیل</TableHead>
@@ -95,7 +96,7 @@ export default async function StatsPage() {
                 <TableBody>
                   {statsArray.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-12 text-gray-500">
+                      <TableCell colSpan={6} className="text-center py-12 text-gray-500">
                         <TrendingUp className="h-12 w-12 mx-auto text-gray-300 mb-3" />
                         هیچ آماری موجود نیست
                       </TableCell>
@@ -109,6 +110,10 @@ export default async function StatsPage() {
                           <span className="text-gray-400 text-sm"> بیمار</span>
                         </TableCell>
                         <TableCell>
+                          <span className="font-medium">{stat.total_users || 0}</span>
+                          <span className="text-gray-400 text-sm"> نفر</span>
+                        </TableCell>
+                        <TableCell>
                           <span className="font-medium">{stat.total_sales || 0}</span>
                           <span className="text-gray-400 text-sm"> فروش</span>
                         </TableCell>
@@ -118,7 +123,7 @@ export default async function StatsPage() {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                              <div 
+                              <div
                                 className="h-full bg-blue-500 rounded-full transition-all"
                                 style={{ width: `${Math.min(Number(stat.conversion_rate) || 0, 100)}%` }}
                               />

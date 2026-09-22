@@ -27,10 +27,11 @@ import {
   Clock as ClockIcon,
   UserCheck,
   UserX,
+  Loader2,
   Calendar
 } from "lucide-react";
 import moment from "moment-jalaali";
-import { toJalaliDisplay } from "@/lib/util/jalaliDate";
+import { formatJalaliDateTimeIntl } from "@/lib/util/jalaliDate";
 import {
   useAppointments,
   useDeleteAppointment,
@@ -39,6 +40,7 @@ import {
 import { APPOINTMENT_STATUSES, APPOINTMENT_TYPES, type AppointmentStatus } from "@/types";
 import { UpcomingAppointmentsAlert } from "@/components/appointments/UpcomingAppointmentsAlert";
 import { LoadingLink } from "@/components/ui/loading-link";
+import { useNavigationLoading } from "@/hooks/useNavigationLoading";
 
 // کامپوننت نمایش وضعیت نوبت
 function AppointmentStatusBadge({ status }: { status: AppointmentStatus }) {
@@ -66,6 +68,7 @@ interface FilterState {
 
 export default function AppointmentsPageClient() {
   const router = useRouter();
+  const { isNavigating, navigate } = useNavigationLoading();
   const [filters, setFilters] = useState<FilterState>({
     status: "",
     type: "",
@@ -101,10 +104,10 @@ export default function AppointmentsPageClient() {
     // فیلتر جستجو
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
-      const patientName = 
+      const patientName =
         `${appointment.patient?.first_name || ""} ${appointment.patient?.last_name || ""}`.toLowerCase();
       const title = (appointment.title || "").toLowerCase();
-      
+
       if (!patientName.includes(searchLower) && !title.includes(searchLower)) {
         return false;
       }
@@ -187,15 +190,21 @@ export default function AppointmentsPageClient() {
             <RefreshCw className={`w-4 h-4 ml-2 ${isFetching ? 'animate-spin' : ''}`} />
             {isFetching ? "در حال بارگذاری..." : "بروزرسانی"}
           </Button>
-          <LoadingLink href="/dashboard/appointments/new">
-            <Button size="sm">
+          <Button
+            size="sm"
+            onClick={() => navigate("/dashboard/appointments/new")}
+            disabled={isNavigating}
+          >
+            {isNavigating ? (
+              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+            ) : (
               <Plus className="w-4 h-4 ml-2" />
-              نوبت جدید
-            </Button>
-          </LoadingLink>
+            )}
+            نوبت جدید
+          </Button>
         </div>
       </div>
-        <UpcomingAppointmentsAlert />
+      <UpcomingAppointmentsAlert />
 
       {/* فیلترها */}
       {showFilters && (
@@ -291,8 +300,8 @@ export default function AppointmentsPageClient() {
       ) : (
         <div className="grid gap-3">
           {filteredAppointments.map((appointment) => {
-            const patientName = 
-              appointment.patient 
+            const patientName =
+              appointment.patient
                 ? `${appointment.patient.first_name} ${appointment.patient.last_name}`
                 : "بیمار ناشناس";
 
@@ -308,7 +317,7 @@ export default function AppointmentsPageClient() {
                         </span>
                         <AppointmentStatusBadge status={appointment.status} />
                       </div>
-                      
+
                       <div className="flex items-center gap-4 text-sm text-gray-600 mt-1 flex-wrap">
                         <span className="flex items-center gap-1">
                           <User className="w-3 h-3" />
@@ -316,7 +325,7 @@ export default function AppointmentsPageClient() {
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {toJalaliDisplay(appointment.start_time)}
+                          {formatJalaliDateTimeIntl(appointment.start_time)}
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
@@ -330,7 +339,7 @@ export default function AppointmentsPageClient() {
                           </span>
                         )}
                       </div>
-                      
+
                       {appointment.description && (
                         <p className="text-sm text-gray-500 mt-1 line-clamp-1">
                           {appointment.description}
@@ -341,22 +350,22 @@ export default function AppointmentsPageClient() {
                     {/* عملیات */}
                     <div className="flex items-center gap-2 flex-wrap">
                       {/* تغییر وضعیت - فقط برای وضعیت‌های فعال */}
-                      {appointment.status !== 'completed' && 
-                       appointment.status !== 'cancelled' && 
-                       appointment.status !== 'no_show' && (
-                        <select
-                          value={appointment.status}
-                          onChange={(e) => handleStatusChange(appointment.id, e.target.value as AppointmentStatus)}
-                          className="text-sm p-1 border rounded bg-white"
-                          disabled={updateStatus.isPending}
-                        >
-                          {APPOINTMENT_STATUSES.map((s) => (
-                            <option key={s.value} value={s.value}>
-                              {s.label}
-                            </option>
-                          ))}
-                        </select>
-                      )}
+                      {appointment.status !== 'completed' &&
+                        appointment.status !== 'cancelled' &&
+                        appointment.status !== 'no_show' && (
+                          <select
+                            value={appointment.status}
+                            onChange={(e) => handleStatusChange(appointment.id, e.target.value as AppointmentStatus)}
+                            className="text-sm p-1 border rounded bg-white"
+                            disabled={updateStatus.isPending}
+                          >
+                            {APPOINTMENT_STATUSES.map((s) => (
+                              <option key={s.value} value={s.value}>
+                                {s.label}
+                              </option>
+                            ))}
+                          </select>
+                        )}
 
                       <Link href={`/dashboard/appointments/${appointment.id}`}>
                         <Button variant="outline" size="sm">
@@ -364,7 +373,7 @@ export default function AppointmentsPageClient() {
                           مشاهده
                         </Button>
                       </Link>
-                      
+
                       <Button
                         variant="ghost"
                         size="sm"

@@ -50,6 +50,7 @@ import {
   Building2,
   Filter,
   X,
+  LayoutDashboard,
 } from "lucide-react";
 import { toast } from "sonner";
 import { deleteTenant, toggleTenantStatus } from "@/lib/supabase/actions";
@@ -86,6 +87,8 @@ export function TenantTable({ tenants }: TenantTableProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<"active" | "inactive" | "suspended">("active");
+  const [impersonatingId, setImpersonatingId] = useState<string | null>(null);
+
 
   // فیلتر کردن مطب‌ها (جستجو + وضعیت + پلن)
   const filteredTenants = tenants.filter((tenant) => {
@@ -190,6 +193,37 @@ export function TenantTable({ tenants }: TenantTableProps) {
     setSearchTerm("");
   };
 
+  const handleImpersonate = async (tenantId: string, tenantName: string) => {
+    if (!confirm(`ورود به داشبورد مطب "${tenantName}"؟`)) return;
+
+    setImpersonatingId(tenantId);
+    try {
+      const response = await fetch('/api/admin/impersonate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tenant_id: tenantId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'خطا در ورود به داشبورد');
+      }
+
+      toast.success(`ورود به داشبورد ${tenantName}`, {
+        description: 'برای خروج، روی «خروج از داشبورد» کلیک کنید.',
+        duration: 5000,
+      });
+
+      // redirect به داشبورد
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast.error(error.message || 'خطا در ورود');
+    } finally {
+      setImpersonatingId(null);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* نوار جستجو و فیلترها */}
@@ -289,8 +323,8 @@ export function TenantTable({ tenants }: TenantTableProps) {
                   >
                     <Building2 className="h-12 w-12 mx-auto text-muted-foreground/40 mb-3" />
                     {searchTerm ||
-                    statusFilter !== "all" ||
-                    planFilter !== "all"
+                      statusFilter !== "all" ||
+                      planFilter !== "all"
                       ? "هیچ مطبی با فیلترهای انتخاب‌شده یافت نشد"
                       : "هیچ مطبی یافت نشد"}
                   </TableCell>
@@ -346,6 +380,14 @@ export function TenantTable({ tenants }: TenantTableProps) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
+                            onClick={() => handleImpersonate(tenant.id, tenant.name)}
+                            className="text-amber-600 focus:text-amber-600"
+                          >
+                            <LayoutDashboard className="ml-2 h-4 w-4" />
+                            ورود به داشبورد این مطب
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem
                             onClick={() =>
                               router.push(`/admin/tenants/${tenant.id}`)
                             }
@@ -358,9 +400,9 @@ export function TenantTable({ tenants }: TenantTableProps) {
                               setSelectedTenant(tenant);
                               setNewStatus(
                                 tenant.status as
-                                  | "active"
-                                  | "inactive"
-                                  | "suspended"
+                                | "active"
+                                | "inactive"
+                                | "suspended"
                               );
                               setIsStatusDialogOpen(true);
                             }}

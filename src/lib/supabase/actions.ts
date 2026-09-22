@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { PatientFormData, SaleFormData } from "@/types";
-import { createAdminClient } from "./admin";
+import { createAdminClient, createAdminClientStateless } from "./admin";
 import { tenantSchema, type TenantFormData } from "@/lib/validations/tenant";
 import moment from "moment-jalaali";
 import { addToQueue } from '@/lib/sms/queue';
@@ -422,27 +422,44 @@ export async function login(formData: FormData) {
   const supabase = await createClient();
   const email = formData.get("email") as string;
 
-  // ۱. اول بررسی کن که کاربر غیرفعال نباشه
+  // ۱. چک non-active (RPC موجود)
   const { data: isActive } = await supabase.rpc("is_user_active", {
     p_email: email,
   });
 
   if (isActive === false) {
     return {
-      error:
-        "حساب کاربری شما غیرفعال است. لطفاً با مدیر مطب تماس بگیرید.",
+      error: "حساب کاربری شما غیرفعال است. لطفاً با مدیر مطب تماس بگیرید.",
       code: "ACCOUNT_DISABLED",
     };
   }
 
-  // ۲. حالا signIn
-  const { error } = await supabase.auth.signInWithPassword({
+  // ۲. لاگین
+  const { data: authData, error } = await supabase.auth.signInWithPassword({
     email,
     password: formData.get("password") as string,
   });
 
   if (error) {
     return { error: error.message };
+  }
+
+  // ۳. ✅ چک جدید: آیا کاربر soft delete شده؟
+  if (authData.user) {
+    const supabaseAdmin = createAdminClientStateless();
+    const { data: userRecord } = await supabaseAdmin
+      .from("users")
+      .select("deleted_at")
+      .eq("id", authData.user.id)
+      .maybeSingle();
+
+    if (userRecord?.deleted_at) {
+      await supabase.auth.signOut();
+      return {
+        error: "حساب کاربری شما حذف شده است. لطفاً با مدیر مطب تماس بگیرید.",
+        code: "ACCOUNT_DELETED",
+      };
+    }
   }
 
   revalidatePath("/", "layout");
@@ -840,24 +857,38 @@ function generateLicenseKey(): string {
   return license;
 }
 
-// src/lib/supabase/actions.ts - اضافه کنید
 
 export async function getAllUsers() {
   try {
     const supabaseAdmin = createAdminClient();
 
     // دریافت لیست کاربران از Auth API
-    const { data: authUsers, error: authError } = await supabaseAdmin.auth.admin.listUsers();
+    const { data: authUsers, error: authError } =
+      await supabaseAdmin.auth.admin.listUsers();
 
     if (authError) {
       console.error("Auth error:", authError);
       return { error: authError.message, data: [] };
     }
 
-    // دریافت اطلاعات تکمیلی از جدول users (بدون deleted_at)
+    // ✅ تغییر: فقط کاربرانی که tenant_id دارند + join با tenants
     const { data: dbUsers, error: dbError } = await supabaseAdmin
       .from("users")
-      .select("id, full_name, role, phone, specialty, is_active, is_super_admin, created_at, tenant_id");
+      .select(
+        `
+        id, 
+        full_name, 
+        role, 
+        phone, 
+        specialty, 
+        is_active, 
+        is_super_admin, 
+        created_at, 
+        tenant_id,
+        tenant:tenants(id, name)
+      `
+      )
+      .not("tenant_id", "is", null); // ✅ فیلتر: فقط کاربران در مطب
 
     if (dbError) {
       console.error("DB error:", dbError);
@@ -865,26 +896,34 @@ export async function getAllUsers() {
     }
 
     // ترکیب داده‌ها
-    const combinedUsers = authUsers.users.map((authUser: any) => {
-      const dbUser = dbUsers?.find((u: any) => u.id === authUser.id);
+    const combinedUsers = (authUsers.users || [])
+      .map((authUser: any) => {
+        const dbUser = dbUsers?.find((u: any) => u.id === authUser.id);
 
-      return {
-        id: authUser.id,
-        email: authUser.email || "نامشخص",
-        full_name: dbUser?.full_name || authUser.user_metadata?.full_name || "-",
-        role: dbUser?.role || "user",
-        phone: dbUser?.phone || authUser.phone || "-",
-        specialty: dbUser?.specialty || "-",
-        is_active: dbUser?.is_active ?? true,
-        is_super_admin: dbUser?.is_super_admin || authUser.app_metadata?.is_super_admin || false,
-        created_at: dbUser?.created_at || authUser.created_at,
-        tenant_id: dbUser?.tenant_id,
-      };
-    });
+        // ✅ تغییر: اگه کاربر در DB نیست یا tenant نداره، حذفش کن
+        if (!dbUser || !dbUser.tenant_id) return null;
 
-    // مرتب‌سازی بر اساس تاریخ ایجاد
-    combinedUsers.sort((a: any, b: any) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        return {
+          id: authUser.id,
+          email: authUser.email || "نامشخص",
+          full_name: dbUser?.full_name || authUser.user_metadata?.full_name || "-",
+          role: dbUser?.role || "user",
+          phone: dbUser?.phone || authUser.phone || "-",
+          specialty: dbUser?.specialty || "-",
+          is_active: dbUser?.is_active ?? true,
+          is_super_admin:
+            dbUser?.is_super_admin || authUser.app_metadata?.is_super_admin || false,
+          created_at: dbUser?.created_at || authUser.created_at,
+          tenant_id: dbUser?.tenant_id,
+          tenant_name: (dbUser as any)?.tenant?.name || null,
+        };
+      })
+      .filter((u): u is NonNullable<typeof u> => u !== null); // حذف nullها
+
+    // مرتب‌سازی
+    combinedUsers.sort(
+      (a: any, b: any) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
     return { data: combinedUsers, error: null };
@@ -895,14 +934,13 @@ export async function getAllUsers() {
 }
 
 export async function getAdminStats() {
-  const supabaseAdmin = createAdminClient();
+  const supabase = await createClient();
+  const supabaseAdmin = createAdminClientStateless();
 
-  const { data, error } = await supabaseAdmin
-    .from("tenant_stats")
-    .select("*")
-    .order("tenant_name");
+  const { data, error } = await supabaseAdmin.rpc('get_all_tenants_stats');
 
   if (error) {
+    console.error("Error fetching admin stats:", error);
     return { error: error.message, data: [] };
   }
 
@@ -1525,4 +1563,236 @@ export async function updateSmsSettings(settings: {
 
   revalidatePath('/dashboard/sms/settings');
   return { data, error: null };
+}
+// ============================================
+// Tenant Users Management
+// ============================================
+
+/**
+ * دریافت کاربران یک مطب خاص
+ */
+export async function getTenantUsers(tenantId: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید.", data: [] };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  // دریافت لیست کاربران auth
+  const { data: authUsers, error: authError } =
+    await supabaseAdmin.auth.admin.listUsers();
+
+  if (authError) {
+    console.error("Auth error:", authError);
+    return { error: authError.message, data: [] };
+  }
+
+  // ✅ تغییر: فیلتر deleted_at IS NULL
+  const { data: dbUsers, error: dbError } = await supabaseAdmin
+    .from("users")
+    .select(
+      "id, full_name, role, phone, specialty, is_active, is_super_admin, created_at, tenant_id"
+    )
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null); // ← این خط اضافه شد
+
+  if (dbError) {
+    console.error("DB error:", dbError);
+    return { error: dbError.message, data: [] };
+  }
+
+  // ترکیب داده‌ها
+  const combinedUsers = (dbUsers || []).map((dbUser: any) => {
+    const authUser = authUsers.users.find((u: any) => u.id === dbUser.id);
+    return {
+      id: dbUser.id,
+      email: authUser?.email || "نامشخص",
+      full_name: dbUser.full_name || "-",
+      role: dbUser.role || "user",
+      phone: dbUser.phone || "-",
+      specialty: dbUser.specialty || "-",
+      is_active: dbUser.is_active ?? true,
+      is_super_admin: dbUser.is_super_admin || false,
+      created_at: dbUser.created_at,
+      tenant_id: dbUser.tenant_id,
+    };
+  });
+
+  combinedUsers.sort(
+    (a: any, b: any) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
+  return { data: combinedUsers, error: null };
+}
+
+
+
+/**
+ * حذف کاربر از مطب (فقط قطع اتصال، نه حذف کامل)
+ */
+export async function removeUserFromTenant(
+  userId: string,
+  tenantId: string
+) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  // چک: کاربر خودِ ادمین نباشه
+  if (userId === user.id) {
+    return { error: "نمی‌توانید خودتان را از مطب حذف کنید." };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  // ✅ تغییر: Soft Delete (deleted_at پر می‌شه، tenant_id می‌مونه)
+  const { data, error } = await supabaseAdmin
+    .from("users")
+    .update({
+      deleted_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId)
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null)
+    .select()
+    .single();
+
+  if (error) {
+    return { error: "خطا در حذف کاربر: " + error.message };
+  }
+
+  revalidatePath(`/admin/tenants/${tenantId}/users`);
+  return { data, error: null };
+}
+
+// ============================================
+// Create Tenant User (by Super Admin or Tenant Admin)
+// ============================================
+
+interface CreateTenantUserData {
+  full_name: string;
+  email: string;
+  password: string;
+  role: "admin" | "audiologist" | "receptionist" | "user";
+  phone?: string;
+  specialty?: string;
+}
+
+// در actions.ts، تابع createTenantUser رو کامل جایگزین کن:
+
+export async function createTenantUser(
+  tenantId: string,
+  data: CreateTenantUserData
+) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "لطفاً وارد حساب کاربری خود شوید." };
+  }
+
+  // اعتبارسنجی
+  if (!data.full_name || data.full_name.length < 2) {
+    return { error: "نام باید حداقل ۲ کاراکتر باشد." };
+  }
+  if (!data.email || !data.email.includes("@")) {
+    return { error: "ایمیل نامعتبر است." };
+  }
+  if (!data.password || data.password.length < 6) {
+    return { error: "رمز عبور باید حداقل ۶ کاراکتر باشد." };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  // ۱. چک محدودیت ۵ کاربر
+  const { count, error: countError } = await supabaseAdmin
+    .from("users")
+    .select("*", { count: "exact", head: true })
+    .eq("tenant_id", tenantId)
+    .is("deleted_at", null);
+
+  if (countError) {
+    return { error: "خطا در بررسی تعداد کاربران: " + countError.message };
+  }
+
+  if ((count ?? 0) >= 5) {
+    return {
+      error: "این مطب به حداکثر تعداد کاربران (۵ نفر) رسیده است.",
+    };
+  }
+
+  // ۲. ساخت کاربر در Auth (Trigger خودش رکورد در public.users می‌سازه)
+  const { data: authData, error: authError } =
+    await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: data.full_name,
+        role: data.role,
+      },
+    });
+
+  if (authError) {
+    if (
+      authError.message.includes("already") ||
+      authError.message.includes("registered")
+    ) {
+      return { error: "این ایمیل قبلاً در سیستم ثبت شده است." };
+    }
+    return { error: "خطا در ساخت کاربر: " + authError.message };
+  }
+
+  if (!authData.user) {
+    return { error: "خطا در ساخت کاربر." };
+  }
+
+  // ۳. کوچیک صبر کن تا Trigger کارش رو تموم کنه
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  // ۴. ✅ UPDATE به جای INSERT — Trigger رکورد رو ساخته، ما فقط اطلاعات رو کامل می‌کنیم
+  const { data: userRecord, error: updateError } = await supabaseAdmin
+    .from("users")
+    .update({
+      tenant_id: tenantId,
+      full_name: data.full_name,
+      role: data.role,
+      phone: data.phone || null,
+      specialty: data.specialty || null,
+      is_active: true,
+      is_super_admin: false,
+      deleted_at: null, // اگه قبلاً soft delete شده بود
+    })
+    .eq("id", authData.user.id)
+    .select()
+    .single();
+
+  if (updateError) {
+    // اگه Trigger کار نکرده بود (رکورد ساخته نشده)، خطا می‌ده
+    // در این حالت کاربر Auth رو پاک می‌کنیم
+    if (updateError.code === "PGRST116") {
+      await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
+      return {
+        error: "خطا در ساخت کاربر (رکورد در دیتابیس ساخته نشد). با مدیر سیستم تماس بگیرید.",
+      };
+    }
+    return { error: "خطا در ذخیره کاربر: " + updateError.message };
+  }
+
+  revalidatePath(`/admin/tenants/${tenantId}/users`);
+  return { data: userRecord, error: null };
 }

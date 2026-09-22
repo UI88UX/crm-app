@@ -25,7 +25,6 @@ C:.
 +---.next
 |   |   app-build-manifest.json
 |   |   build-manifest.json
-|   |   fallback-build-manifest.json
 |   |   package.json
 |   |   react-loadable-manifest.json
 |   |   trace
@@ -68,8 +67,29 @@ C:.
 |   |       |       32.pack.gz
 |   |       |       33.pack.gz
 |   |       |       34.pack.gz
+|   |       |       35.pack.gz
+|   |       |       36.pack.gz
+|   |       |       37.pack.gz
+|   |       |       38.pack.gz
+|   |       |       39.pack.gz
 |   |       |       4.pack.gz
+|   |       |       40.pack.gz
+|   |       |       41.pack.gz
+|   |       |       42.pack.gz
+|   |       |       43.pack.gz
+|   |       |       44.pack.gz
+|   |       |       45.pack.gz
+|   |       |       46.pack.gz
+|   |       |       47.pack.gz
+|   |       |       48.pack.gz
+|   |       |       49.pack.gz
 |   |       |       5.pack.gz
+|   |       |       50.pack.gz
+|   |       |       51.pack.gz
+|   |       |       52.pack.gz
+|   |       |       53.pack.gz
+|   |       |       54.pack.gz
+|   |       |       55.pack.gz
 |   |       |       6.pack.gz
 |   |       |       7.pack.gz
 |   |       |       8.pack.gz
@@ -102,11 +122,18 @@ C:.
 |   |       |       
 |   |       +---edge-server-development
 |   |       |       0.pack.gz
+|   |       |       1.pack.gz
+|   |       |       2.pack.gz
+|   |       |       3.pack.gz
+|   |       |       4.pack.gz
+|   |       |       5.pack.gz
 |   |       |       index.pack.gz
+|   |       |       index.pack.gz.old
 |   |       |       
 |   |       +---edge-server-production
 |   |       |       0.pack
 |   |       |       index.pack
+|   |       |       index.pack.old
 |   |       |       
 |   |       +---server-development
 |   |       |       0.pack.gz
@@ -151,8 +178,26 @@ C:.
 |   |       |       44.pack.gz
 |   |       |       45.pack.gz
 |   |       |       46.pack.gz
+|   |       |       47.pack.gz
+|   |       |       48.pack.gz
+|   |       |       49.pack.gz
 |   |       |       5.pack.gz
+|   |       |       50.pack.gz
+|   |       |       51.pack.gz
+|   |       |       52.pack.gz
+|   |       |       53.pack.gz
+|   |       |       54.pack.gz
+|   |       |       55.pack.gz
+|   |       |       56.pack.gz
+|   |       |       57.pack.gz
+|   |       |       58.pack.gz
+|   |       |       59.pack.gz
 |   |       |       6.pack.gz
+|   |       |       60.pack.gz
+|   |       |       61.pack.gz
+|   |       |       62.pack.gz
+|   |       |       63.pack.gz
+|   |       |       64.pack.gz
 |   |       |       7.pack.gz
 |   |       |       8.pack.gz
 |   |       |       9.pack.gz
@@ -185,111 +230,64 @@ C:.
 |   |   |   server-reference-manifest.js
 |   |   |   server-reference-manifest.json
 |   |   |   webpack-runtime.js
-|   |   |   _error.js
 |   |   |   
 |   |   +---app
 |   |   |   |   page.js
 |   |   |   |   page_client-reference-manifest.js
 |   |   |   |   
+|   |   |   +---admin
+|   |   |   |   +---(protected)
+|   |   |   |   |   \---tenants
+|   |   |   |   |           page.js
+|   |   |   |   |           page_client-reference-manifest.js
+|   |   |   |   |           
+|   |   |   |   \---login
+|   |   |   |           page.js
+|   |   |   |           page_client-reference-manifest.js
+|   |   |   |           
 |   |   |   +---api
 |   |   |   |   +---appointments
 |   |   |   |   |       route.js
 |   |   |   |   |       route_client-reference-manifest.js
 |   |   |   |   |       
 |   |   |   |   +---auth
-|   |   |   |   |   \---check-super-admin
+|   |   |   |   |   \---permissions
 |   |   |   |   |           route.js
 |   |   |   |   |           route_client-reference-manifest.js
 |   |   |   |   |           
 |   |   |   |   +---call-followups
-|   |   |   |   |   |   route.js
-|   |   |   |   |   |   route_client-reference-manifest.js
-|   |   |   |   |   |   
 |   |   |   |   |   +---due-soon
 |   |   |   |   |   |       route.js
 |   |   |   |   |   |       route_client-reference-manifest.js
 |   |   |   |   |   |       
-|   |   |   |   |   +---stats
-|   |   |   |   |   |       route.js
-|   |   |   |   |   |       route_client-reference-manifest.js
-|   |   |   |   |   |       
-|   |   |   |   |   \---[id]
-|   |   |   |   |       |   route.js
-|   |   |   |   |       |   route_client-reference-manifest.js
-|   |   |   |   |       |   
-|   |   |   |   |       +---cancel
-|   |   |   |   |       |       route.js
-|   |   |   |   |       |       route_client-reference-manifest.js
-|   |   |   |   |       |       
-|   |   |   |   |       \---complete
-|   |   |   |   |               route.js
-|   |   |   |   |               route_client-reference-manifest.js
-|   |   |   |   |               
-|   |   |   |   +---patients
-|   |   |   |   |   |   route.js
-|   |   |   |   |   |   route_client-reference-manifest.js
-|   |   |   |   |   |   
-|   |   |   |   |   \---[id]
-|   |   |   |   |       \---sales
-|   |   |   |   |               route.js
-|   |   |   |   |               route_client-reference-manifest.js
-|   |   |   |   |               
-|   |   |   |   \---sales
-|   |   |   |           route.js
-|   |   |   |           route_client-reference-manifest.js
-|   |   |   |           
+|   |   |   |   |   \---stats
+|   |   |   |   |           route.js
+|   |   |   |   |           route_client-reference-manifest.js
+|   |   |   |   |           
+|   |   |   |   \---dashboard
+|   |   |   |       \---stats
+|   |   |   |               route.js
+|   |   |   |               route_client-reference-manifest.js
+|   |   |   |               
 |   |   |   +---dashboard
 |   |   |   |   |   page.js
 |   |   |   |   |   page_client-reference-manifest.js
 |   |   |   |   |   
-|   |   |   |   +---appointments
-|   |   |   |   |   |   page.js
-|   |   |   |   |   |   page_client-reference-manifest.js
-|   |   |   |   |   |   
-|   |   |   |   |   \---new
-|   |   |   |   |           page.js
-|   |   |   |   |           page_client-reference-manifest.js
-|   |   |   |   |           
-|   |   |   |   +---call-followups
-|   |   |   |   |       page.js
-|   |   |   |   |       page_client-reference-manifest.js
-|   |   |   |   |       
-|   |   |   |   +---patients
-|   |   |   |   |   |   page.js
-|   |   |   |   |   |   page_client-reference-manifest.js
-|   |   |   |   |   |   
-|   |   |   |   |   \---[id]
-|   |   |   |   |           page.js
-|   |   |   |   |           page_client-reference-manifest.js
-|   |   |   |   |           
-|   |   |   |   +---sales
-|   |   |   |   |       page.js
-|   |   |   |   |       page_client-reference-manifest.js
-|   |   |   |   |       
-|   |   |   |   \---users
-|   |   |   |           page.js
-|   |   |   |           page_client-reference-manifest.js
-|   |   |   |           
+|   |   |   |   \---appointments
+|   |   |   |       |   page.js
+|   |   |   |       |   page_client-reference-manifest.js
+|   |   |   |       |   
+|   |   |   |       \---new
+|   |   |   |               page.js
+|   |   |   |               page_client-reference-manifest.js
+|   |   |   |               
 |   |   |   +---favicon.ico
 |   |   |   |       route.js
 |   |   |   |       
-|   |   |   +---login
-|   |   |   |       page.js
-|   |   |   |       page_client-reference-manifest.js
-|   |   |   |       
-|   |   |   +---register
-|   |   |   |       page.js
-|   |   |   |       page_client-reference-manifest.js
-|   |   |   |       
-|   |   |   \---_not-found
+|   |   |   \---login
 |   |   |           page.js
 |   |   |           page_client-reference-manifest.js
 |   |   |           
-|   |   +---pages
-|   |   |       _app.js
-|   |   |       _document.js
-|   |   |       _error.js
-|   |   |       
 |   |   +---static
 |   |   |   \---webpack
 |   |   |           633457081244afec._.hot-update.json
@@ -298,17 +296,30 @@ C:.
 |   |           @floating-ui.js
 |   |           @hookform.js
 |   |           @radix-ui.js
+|   |           @reduxjs.js
 |   |           @supabase.js
 |   |           @swc.js
 |   |           @tanstack.js
 |   |           aria-hidden.js
-|   |           attr-accept.js
 |   |           class-variance-authority.js
 |   |           clsx.js
 |   |           cookie.js
-|   |           file-selector.js
+|   |           d3-array.js
+|   |           d3-color.js
+|   |           d3-format.js
+|   |           d3-interpolate.js
+|   |           d3-path.js
+|   |           d3-scale.js
+|   |           d3-shape.js
+|   |           d3-time-format.js
+|   |           d3-time.js
+|   |           decimal.js-light.js
+|   |           es-toolkit.js
+|   |           eventemitter3.js
 |   |           get-nonce.js
 |   |           iceberg-js.js
+|   |           immer.js
+|   |           internmap.js
 |   |           jalaali-js.js
 |   |           lucide-react.js
 |   |           moment-jalaali.js
@@ -316,127 +327,83 @@ C:.
 |   |           next-themes.js
 |   |           next.js
 |   |           react-date-object.js
-|   |           react-dropzone.js
 |   |           react-element-popper.js
 |   |           react-hook-form.js
+|   |           react-is.js
 |   |           react-multi-date-picker.js
+|   |           react-redux.js
 |   |           react-remove-scroll-bar.js
 |   |           react-remove-scroll.js
 |   |           react-style-singleton.js
+|   |           recharts.js
+|   |           redux-thunk.js
+|   |           redux.js
+|   |           reselect.js
 |   |           sonner.js
 |   |           tailwind-merge.js
 |   |           tslib.js
 |   |           use-callback-ref.js
 |   |           use-sidecar.js
+|   |           use-sync-external-store.js
+|   |           victory-vendor.js
 |   |           zod.js
 |   |           
 |   +---static
 |   |   +---chunks
 |   |   |   |   app-pages-internals.js
 |   |   |   |   main-app.js
-|   |   |   |   main.js
 |   |   |   |   polyfills.js
-|   |   |   |   react-refresh.js
 |   |   |   |   webpack.js
 |   |   |   |   _app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
 |   |   |   |   _app-pages-browser_node_modules_tanstack_query-devtools_build_DevtoolsComponent-CFsAhafd_js.js
 |   |   |   |   _app-pages-browser_node_modules_tanstack_query-devtools_build_DevtoolsPanelComponent-B9zkHqmD_js.js
-|   |   |   |   _error.js
-|   |   |   |   _pages-dir-browser_node_modules_next_dist_pages__app_js.js
-|   |   |   |   _pages-dir-browser_node_modules_next_dist_pages__error_js.js
 |   |   |   |   
-|   |   |   +---app
-|   |   |   |   |   layout.js
-|   |   |   |   |   page.js
-|   |   |   |   |   
-|   |   |   |   +---api
-|   |   |   |   |   +---appointments
-|   |   |   |   |   |       route.js
-|   |   |   |   |   |       
-|   |   |   |   |   +---auth
-|   |   |   |   |   |   \---check-super-admin
-|   |   |   |   |   |           route.js
-|   |   |   |   |   |           
-|   |   |   |   |   +---call-followups
-|   |   |   |   |   |   |   route.js
-|   |   |   |   |   |   |   
-|   |   |   |   |   |   +---due-soon
-|   |   |   |   |   |   |       route.js
-|   |   |   |   |   |   |       
-|   |   |   |   |   |   +---stats
-|   |   |   |   |   |   |       route.js
-|   |   |   |   |   |   |       
-|   |   |   |   |   |   \---[id]
-|   |   |   |   |   |       |   route.js
-|   |   |   |   |   |       |   
-|   |   |   |   |   |       +---cancel
-|   |   |   |   |   |       |       route.js
-|   |   |   |   |   |       |       
-|   |   |   |   |   |       \---complete
-|   |   |   |   |   |               route.js
-|   |   |   |   |   |               
-|   |   |   |   |   +---patients
-|   |   |   |   |   |   |   route.js
-|   |   |   |   |   |   |   
-|   |   |   |   |   |   \---[id]
-|   |   |   |   |   |       \---sales
-|   |   |   |   |   |               route.js
-|   |   |   |   |   |               
-|   |   |   |   |   \---sales
-|   |   |   |   |           route.js
-|   |   |   |   |           
-|   |   |   |   +---dashboard
-|   |   |   |   |   |   layout.js
-|   |   |   |   |   |   page.js
-|   |   |   |   |   |   
-|   |   |   |   |   +---appointments
-|   |   |   |   |   |   |   page.js
-|   |   |   |   |   |   |   
-|   |   |   |   |   |   \---new
-|   |   |   |   |   |           page.js
-|   |   |   |   |   |           
-|   |   |   |   |   +---call-followups
-|   |   |   |   |   |       page.js
-|   |   |   |   |   |       
-|   |   |   |   |   +---patients
-|   |   |   |   |   |   |   page.js
-|   |   |   |   |   |   |   
-|   |   |   |   |   |   \---[id]
-|   |   |   |   |   |           page.js
-|   |   |   |   |   |           
-|   |   |   |   |   +---sales
-|   |   |   |   |   |       page.js
-|   |   |   |   |   |       
-|   |   |   |   |   \---users
-|   |   |   |   |           page.js
-|   |   |   |   |           
-|   |   |   |   +---login
-|   |   |   |   |       page.js
-|   |   |   |   |       
-|   |   |   |   +---register
-|   |   |   |   |       page.js
-|   |   |   |   |       
-|   |   |   |   \---_not-found
-|   |   |   |           page.js
-|   |   |   |           
-|   |   |   +---fallback
-|   |   |   |   |   amp.js
-|   |   |   |   |   main-app.js
-|   |   |   |   |   main.js
-|   |   |   |   |   react-refresh.js
-|   |   |   |   |   webpack.js
-|   |   |   |   |   _app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js
-|   |   |   |   |   _pages-dir-browser_node_modules_next_dist_pages__app_js.js
-|   |   |   |   |   _pages-dir-browser_node_modules_next_dist_pages__error_js.js
-|   |   |   |   |   
-|   |   |   |   \---pages
-|   |   |   |           _app.js
-|   |   |   |           _error.js
-|   |   |   |           
-|   |   |   \---pages
-|   |   |           _app.js
-|   |   |           _error.js
-|   |   |           
+|   |   |   \---app
+|   |   |       |   layout.js
+|   |   |       |   page.js
+|   |   |       |   
+|   |   |       +---admin
+|   |   |       |   +---(protected)
+|   |   |       |   |   |   layout.js
+|   |   |       |   |   |   
+|   |   |       |   |   \---tenants
+|   |   |       |   |           page.js
+|   |   |       |   |           
+|   |   |       |   \---login
+|   |   |       |           page.js
+|   |   |       |           
+|   |   |       +---api
+|   |   |       |   +---appointments
+|   |   |       |   |       route.js
+|   |   |       |   |       
+|   |   |       |   +---auth
+|   |   |       |   |   \---permissions
+|   |   |       |   |           route.js
+|   |   |       |   |           
+|   |   |       |   +---call-followups
+|   |   |       |   |   +---due-soon
+|   |   |       |   |   |       route.js
+|   |   |       |   |   |       
+|   |   |       |   |   \---stats
+|   |   |       |   |           route.js
+|   |   |       |   |           
+|   |   |       |   \---dashboard
+|   |   |       |       \---stats
+|   |   |       |               route.js
+|   |   |       |               
+|   |   |       +---dashboard
+|   |   |       |   |   layout.js
+|   |   |       |   |   page.js
+|   |   |       |   |   
+|   |   |       |   \---appointments
+|   |   |       |       |   page.js
+|   |   |       |       |   
+|   |   |       |       \---new
+|   |   |       |               page.js
+|   |   |       |               
+|   |   |       \---login
+|   |   |               page.js
+|   |   |               
 |   |   +---css
 |   |   |   \---app
 |   |   |           layout.css
@@ -451,216 +418,38 @@ C:.
 |   |   |       8c96cc4bd2a39381-s.woff2
 |   |   |       
 |   |   \---webpack
-|   |       |   081a21d56e2cd456.webpack.hot-update.json
-|   |       |   0fce08db921e32c5.webpack.hot-update.json
-|   |       |   100a69aa54de86c4.webpack.hot-update.json
-|   |       |   10d7b552bb78cf0f.webpack.hot-update.json
-|   |       |   11c750c409876752.webpack.hot-update.json
-|   |       |   16167fea3367eb94.webpack.hot-update.json
-|   |       |   1d6a1ea0be70fd6c.webpack.hot-update.json
-|   |       |   22dd75343906996b.webpack.hot-update.json
-|   |       |   2851196a32df9eb5.webpack.hot-update.json
-|   |       |   28b11eb949a4df09.webpack.hot-update.json
-|   |       |   2915d2dcb3900cdf.webpack.hot-update.json
-|   |       |   337541a39cbbbe7e.webpack.hot-update.json
-|   |       |   3772b43cbcca6925.webpack.hot-update.json
-|   |       |   3863085cb6874b80.webpack.hot-update.json
-|   |       |   3d6e14a7b301b588.webpack.hot-update.json
-|   |       |   412129fc627d0565.webpack.hot-update.json
-|   |       |   48967e1f0d1f03fc.webpack.hot-update.json
-|   |       |   4d7d5e93ce67d7c0.webpack.hot-update.json
-|   |       |   52e67612694cc5df.webpack.hot-update.json
-|   |       |   55533ad6797680ba.webpack.hot-update.json
-|   |       |   5a63c42b740b53ce.webpack.hot-update.json
-|   |       |   5e78370741666b34.webpack.hot-update.json
-|   |       |   60c2e508a353801c.webpack.hot-update.json
+|   |       |   094598c242b2b217.webpack.hot-update.json
+|   |       |   1838cb4636cb1f4e.webpack.hot-update.json
+|   |       |   18bad73177d4a4ad.webpack.hot-update.json
+|   |       |   5311462e73b22497.webpack.hot-update.json
 |   |       |   633457081244afec._.hot-update.json
-|   |       |   6661107f3512891c.webpack.hot-update.json
-|   |       |   69f5c9d1c8cb6b4c.webpack.hot-update.json
-|   |       |   6d5297dde59d38c8.webpack.hot-update.json
-|   |       |   6db745f573ea5435.webpack.hot-update.json
-|   |       |   728895e5b5d398b1.webpack.hot-update.json
-|   |       |   7421089b1c03cb8e.webpack.hot-update.json
-|   |       |   75028f537cd2c28d.webpack.hot-update.json
-|   |       |   782bae21cbd07a05.webpack.hot-update.json
-|   |       |   79ffef58c7dd3bed.webpack.hot-update.json
-|   |       |   7d97a111daf65a6d.webpack.hot-update.json
-|   |       |   8188d370ed9d1de1.webpack.hot-update.json
-|   |       |   8d900f1f8086625f.webpack.hot-update.json
-|   |       |   93c3cf12ebe3f2fc.webpack.hot-update.json
-|   |       |   95d7d96776ac151a.webpack.hot-update.json
-|   |       |   96eac4a165e1cc44.webpack.hot-update.json
-|   |       |   995c210e51d14129.webpack.hot-update.json
-|   |       |   a226c6549e34af7c.webpack.hot-update.json
-|   |       |   a44c1bcd6466e5ec.webpack.hot-update.json
-|   |       |   a8c90a585393d09a.webpack.hot-update.json
-|   |       |   a9c944897c418b33.webpack.hot-update.json
-|   |       |   ac744969dddb81ef.webpack.hot-update.json
-|   |       |   b0d07f5d784656b7.webpack.hot-update.json
-|   |       |   b4c7b5a08b4581d9.webpack.hot-update.json
-|   |       |   b6c99080dcf632ba.webpack.hot-update.json
-|   |       |   b952441fa3ab4c82.webpack.hot-update.json
-|   |       |   b9ba66e0c7d37a76.webpack.hot-update.json
-|   |       |   c379bacdc86962d0.webpack.hot-update.json
-|   |       |   c3f5a3f04ebdfc0a.webpack.hot-update.json
-|   |       |   c4a43a9ca630f482.webpack.hot-update.json
-|   |       |   dcb59add170cd925.webpack.hot-update.json
-|   |       |   dd261ea8118b2ded.webpack.hot-update.json
-|   |       |   e5e7d6b7850ee265.webpack.hot-update.json
-|   |       |   eeccc11ae01580ef.webpack.hot-update.json
-|   |       |   f22271122b123189.webpack.hot-update.json
-|   |       |   f6adaeffc2024ba7.webpack.hot-update.json
-|   |       |   webpack.081a21d56e2cd456.hot-update.js
-|   |       |   webpack.0fce08db921e32c5.hot-update.js
-|   |       |   webpack.100a69aa54de86c4.hot-update.js
-|   |       |   webpack.10d7b552bb78cf0f.hot-update.js
-|   |       |   webpack.11c750c409876752.hot-update.js
-|   |       |   webpack.16167fea3367eb94.hot-update.js
-|   |       |   webpack.1d6a1ea0be70fd6c.hot-update.js
-|   |       |   webpack.22dd75343906996b.hot-update.js
-|   |       |   webpack.2851196a32df9eb5.hot-update.js
-|   |       |   webpack.28b11eb949a4df09.hot-update.js
-|   |       |   webpack.2915d2dcb3900cdf.hot-update.js
-|   |       |   webpack.337541a39cbbbe7e.hot-update.js
-|   |       |   webpack.3772b43cbcca6925.hot-update.js
-|   |       |   webpack.3863085cb6874b80.hot-update.js
-|   |       |   webpack.3d6e14a7b301b588.hot-update.js
-|   |       |   webpack.412129fc627d0565.hot-update.js
-|   |       |   webpack.48967e1f0d1f03fc.hot-update.js
-|   |       |   webpack.4d7d5e93ce67d7c0.hot-update.js
-|   |       |   webpack.52e67612694cc5df.hot-update.js
-|   |       |   webpack.55533ad6797680ba.hot-update.js
-|   |       |   webpack.5a63c42b740b53ce.hot-update.js
-|   |       |   webpack.5e78370741666b34.hot-update.js
-|   |       |   webpack.60c2e508a353801c.hot-update.js
-|   |       |   webpack.6661107f3512891c.hot-update.js
-|   |       |   webpack.69f5c9d1c8cb6b4c.hot-update.js
-|   |       |   webpack.6d5297dde59d38c8.hot-update.js
-|   |       |   webpack.6db745f573ea5435.hot-update.js
-|   |       |   webpack.728895e5b5d398b1.hot-update.js
-|   |       |   webpack.7421089b1c03cb8e.hot-update.js
-|   |       |   webpack.75028f537cd2c28d.hot-update.js
-|   |       |   webpack.782bae21cbd07a05.hot-update.js
-|   |       |   webpack.79ffef58c7dd3bed.hot-update.js
-|   |       |   webpack.7d97a111daf65a6d.hot-update.js
-|   |       |   webpack.8188d370ed9d1de1.hot-update.js
-|   |       |   webpack.8d900f1f8086625f.hot-update.js
-|   |       |   webpack.93c3cf12ebe3f2fc.hot-update.js
-|   |       |   webpack.95d7d96776ac151a.hot-update.js
-|   |       |   webpack.96eac4a165e1cc44.hot-update.js
-|   |       |   webpack.995c210e51d14129.hot-update.js
-|   |       |   webpack.a226c6549e34af7c.hot-update.js
-|   |       |   webpack.a44c1bcd6466e5ec.hot-update.js
-|   |       |   webpack.a8c90a585393d09a.hot-update.js
-|   |       |   webpack.a9c944897c418b33.hot-update.js
-|   |       |   webpack.ac744969dddb81ef.hot-update.js
-|   |       |   webpack.b0d07f5d784656b7.hot-update.js
-|   |       |   webpack.b4c7b5a08b4581d9.hot-update.js
-|   |       |   webpack.b6c99080dcf632ba.hot-update.js
-|   |       |   webpack.b952441fa3ab4c82.hot-update.js
-|   |       |   webpack.b9ba66e0c7d37a76.hot-update.js
-|   |       |   webpack.c379bacdc86962d0.hot-update.js
-|   |       |   webpack.c3f5a3f04ebdfc0a.hot-update.js
-|   |       |   webpack.c4a43a9ca630f482.hot-update.js
-|   |       |   webpack.dcb59add170cd925.hot-update.js
-|   |       |   webpack.dd261ea8118b2ded.hot-update.js
-|   |       |   webpack.e5e7d6b7850ee265.hot-update.js
-|   |       |   webpack.eeccc11ae01580ef.hot-update.js
-|   |       |   webpack.f22271122b123189.hot-update.js
-|   |       |   webpack.f6adaeffc2024ba7.hot-update.js
+|   |       |   67bcf567f104b6a9.webpack.hot-update.json
+|   |       |   932a9560551457c0.webpack.hot-update.json
+|   |       |   93ea7fccae17e119.webpack.hot-update.json
+|   |       |   a78f04592c3a6d26.webpack.hot-update.json
+|   |       |   bc298ee57a505a8d.webpack.hot-update.json
+|   |       |   c82959eb299a54af.webpack.hot-update.json
+|   |       |   e99f977192b62de1.webpack.hot-update.json
+|   |       |   webpack.094598c242b2b217.hot-update.js
+|   |       |   webpack.1838cb4636cb1f4e.hot-update.js
+|   |       |   webpack.18bad73177d4a4ad.hot-update.js
+|   |       |   webpack.5311462e73b22497.hot-update.js
+|   |       |   webpack.67bcf567f104b6a9.hot-update.js
+|   |       |   webpack.932a9560551457c0.hot-update.js
+|   |       |   webpack.93ea7fccae17e119.hot-update.js
+|   |       |   webpack.a78f04592c3a6d26.hot-update.js
+|   |       |   webpack.bc298ee57a505a8d.hot-update.js
+|   |       |   webpack.c82959eb299a54af.hot-update.js
+|   |       |   webpack.e99f977192b62de1.hot-update.js
 |   |       |   
 |   |       \---app
-|   |           |   layout.0fce08db921e32c5.hot-update.js
-|   |           |   layout.100a69aa54de86c4.hot-update.js
-|   |           |   layout.10d7b552bb78cf0f.hot-update.js
-|   |           |   layout.16167fea3367eb94.hot-update.js
-|   |           |   layout.1d6a1ea0be70fd6c.hot-update.js
-|   |           |   layout.22dd75343906996b.hot-update.js
-|   |           |   layout.2851196a32df9eb5.hot-update.js
-|   |           |   layout.337541a39cbbbe7e.hot-update.js
-|   |           |   layout.412129fc627d0565.hot-update.js
-|   |           |   layout.48967e1f0d1f03fc.hot-update.js
-|   |           |   layout.4d7d5e93ce67d7c0.hot-update.js
-|   |           |   layout.52e67612694cc5df.hot-update.js
-|   |           |   layout.55533ad6797680ba.hot-update.js
-|   |           |   layout.5a63c42b740b53ce.hot-update.js
-|   |           |   layout.60c2e508a353801c.hot-update.js
-|   |           |   layout.6661107f3512891c.hot-update.js
-|   |           |   layout.69f5c9d1c8cb6b4c.hot-update.js
-|   |           |   layout.6db745f573ea5435.hot-update.js
-|   |           |   layout.728895e5b5d398b1.hot-update.js
-|   |           |   layout.7421089b1c03cb8e.hot-update.js
-|   |           |   layout.75028f537cd2c28d.hot-update.js
-|   |           |   layout.782bae21cbd07a05.hot-update.js
-|   |           |   layout.7d97a111daf65a6d.hot-update.js
-|   |           |   layout.8d900f1f8086625f.hot-update.js
-|   |           |   layout.93c3cf12ebe3f2fc.hot-update.js
-|   |           |   layout.96eac4a165e1cc44.hot-update.js
-|   |           |   layout.995c210e51d14129.hot-update.js
-|   |           |   layout.a44c1bcd6466e5ec.hot-update.js
-|   |           |   layout.a8c90a585393d09a.hot-update.js
-|   |           |   layout.a9c944897c418b33.hot-update.js
-|   |           |   layout.b0d07f5d784656b7.hot-update.js
-|   |           |   layout.b4c7b5a08b4581d9.hot-update.js
-|   |           |   layout.b952441fa3ab4c82.hot-update.js
-|   |           |   layout.b9ba66e0c7d37a76.hot-update.js
-|   |           |   layout.c3f5a3f04ebdfc0a.hot-update.js
-|   |           |   layout.c4a43a9ca630f482.hot-update.js
-|   |           |   layout.f22271122b123189.hot-update.js
-|   |           |   layout.f6adaeffc2024ba7.hot-update.js
+|   |           |   layout.094598c242b2b217.hot-update.js
+|   |           |   layout.a78f04592c3a6d26.hot-update.js
+|   |           |   layout.e99f977192b62de1.hot-update.js
 |   |           |   
-|   |           \---dashboard
-|   |               |   layout.100a69aa54de86c4.hot-update.js
-|   |               |   layout.22dd75343906996b.hot-update.js
-|   |               |   layout.412129fc627d0565.hot-update.js
-|   |               |   layout.60c2e508a353801c.hot-update.js
-|   |               |   layout.6661107f3512891c.hot-update.js
-|   |               |   layout.a9c944897c418b33.hot-update.js
-|   |               |   layout.dcb59add170cd925.hot-update.js
-|   |               |   page.4d7d5e93ce67d7c0.hot-update.js
-|   |               |   page.75028f537cd2c28d.hot-update.js
-|   |               |   
-|   |               +---appointments
-|   |               |       page.100a69aa54de86c4.hot-update.js
-|   |               |       page.69f5c9d1c8cb6b4c.hot-update.js
-|   |               |       page.96eac4a165e1cc44.hot-update.js
-|   |               |       page.b0d07f5d784656b7.hot-update.js
-|   |               |       page.c3f5a3f04ebdfc0a.hot-update.js
-|   |               |       
-|   |               +---call-followups
-|   |               |       page.0fce08db921e32c5.hot-update.js
-|   |               |       page.10d7b552bb78cf0f.hot-update.js
-|   |               |       page.2851196a32df9eb5.hot-update.js
-|   |               |       page.52e67612694cc5df.hot-update.js
-|   |               |       page.5a63c42b740b53ce.hot-update.js
-|   |               |       page.93c3cf12ebe3f2fc.hot-update.js
-|   |               |       page.a8c90a585393d09a.hot-update.js
-|   |               |       page.b4c7b5a08b4581d9.hot-update.js
-|   |               |       page.b952441fa3ab4c82.hot-update.js
-|   |               |       page.dcb59add170cd925.hot-update.js
-|   |               |       page.f22271122b123189.hot-update.js
-|   |               |       
-|   |               +---patients
-|   |               |   |   page.f6adaeffc2024ba7.hot-update.js
-|   |               |   |   
-|   |               |   \---[id]
-|   |               |           page.0fce08db921e32c5.hot-update.js
-|   |               |           page.10d7b552bb78cf0f.hot-update.js
-|   |               |           page.2851196a32df9eb5.hot-update.js
-|   |               |           page.52e67612694cc5df.hot-update.js
-|   |               |           page.5a63c42b740b53ce.hot-update.js
-|   |               |           page.a8c90a585393d09a.hot-update.js
-|   |               |           page.b952441fa3ab4c82.hot-update.js
-|   |               |           page.dcb59add170cd925.hot-update.js
-|   |               |           page.f22271122b123189.hot-update.js
-|   |               |           
-|   |               +---sales
-|   |               |       page.1d6a1ea0be70fd6c.hot-update.js
-|   |               |       
-|   |               \---users
-|   |                       page.48967e1f0d1f03fc.hot-update.js
-|   |                       page.c4a43a9ca630f482.hot-update.js
-|   |                       
+|   |           \---login
+|   |                   page.094598c242b2b217.hot-update.js
+|   |                   
 |   \---types
 |       |   cache-life.d.ts
 |       |   package.json
@@ -669,71 +458,46 @@ C:.
 |           |   layout.ts
 |           |   page.ts
 |           |   
+|           +---admin
+|           |   +---(protected)
+|           |   |   |   layout.ts
+|           |   |   |   
+|           |   |   \---tenants
+|           |   |           page.ts
+|           |   |           
+|           |   \---login
+|           |           page.ts
+|           |           
 |           +---api
 |           |   +---appointments
 |           |   |       route.ts
 |           |   |       
 |           |   +---auth
-|           |   |   \---check-super-admin
+|           |   |   \---permissions
 |           |   |           route.ts
 |           |   |           
 |           |   +---call-followups
-|           |   |   |   route.ts
-|           |   |   |   
 |           |   |   +---due-soon
 |           |   |   |       route.ts
 |           |   |   |       
-|           |   |   +---stats
-|           |   |   |       route.ts
-|           |   |   |       
-|           |   |   \---[id]
-|           |   |       |   route.ts
-|           |   |       |   
-|           |   |       +---cancel
-|           |   |       |       route.ts
-|           |   |       |       
-|           |   |       \---complete
-|           |   |               route.ts
-|           |   |               
-|           |   +---patients
-|           |   |   |   route.ts
-|           |   |   |   
-|           |   |   \---[id]
-|           |   |       \---sales
-|           |   |               route.ts
-|           |   |               
-|           |   \---sales
-|           |           route.ts
-|           |           
+|           |   |   \---stats
+|           |   |           route.ts
+|           |   |           
+|           |   \---dashboard
+|           |       \---stats
+|           |               route.ts
+|           |               
 |           +---dashboard
 |           |   |   layout.ts
 |           |   |   page.ts
 |           |   |   
-|           |   +---appointments
-|           |   |   |   page.ts
-|           |   |   |   
-|           |   |   \---new
-|           |   |           page.ts
-|           |   |           
-|           |   +---call-followups
-|           |   |       page.ts
-|           |   |       
-|           |   +---patients
-|           |   |   |   page.ts
-|           |   |   |   
-|           |   |   \---[id]
-|           |   |           page.ts
-|           |   |           
-|           |   +---sales
-|           |   |       page.ts
-|           |   |       
-|           |   \---users
-|           |           page.ts
-|           |           
-|           +---login
-|           |       page.ts
-|           |       
-|           \---register
+|           |   \---appointments
+|           |       |   page.ts
+|           |       |   
+|           |       \---new
+|           |               page.ts
+|           |               
+|           \---login
 |                   page.ts
 |                   
 +---node_modules
@@ -5548,6 +5312,60 @@ C:.
 |   |   |               is-development.true.mjs.map
 |   |   |               
 |   |   +---react-arrow
+|   |   |   |   LICENSE
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |       index.d.mts
+|   |   |   |       index.d.ts
+|   |   |   |       index.js
+|   |   |   |       index.js.map
+|   |   |   |       index.mjs
+|   |   |   |       index.mjs.map
+|   |   |   |       
+|   |   |   \---node_modules
+|   |   |       \---@radix-ui
+|   |   |           +---react-compose-refs
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           +---react-primitive
+|   |   |           |   |   LICENSE
+|   |   |           |   |   package.json
+|   |   |           |   |   README.md
+|   |   |           |   |   
+|   |   |           |   \---dist
+|   |   |           |           index.d.mts
+|   |   |           |           index.d.ts
+|   |   |           |           index.js
+|   |   |           |           index.js.map
+|   |   |           |           index.mjs
+|   |   |           |           index.mjs.map
+|   |   |           |           
+|   |   |           \---react-slot
+|   |   |               |   LICENSE
+|   |   |               |   package.json
+|   |   |               |   README.md
+|   |   |               |   
+|   |   |               \---dist
+|   |   |                       index.d.mts
+|   |   |                       index.d.ts
+|   |   |                       index.js
+|   |   |                       index.js.map
+|   |   |                       index.mjs
+|   |   |                       index.mjs.map
+|   |   |                       
+|   |   +---react-checkbox
 |   |   |   |   LICENSE
 |   |   |   |   package.json
 |   |   |   |   README.md
@@ -51648,25 +51466,38 @@ C:.
     |   |   page.tsx
     |   |   
     |   +---admin
-    |   |   |   layout.tsx
     |   |   |   page.tsx
     |   |   |   
-    |   |   +---stats
-    |   |   |       page.tsx
-    |   |   |       
-    |   |   +---tenants
-    |   |   |   |   page.tsx
+    |   |   +---(protected)
+    |   |   |   |   layout.tsx
     |   |   |   |   
-    |   |   |   +---new
+    |   |   |   +---stats
     |   |   |   |       page.tsx
     |   |   |   |       
-    |   |   |   \---[id]
+    |   |   |   +---tenants
+    |   |   |   |   |   page.tsx
+    |   |   |   |   |   
+    |   |   |   |   +---new
+    |   |   |   |   |       page.tsx
+    |   |   |   |   |       
+    |   |   |   |   \---[id]
+    |   |   |   |       |   page.tsx
+    |   |   |   |       |   
+    |   |   |   |       \---users
+    |   |   |   |               page.tsx
+    |   |   |   |               
+    |   |   |   \---users
     |   |   |           page.tsx
     |   |   |           
-    |   |   \---users
+    |   |   \---login
+    |   |           login-form.tsx
     |   |           page.tsx
     |   |           
     |   +---api
+    |   |   +---admin
+    |   |   |   \---impersonate
+    |   |   |           route.ts
+    |   |   |           
     |   |   +---appointments
     |   |   |   |   route.ts
     |   |   |   |   
@@ -51680,7 +51511,10 @@ C:.
     |   |   |   +---check-super-admin
     |   |   |   |       route.ts
     |   |   |   |       
-    |   |   |   \---me
+    |   |   |   +---me
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   \---permissions
     |   |   |           route.ts
     |   |   |           
     |   |   +---call-followups
@@ -51706,6 +51540,10 @@ C:.
     |   |   |   |       route.ts
     |   |   |   |       
     |   |   |   \---process-queue
+    |   |   |           route.ts
+    |   |   |           
+    |   |   +---dashboard
+    |   |   |   \---stats
     |   |   |           route.ts
     |   |   |           
     |   |   +---patients
@@ -51746,20 +51584,26 @@ C:.
     |   |   |   \---stats
     |   |   |           route.ts
     |   |   |           
-    |   |   +---stats
-    |   |   |       route.ts
-    |   |   |       
-    |   |   \---storage
-    |   |       +---delete
-    |   |       |       route.ts
-    |   |       |       
-    |   |       +---singe-url
-    |   |       |   \---[...file-path]
-    |   |       |           route.ts
-    |   |       |           
-    |   |       \---upload
-    |   |               route.ts
-    |   |               
+    |   |   +---storage
+    |   |   |   +---delete
+    |   |   |   |       route.ts
+    |   |   |   |       
+    |   |   |   +---singe-url
+    |   |   |   |   \---[...file-path]
+    |   |   |   |           route.ts
+    |   |   |   |           
+    |   |   |   \---upload
+    |   |   |           route.ts
+    |   |   |           
+    |   |   \---users
+    |   |       |   route.ts
+    |   |       |   
+    |   |       \---[id]
+    |   |           |   route.ts
+    |   |           |   
+    |   |           \---password
+    |   |                   route.ts
+    |   |                   
     |   +---dashboard
     |   |   |   layout.tsx
     |   |   |   page.client.tsx
@@ -51846,8 +51690,14 @@ C:.
     |   |   providers.tsx
     |   |   
     |   +---admin
+    |   |       AddUserToTenantDialog.tsx
+    |   |       AdminLogoutButton.tsx
     |   |       TenantForm.tsx
+    |   |       TenantHeader.tsx
     |   |       TenantTable.tsx
+    |   |       TenantTabs.tsx
+    |   |       TenantUserLimit.tsx
+    |   |       TenantUsersTable.tsx
     |   |       
     |   +---appointments
     |   |       AppointmentCalendar.tsx
@@ -51870,7 +51720,9 @@ C:.
     |   +---dashboard
     |   |       ActivityList.tsx
     |   |       RecentSales.tsx
+    |   |       SalesChart.tsx
     |   |       StatsCard.tsx
+    |   |       SubscriptionStatus.tsx
     |   |       
     |   +---sms
     |   |       CampaignForm.tsx
@@ -51879,27 +51731,34 @@ C:.
     |   |       StatsCards.tsx
     |   |       TemplateManager.tsx
     |   |       
-    |   \---ui
-    |           badge.tsx
-    |           button.tsx
-    |           card.tsx
-    |           dialog.tsx
-    |           dropdown-menu.tsx
-    |           file-uploader.tsx
-    |           global-loader.tsx
-    |           input.tsx
-    |           label.tsx
-    |           loading-link.tsx
-    |           loading-spinner.tsx
-    |           popover.tsx
-    |           select.tsx
-    |           separator.tsx
-    |           sonner.tsx
-    |           switch.tsx
-    |           table.tsx
-    |           tabs.tsx
-    |           textarea.tsx
-    |           tooltip.tsx
+    |   +---ui
+    |   |       badge.tsx
+    |   |       button.tsx
+    |   |       card.tsx
+    |   |       checkbox.tsx
+    |   |       dialog.tsx
+    |   |       dropdown-menu.tsx
+    |   |       file-uploader.tsx
+    |   |       global-loader.tsx
+    |   |       input.tsx
+    |   |       label.tsx
+    |   |       loading-link.tsx
+    |   |       loading-spinner.tsx
+    |   |       popover.tsx
+    |   |       select.tsx
+    |   |       separator.tsx
+    |   |       sonner.tsx
+    |   |       switch.tsx
+    |   |       table.tsx
+    |   |       tabs.tsx
+    |   |       textarea.tsx
+    |   |       tooltip.tsx
+    |   |       
+    |   \---users
+    |           ConfirmUserActionDialog.tsx
+    |           EditUserDialog.tsx
+    |           userForm.tsx
+    |           UserTable.tsx
     |           
     +---HearingAid.Purchased
     |       policy.ts
@@ -51908,6 +51767,9 @@ C:.
     |       useAppointments.ts
     |       useCallFollowups.ts
     |       useCallFollowupStats.ts
+    |       useCurrentPermissions.ts
+    |       useCurrentUser.ts
+    |       useDashboardStats.ts
     |       useDebounce.ts
     |       usePatientAppointments.ts
     |       usePatientFiles.ts
@@ -51917,10 +51779,14 @@ C:.
     |       useSales.ts
     |       useSmsCampaigns.ts
     |       useSmsSettings.ts
+    |       useUsers.ts
     |       
     +---lib
     |   |   utils.ts
     |   |   
+    |   +---auth
+    |   |       permissions.ts
+    |   |       
     |   +---components
     |   |       FileUploader.ts
     |   |       
@@ -51948,9 +51814,11 @@ C:.
     |   |       
     |   +---supabase
     |   |   |   actions.ts
+    |   |   |   admin-auth-actions.ts
     |   |   |   admin.ts
     |   |   |   call-followups.ts
     |   |   |   client.ts
+    |   |   |   get-tenant-id.ts
     |   |   |   middleware.ts
     |   |   |   queries.ts
     |   |   |   server.ts
@@ -51966,12 +51834,15 @@ C:.
     |           call-followup.ts
     |           patient.ts
     |           tenant.ts
+    |           user.ts
     |           
     +---scripts
     |       fix-all-routes.js
     |       
     \---types
+            dashboard.ts
             index.ts
             messaging.ts
             storage.ts
+            user.ts
             

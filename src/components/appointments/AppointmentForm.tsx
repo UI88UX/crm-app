@@ -74,8 +74,8 @@ interface AppointmentFormProps {
   onCancel?: () => void;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  asDialog?: boolean;
 }
-
 // ============================================
 // Status Badge Component
 // ============================================
@@ -205,6 +205,7 @@ export function AppointmentForm({
   onCancel,
   isOpen = true,
   onOpenChange,
+  asDialog = true,
 }: AppointmentFormProps) {
   // ============================================
   // State
@@ -348,8 +349,14 @@ export function AppointmentForm({
 
   const handleDateChange = useCallback((date: any) => {
     if (date && date.isValid) {
-      const gregorianDate = date.toDate();
-      const dateStr = gregorianDate.toISOString().split('T')[0];
+      // ✅ استخراج مستقیم سال/ماه/روز میلادی از DateObject
+      // date.year, date.month.number, date.day همگی میلادی هستند
+      const gregorianYear = date.toDate().getFullYear();
+      const gregorianMonth = date.toDate().getMonth() + 1;
+      const gregorianDay = date.toDate().getDate();
+      
+      // ساخت رشته YYYY-MM-DD به‌صورت دستی (بدون Timezone conversion)
+      const dateStr = `${gregorianYear}-${String(gregorianMonth).padStart(2, '0')}-${String(gregorianDay).padStart(2, '0')}`;
       setSelectedDate(dateStr);
     } else {
       setSelectedDate("");
@@ -594,7 +601,7 @@ export function AppointmentForm({
                   onChange={handleDateChange}
                   format="YYYY/MM/DD"
                   placeholder="انتخاب تاریخ"
-                  className="w-full p-2.5 border rounded-lg bg-background hover:border-primary/50 transition-colors"
+                  inputClass="w-full h-11 px-3 border rounded-lg bg-background hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none text-sm"
                   containerClassName="w-full"
                 />
               </div>
@@ -603,12 +610,12 @@ export function AppointmentForm({
               <div className="space-y-2">
                 <Label className="font-medium">زمان شروع</Label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   <input
                     type="time"
                     value={startTime}
                     onChange={handleStartTimeChange}
-                    className="w-full p-2.5 pl-10 border rounded-lg bg-background hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary/20"
+                    className="w-full h-11 p-2.5 pl-10 border rounded-lg bg-background hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none text-sm"
                   />
                 </div>
                 {errors.start_time && (
@@ -623,12 +630,12 @@ export function AppointmentForm({
               <div className="space-y-2">
                 <Label className="font-medium">زمان پایان</Label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   <input
                     type="time"
                     value={endTime}
                     onChange={handleEndTimeChange}
-                    className="w-full p-2.5 pl-10 border rounded-lg bg-background hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary/20"
+                    className="w-full h-11 p-2.5 pl-10 border rounded-lg bg-background hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none text-sm"
                   />
                 </div>
                 {errors.end_time && (
@@ -806,6 +813,153 @@ export function AppointmentForm({
   // Main Render
   // ============================================
 
+  // محتوای مشترک فرم (Header + Content + Footer)
+  const formBody = (
+    <>
+      {/* Header */}
+      <div className="px-6 pt-6 pb-4 border-b bg-gradient-to-r from-background to-muted/20 flex-shrink-0">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              {isEditing ? (
+                <>
+                  <CalendarIcon className="w-6 h-6 text-primary" />
+                  ویرایش نوبت
+                </>
+              ) : (
+                <>
+                  <Plus className="w-6 h-6 text-primary" />
+                  ثبت نوبت جدید
+                </>
+              )}
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1.5">
+              {isEditing
+                ? "اطلاعات نوبت را ویرایش کنید"
+                : "لطفاً اطلاعات نوبت جدید را وارد کنید"}
+            </p>
+          </div>
+          {isEditing && appointment && (
+            <StatusBadge status={appointment.status} />
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsTrigger
+                value="patient"
+                className={`gap-2 ${getTabErrorStatus("patient") ? "text-red-600 border-red-500 bg-red-50" : ""}`}
+              >
+                <User className="w-4 h-4" />
+                بیمار
+                {getTabErrorStatus("patient") && (
+                  <AlertCircle className="w-4 h-4 text-red-500" />
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="datetime"
+                className={`gap-2 ${getTabErrorStatus("datetime") ? "text-red-600 border-red-500 bg-red-50" : ""}`}
+              >
+                <Clock className="w-4 h-4" />
+                تاریخ و زمان
+                {getTabErrorStatus("datetime") && (
+                  <AlertCircle className="w-4 h-4 text-red-500" />
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="details"
+                className={`gap-2 ${getTabErrorStatus("details") ? "text-red-600 border-red-500 bg-red-50" : ""}`}
+              >
+                <FileText className="w-4 h-4" />
+                جزئیات نوبت
+                {getTabErrorStatus("details") && (
+                  <AlertCircle className="w-4 h-4 text-red-500" />
+                )}
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Tab: Patient */}
+            <TabsContent value="patient" className="space-y-4 mt-0">
+              {renderPatientSearch}
+              {renderSelectedPatient}
+            </TabsContent>
+
+            {/* Tab: Date & Time */}
+            <TabsContent value="datetime" className="space-y-4 mt-0">
+              {renderDateTime}
+            </TabsContent>
+
+            {/* Tab: Details */}
+            <TabsContent value="details" className="space-y-4 mt-0">
+              {renderDetails}
+            </TabsContent>
+          </Tabs>
+
+          {/* Error Message */}
+          {error && (
+            <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-lg flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+              <p className="text-sm text-destructive font-medium">{error}</p>
+            </div>
+          )}
+        </form>
+      </div>
+
+      {/* Footer */}
+      <div className="px-6 py-4 border-t bg-muted/10 flex-shrink-0">
+        <div className="flex items-center justify-between w-full">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleClose}
+            disabled={isSubmitting}
+            className="hover:bg-destructive/10 hover:text-destructive"
+          >
+            <X className="w-4 h-4 ml-2" />
+            انصراف
+          </Button>
+          <div className="flex items-center gap-3">
+            {!isEditing && (
+              <span
+                className={`text-sm ${watchPatientId ? "text-green-600" : "text-muted-foreground"}`}
+              >
+                {watchPatientId ? "✓ بیمار انتخاب شد" : "! لطفاً بیمار را انتخاب کنید"}
+              </span>
+            )}
+            <Button
+              type="submit"
+              disabled={!watchPatientId || isSubmitting}
+              size="lg"
+              className="min-w-[130px]"
+              onClick={handleSubmit(onSubmit)}
+            >
+              <span className="inline-flex items-center justify-center gap-2">
+                {isSubmitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                ) : isEditing ? (
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                ) : (
+                  <Plus className="w-4 h-4 shrink-0" />
+                )}
+                <span>{isEditing ? "ذخیره تغییرات" : "ثبت نوبت"}</span>
+              </span>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
+  // حالت inline (بدون Dialog) — برای صفحه /dashboard/appointments/new
+  if (!asDialog) {
+    return <div className="flex flex-col w-full">{formBody}</div>;
+  }
+
+  // حالت مدال (پیش‌فرض) — برای شرتکات‌ها و هر جای دیگر
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
@@ -821,137 +975,7 @@ export function AppointmentForm({
           }
         }}
       >
-        {/* Header */}
-        <DialogHeader className="px-6 pt-6 pb-4 border-b bg-gradient-to-r from-background to-muted/20 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div>
-              <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                {isEditing ? (
-                  <>
-                    <CalendarIcon className="w-6 h-6 text-primary" />
-                    ویرایش نوبت
-                  </>
-                ) : (
-                  <>
-                    <Plus className="w-6 h-6 text-primary" />
-                    ثبت نوبت جدید
-                  </>
-                )}
-              </DialogTitle>
-              <DialogDescription className="mt-1.5">
-                {isEditing
-                  ? "اطلاعات نوبت را ویرایش کنید"
-                  : "لطفاً اطلاعات نوبت جدید را وارد کنید"}
-              </DialogDescription>
-            </div>
-            {isEditing && appointment && (
-              <StatusBadge status={appointment.status} />
-            )}
-          </div>
-        </DialogHeader>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
-                <TabsTrigger
-                  value="patient"
-                  className={`gap-2 ${getTabErrorStatus('patient') ? 'text-red-600 border-red-500 bg-red-50' : ''}`}
-                >
-                  <User className="w-4 h-4" />
-                  بیمار
-                  {getTabErrorStatus('patient') && (
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                  )}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="datetime"
-                  className={`gap-2 ${getTabErrorStatus('datetime') ? 'text-red-600 border-red-500 bg-red-50' : ''}`}
-                >
-                  <Clock className="w-4 h-4" />
-                  تاریخ و زمان
-                  {getTabErrorStatus('datetime') && (
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                  )}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="details"
-                  className={`gap-2 ${getTabErrorStatus('details') ? 'text-red-600 border-red-500 bg-red-50' : ''}`}
-                >
-                  <FileText className="w-4 h-4" />
-                  جزئیات نوبت
-                  {getTabErrorStatus('details') && (
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                  )}
-                </TabsTrigger>
-              </TabsList>
-
-              {/* Tab: Patient */}
-              <TabsContent value="patient" className="space-y-4 mt-0">
-                {renderPatientSearch}
-                {renderSelectedPatient}
-              </TabsContent>
-
-              {/* Tab: Date & Time */}
-              <TabsContent value="datetime" className="space-y-4 mt-0">
-                {renderDateTime}
-              </TabsContent>
-
-              {/* Tab: Details */}
-              <TabsContent value="details" className="space-y-4 mt-0">
-                {renderDetails}
-              </TabsContent>
-            </Tabs>
-
-            {/* Error Message */}
-            {error && (
-              <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-lg flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0" />
-                <p className="text-sm text-destructive font-medium">{error}</p>
-              </div>
-            )}
-          </form>
-        </div>
-
-        {/* Footer */}
-        <DialogFooter className="px-6 py-4 border-t bg-muted/10 flex-shrink-0">
-          <div className="flex items-center justify-between w-full">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={handleClose}
-              disabled={isSubmitting}
-              className="hover:bg-destructive/10 hover:text-destructive"
-            >
-              <X className="w-4 h-4 ml-2" />
-              انصراف
-            </Button>
-            <div className="flex items-center gap-3">
-              {!isEditing && (
-                <span className={`text-sm ${watchPatientId ? 'text-green-600' : 'text-muted-foreground'}`}>
-                  {watchPatientId ? "✓ بیمار انتخاب شد" : "! لطفاً بیمار را انتخاب کنید"}
-                </span>
-              )}
-              <Button
-                type="submit"
-                disabled={!watchPatientId || isSubmitting}
-                size="lg"
-                className="gap-2 min-w-[120px]"
-                onClick={handleSubmit(onSubmit)}
-              >
-                {isSubmitting ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : isEditing ? (
-                  <CheckCircle2 className="w-4 h-4" />
-                ) : (
-                  <Plus className="w-4 h-4" />
-                )}
-                {isEditing ? "ذخیره تغییرات" : "ثبت نوبت"}
-              </Button>
-            </div>
-          </div>
-        </DialogFooter>
+        {formBody}
       </DialogContent>
     </Dialog>
   );

@@ -145,7 +145,7 @@ export default function Home() {
 
       {/* ============ Hero ============ */}
       <section className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-24 pb-12 text-center">
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl tracking-tight text-balance leading-tight">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl text-balance leading-tight ">
           مدیریت هوشمند
           <br />
           <span className="bg-gradient-to-l from-emerald-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent">

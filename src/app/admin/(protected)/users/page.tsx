@@ -1,7 +1,7 @@
 // app/admin/users/page.tsx
 "use client";
 
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getAllUsers } from "@/lib/supabase/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,6 +19,7 @@ interface User {
   is_active: boolean;
   is_super_admin: boolean;
   created_at: string;
+  tenant_name?: string | null;
 }
 
 export default function UsersPage() {
@@ -48,7 +49,7 @@ export default function UsersPage() {
       user.full_name.toLowerCase().includes(search) ||
       user.email.toLowerCase().includes(search) ||
       user.role.toLowerCase().includes(search) ||
-      user.specialty.toLowerCase().includes(search)
+      user.tenant_name?.toLowerCase().includes(search)
     );
   });
 
@@ -99,6 +100,7 @@ export default function UsersPage() {
                 <TableHeader>
                   <TableRow className="bg-gray-50 hover:bg-gray-50">
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">کاربر</TableHead>
+                    <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">مطب</TableHead>
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">ایمیل</TableHead>
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">نقش</TableHead>
                     <TableHead className="text-right text-xs font-medium text-gray-500 uppercase">وضعیت</TableHead>
@@ -108,7 +110,7 @@ export default function UsersPage() {
                 <TableBody>
                   {filteredUsers.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-12 text-gray-500">
+                      <TableCell colSpan={6} className="text-center py-12 text-gray-500">
                         <Users className="h-12 w-12 mx-auto text-gray-300 mb-3" />
                         {searchTerm ? "هیچ کاربری با عبارت جستجو یافت نشد" : "هیچ کاربری یافت نشد"}
                       </TableCell>
@@ -128,6 +130,11 @@ export default function UsersPage() {
                           </div>
                         </TableCell>
                         <TableCell>
+                          <span className="text-sm text-gray-700">
+                            {user.tenant_name || "بدون مطب"}
+                          </span>
+                        </TableCell>
+                        <TableCell>
                           <div className="flex items-center gap-2">
                             <Mail className="h-3 w-3 text-gray-400" />
                             <span className="text-gray-700">{user.email}</span>
@@ -143,7 +150,7 @@ export default function UsersPage() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={user.is_active ? "default" : "outline"} 
+                          <Badge variant={user.is_active ? "default" : "outline"}
                             className={user.is_active ? "bg-emerald-500" : "bg-gray-100 text-gray-500"}>
                             {user.is_active ? "فعال" : "غیرفعال"}
                           </Badge>

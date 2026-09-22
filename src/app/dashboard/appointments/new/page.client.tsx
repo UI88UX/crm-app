@@ -1,7 +1,7 @@
 // src/app/dashboard/appointments/new/page.client.tsx
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,17 +10,27 @@ import type { Appointment } from "@/types";
 
 export function NewAppointmentClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialPatientId = searchParams.get("patientId") || undefined;
+  const returnTo = searchParams.get("returnTo") || "/dashboard/appointments";
 
   const handleSuccess = (data: Appointment) => {
-    router.push(`/dashboard/appointments/${data.id}`);
+    // بعد از ثبت، اگر از صفحه بیمار آمده بودیم، به همان صفحه برگردیم
+    // در غیر این صورت به صفحه جزئیات نوبت جدید برویم
+    if (returnTo && returnTo !== "/dashboard/appointments") {
+      router.push(returnTo);
+    } else {
+      router.push(`/dashboard/appointments/${data.id}`);
+    }
   };
 
   const handleCancel = () => {
-    router.push("/dashboard/appointments");
+    router.push(returnTo);
   };
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6 max-w-3xl mx-auto p-6" dir="rtl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">ثبت نوبت جدید</h1>
@@ -34,18 +44,19 @@ export function NewAppointmentClient() {
         </Button>
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="overflow-hidden">
+        <CardHeader className="border-b bg-gradient-to-r from-background to-muted/20">
           <CardTitle>اطلاعات نوبت</CardTitle>
           <CardDescription>
             تمام فیلدهای الزامی را پر کنید
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <AppointmentForm
+            patientId={initialPatientId}
             onSuccess={handleSuccess}
             onCancel={handleCancel}
-            isOpen={true}
+            asDialog={false}
           />
         </CardContent>
       </Card>

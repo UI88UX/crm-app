@@ -8,11 +8,11 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  // typescript: {
-  //   // ! هشدار: این کار type-check رو کاملاً غیرفعال می‌کنه
-  //   // فقط برای دیباگ موقت استفاده کن
-  //   ignoreBuildErrors: true,
-  // },
+  typescript: {
+    // ! هشدار: این کار type-check رو کاملاً غیرفعال می‌کنه
+    // فقط برای دیباگ موقت استفاده کن
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;

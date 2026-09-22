@@ -253,3 +253,36 @@ export function useReactivateUser() {
     },
   });
 }
+// ============================================
+// 🔑 تغییر رمز عبور کاربر (توسط ادمین)
+// ============================================
+export function useChangePassword() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      password,
+    }: {
+      id: string;
+      password: string;
+    }): Promise<void> => {
+      const response = await fetch(`/api/users/${id}/password`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'خطا در تغییر رمز عبور');
+      }
+    },
+    onSuccess: () => {
+      toast.success('رمز عبور با موفقیت تغییر کرد');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'خطا در تغییر رمز عبور');
+    },
+  });
+}

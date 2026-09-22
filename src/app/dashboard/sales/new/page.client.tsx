@@ -10,9 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 
-// ✅ ایمپورت React Query
 import { useCreateSale } from "@/hooks/useSales";
-import { usePatients } from "@/hooks/usePatients"; // ✅ استفاده از usePatients موجود
+import { usePatients } from "@/hooks/usePatients";
 
 import { toJalaliDisplay } from "@/lib/util/jalaliDate";
 import { ArrowRight, Package, User, Calendar, DollarSign, Loader2, Hash, FileText } from "lucide-react";
@@ -27,14 +26,13 @@ interface Patient {
 export default function NewSaleClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const patientIdFromUrl = searchParams.get('patientId');
-  
-  // ✅ دریافت لیست بیماران با React Query (از usePatients موجود)
-  const { data: patients = [], isLoading: isLoadingPatients } = usePatients({ 
-    limit: 1000 
+  const patientIdFromUrl = searchParams.get("patientId");
+  const returnTo = searchParams.get("returnTo") || "/dashboard/sales"; // ✅ جدید
+
+  const { data: patients = [], isLoading: isLoadingPatients } = usePatients({
+    limit: 1000,
   });
-  
-  // ✅ استفاده از React Query برای ایجاد فروش
+
   const createSale = useCreateSale();
 
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -45,41 +43,40 @@ export default function NewSaleClient() {
     hearing_aid_model: "",
     hearing_aid_serial: "",
     price: "",
-    sale_date: new Date().toISOString().split('T')[0],
+    sale_date: new Date().toISOString().split("T")[0],
     warranty_expiry: "",
     notes: "",
   });
 
-  // اگر patientId از URL آمده، اطلاعات بیمار را پیدا کن
   useEffect(() => {
     if (patientIdFromUrl && patients.length > 0) {
-      const patient = patients.find(p => p.id === patientIdFromUrl);
+      const patient = patients.find((p) => p.id === patientIdFromUrl);
       if (patient) {
         setSelectedPatient(patient);
-        setFormData(prev => ({ ...prev, patient_id: patient.id }));
+        setFormData((prev) => ({ ...prev, patient_id: patient.id }));
       }
     }
   }, [patientIdFromUrl, patients]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: [] }));
+      setErrors((prev) => ({ ...prev, [name]: [] }));
     }
-    
-    if (name === 'patient_id') {
-      const patient = patients.find(p => p.id === value);
+
+    if (name === "patient_id") {
+      const patient = patients.find((p) => p.id === value);
       setSelectedPatient(patient || null);
     }
   };
 
-  // ✅ ثبت با React Query
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
-    // اعتبارسنجی ساده
     if (!formData.patient_id) {
       toast.error("لطفاً یک بیمار را انتخاب کنید");
       return;
@@ -105,7 +102,7 @@ export default function NewSaleClient() {
       hearing_aid_model: formData.hearing_aid_model.trim(),
       hearing_aid_serial: formData.hearing_aid_serial.trim(),
       price: parseFloat(formData.price) || 0,
-      sale_date: formData.sale_date || new Date().toISOString().split('T')[0],
+      sale_date: formData.sale_date || new Date().toISOString().split("T")[0],
       warranty_expiry: formData.warranty_expiry || null,
       notes: formData.notes || null,
     };
@@ -113,7 +110,8 @@ export default function NewSaleClient() {
     createSale.mutate(dataToSubmit, {
       onSuccess: () => {
         toast.success("فروش با موفقیت ثبت شد!");
-        router.push("/dashboard/sales");
+        // ✅ بعد از ثبت، به صفحه‌ای که از آن آمده بودیم برگرد
+        router.push(returnTo);
         router.refresh();
       },
       onError: (error: any) => {
@@ -127,6 +125,10 @@ export default function NewSaleClient() {
     });
   };
 
+  const handleCancel = () => {
+    router.push(returnTo);
+  };
+
   return (
     <div className="p-6 space-y-6" dir="rtl">
       <div className="flex items-center justify-between flex-wrap gap-4">
@@ -134,12 +136,11 @@ export default function NewSaleClient() {
           <h1 className="text-3xl font-bold">ثبت فروش جدید</h1>
           <p className="text-gray-500 mt-1">ثبت فروش سمعک برای بیمار</p>
         </div>
-        <Link href="/dashboard/sales">
-          <Button variant="outline">
-            <ArrowRight className="w-4 h-4 ml-2" />
-            بازگشت به لیست
-          </Button>
-        </Link>
+        {/* ✅ حالا از returnTo استفاده می‌کند */}
+        <Button variant="outline" onClick={handleCancel}>
+          <ArrowRight className="w-4 h-4 ml-2" />
+          بازگشت
+        </Button>
       </div>
 
       <Card>
@@ -322,11 +323,7 @@ export default function NewSaleClient() {
                   "ثبت فروش"
                 )}
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/dashboard/sales")}
-              >
+              <Button type="button" variant="outline" onClick={handleCancel}>
                 انصراف
               </Button>
             </div>

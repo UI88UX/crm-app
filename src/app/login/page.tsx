@@ -75,12 +75,6 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "در حال ورود..." : "ورود"}
             </Button>
-            <p className="text-sm text-center text-gray-600">
-              حساب کاربری ندارید؟{" "}
-              <Link href="/register" className="text-blue-600 hover:underline">
-                ثبت‌نام کنید
-              </Link>
-            </p>
           </CardFooter>
         </form>
       </Card>
