@@ -11,7 +11,7 @@ import { useCampaign, useSendCampaign, useDeleteCampaign } from "@/hooks/useSmsC
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatJalaliDateIntl  } from "@/lib/util/jalaliDate";
+import { formatJalaliDateIntl } from "@/lib/util/jalaliDate";
 
 const statusColors: Record<string, string> = {
   draft: "bg-gray-100 text-gray-700",
@@ -80,31 +80,43 @@ export default function CampaignDetailPage() {
   const isDeleting = deleteCampaign.isPending;
 
   return (
-    <div className="p-6 space-y-6 max-w-4xl mx-auto">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-4xl mx-auto">
       {/* هدر */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => router.back()}>
-            <ArrowRight className="w-4 h-4 ml-2" />
-            بازگشت
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">{campaign.name}</h1>
-            <p className="text-sm text-muted-foreground mt-1">
+      <div className="flex flex-col gap-4">
+        {/* ردیف اول: عنوان + دکمه بازگشت */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-2xl font-bold truncate">{campaign.name}</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               جزئیات کمپین پیامکی
             </p>
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.back()}
+            className="shrink-0"
+          >
+            <ArrowRight className="w-4 h-4" />
+            <span className="hidden sm:inline mr-1">بازگشت</span>
+          </Button>
         </div>
-        <Badge className={statusColors[campaign.status]}>
-          {statusLabels[campaign.status] || campaign.status}
-        </Badge>
-        <div className="flex items-center gap-2">
+
+        {/* ردیف دوم: بج + دکمه‌های ویرایش/حذف */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <Badge className={`${statusColors[campaign.status]} shrink-0`}>
+            {statusLabels[campaign.status] || campaign.status}
+          </Badge>
+
+          <div className="flex-1" />
+
           <Button
             variant="outline"
             size="sm"
             onClick={() => router.push(`/dashboard/sms/campaigns/${id}/edit`)}
+            className="flex-1 sm:flex-none"
           >
-            <Pencil className="w-4 h-4 ml-2" />
+            <Pencil className="w-4 h-4 ml-1 sm:ml-2" />
             ویرایش
           </Button>
           <Button
@@ -112,11 +124,12 @@ export default function CampaignDetailPage() {
             size="sm"
             onClick={handleDelete}
             disabled={isDeleting}
+            className="flex-1 sm:flex-none"
           >
             {isDeleting ? (
-              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+              <Loader2 className="w-4 h-4 ml-1 sm:ml-2 animate-spin" />
             ) : (
-              <Trash2 className="w-4 h-4 ml-2" />
+              <Trash2 className="w-4 h-4 ml-1 sm:ml-2" />
             )}
             حذف
           </Button>
@@ -124,7 +137,7 @@ export default function CampaignDetailPage() {
       </div>
 
       {/* اطلاعات اصلی */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -208,25 +221,25 @@ export default function CampaignDetailPage() {
         <CardContent className="space-y-2">
           <div className="flex justify-between">
             <span className="text-muted-foreground">تاریخ ایجاد:</span>
-            <span>{formatJalaliDateIntl (campaign.created_at)}</span>
+            <span>{formatJalaliDateIntl(campaign.created_at)}</span>
           </div>
           {campaign.scheduled_at && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">زمان برنامه‌ریزی:</span>
-              <span>{formatJalaliDateIntl (campaign.scheduled_at)}</span>
+              <span>{formatJalaliDateIntl(campaign.scheduled_at)}</span>
             </div>
           )}
           {campaign.sent_at && (
             <div className="flex justify-between">
               <span className="text-muted-foreground">تاریخ ارسال:</span>
-              <span>{formatJalaliDateIntl (campaign.sent_at)}</span>
+              <span>{formatJalaliDateIntl(campaign.sent_at)}</span>
             </div>
           )}
         </CardContent>
       </Card>
 
       {/* دکمه‌ها */}
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         {(campaign.status === 'draft' || campaign.status === 'scheduled') && (
           <Button
             onClick={handleSend}

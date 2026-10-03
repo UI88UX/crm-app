@@ -142,7 +142,7 @@ export function Sidebar() {
       </div>
 
       {/* منو */}
-      <nav className="flex-1 space-y-1 overflow-y-auto">
+      <nav className="flex-1 space-y-1 overflow-y-auto min-h-0 scrollbar-hide">
         {visibleMenuItems.map((item) => {
           const isActive =
             item.href === "/dashboard"
@@ -179,7 +179,7 @@ export function Sidebar() {
   return (
     <>
       {/* Header موبایل */}
-      <header className="lg:hidden fixed top-0 right-0 left-0 z-30 bg-gray-900 text-white h-14 flex items-center justify-between px-4 shadow-md">
+      <header className="md:hidden fixed top-0 right-0 left-0 z-30 bg-gray-900 text-white h-14 flex items-center justify-between px-4 shadow-md">
         <button
           onClick={() => setIsOpen(true)}
           data-loading="false"
@@ -209,7 +209,8 @@ export function Sidebar() {
       <aside
         className={cn(
           "fixed right-0 top-0 w-64 bg-gray-900 text-white h-screen flex flex-col p-4 z-50 transition-transform duration-300 ease-in-out",
-          "lg:translate-x-0",
+          "overflow-hidden",
+          "md:translate-x-0",
           isOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
         )}
       >

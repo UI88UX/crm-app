@@ -171,23 +171,29 @@ export default function NewPatientClient() {
   };
 
   return (
-    <div className="p-6 space-y-6" dir="rtl">
+    <div className="p-6 space-y-6">
       {/* هدر */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">ثبت بیمار جدید</h1>
-          <p className="text-gray-500 mt-1">
-            {isPatientCreated
-              ? `بیمار ${createdPatientName} با موفقیت ثبت شد`
-              : "اطلاعات بیمار را وارد کنید"}
-          </p>
+      {/* هدر */}
+      <div className="flex flex-col gap-4" dir="rtl">
+        {/* ردیف اول: عنوان + دکمه بازگشت */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-bold truncate">
+              ثبت بیمار جدید
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              {isPatientCreated
+                ? `بیمار ${createdPatientName} با موفقیت ثبت شد`
+                : "اطلاعات بیمار را وارد کنید"}
+            </p>
+          </div>
+          <Link href="/dashboard/patients" className="shrink-0">
+            <Button variant="outline" size="sm">
+              <ArrowRight className="w-4 h-4" />
+              <span className="hidden sm:inline mr-1">بازگشت به لیست</span>
+            </Button>
+          </Link>
         </div>
-        <Link href="/dashboard/patients">
-          <Button variant="outline">
-            <ArrowRight className="w-4 h-4 ml-2" />
-            بازگشت به لیست
-          </Button>
-        </Link>
       </div>
 
       {/* فرم - فقط در صورتی که بیمار ثبت نشده باشد نمایش داده می‌شود */}

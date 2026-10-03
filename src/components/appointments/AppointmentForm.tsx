@@ -354,7 +354,7 @@ export function AppointmentForm({
       const gregorianYear = date.toDate().getFullYear();
       const gregorianMonth = date.toDate().getMonth() + 1;
       const gregorianDay = date.toDate().getDate();
-      
+
       // ساخت رشته YYYY-MM-DD به‌صورت دستی (بدون Timezone conversion)
       const dateStr = `${gregorianYear}-${String(gregorianMonth).padStart(2, '0')}-${String(gregorianDay).padStart(2, '0')}`;
       setSelectedDate(dateStr);
@@ -530,50 +530,57 @@ export function AppointmentForm({
           <User className="w-4 h-4 text-primary" />
           بیمار انتخاب شده
         </Label>
+
         <Card className="bg-gradient-to-r from-primary/5 to-transparent border-primary/20">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <User className="w-8 h-8 text-primary" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-start gap-3 sm:gap-4">
+              {/* آواتار */}
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <User className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+              </div>
+
+              {/* اطلاعات */}
+              <div className="min-w-0 flex-1 space-y-2">
+                {/* اسم + دکمه X */}
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="text-base sm:text-xl font-bold truncate">
                     {selectedPatient.first_name} {selectedPatient.last_name}
                   </h3>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={handleRemovePatient}
+                          className="hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 flex-shrink-0 h-8 w-8"
+                          disabled={isSubmitting}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>تغییر بیمار</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+
+                {/* اطلاعات تماس */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <CreditCard className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>کد ملی: {selectedPatient.national_code}</span>
+                  </span>
+                  {selectedPatient.phone && (
                     <span className="flex items-center gap-1.5">
-                      <CreditCard className="w-4 h-4" />
-                      کد ملی: {selectedPatient.national_code}
+                      <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span>تلفن: {selectedPatient.phone}</span>
                     </span>
-                    {selectedPatient.phone && (
-                      <span className="flex items-center gap-1.5">
-                        <Phone className="w-4 h-4" />
-                        تلفن: {selectedPatient.phone}
-                      </span>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={handleRemovePatient}
-                      className="hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 flex-shrink-0"
-                      disabled={isSubmitting}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>تغییر بیمار</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
           </CardContent>
         </Card>
@@ -610,7 +617,7 @@ export function AppointmentForm({
               <div className="space-y-2">
                 <Label className="font-medium">زمان شروع</Label>
                 <div className="relative">
-                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   <input
                     type="time"
                     value={startTime}
@@ -630,7 +637,7 @@ export function AppointmentForm({
               <div className="space-y-2">
                 <Label className="font-medium">زمان پایان</Label>
                 <div className="relative">
-                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   <input
                     type="time"
                     value={endTime}
@@ -910,31 +917,47 @@ export function AppointmentForm({
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t bg-muted/10 flex-shrink-0">
-        <div className="flex items-center justify-between w-full">
+      {/* Footer */}
+      <div className="px-4 sm:px-6 py-4 border-t bg-muted/10 flex-shrink-0">
+        {/* متن وضعیت بالا (فقط موبایل) */}
+        {!isEditing && (
+          <div className="sm:hidden mb-3 text-center">
+            <span
+              className={`text-xs ${watchPatientId ? "text-green-600" : "text-muted-foreground"}`}
+            >
+              {watchPatientId ? "✓ بیمار انتخاب شد" : "! لطفاً بیمار را انتخاب کنید"}
+            </span>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between gap-3 w-full">
           <Button
             type="button"
             variant="ghost"
             onClick={handleClose}
             disabled={isSubmitting}
-            className="hover:bg-destructive/10 hover:text-destructive"
+            className="hover:bg-destructive/10 hover:text-destructive shrink-0"
           >
-            <X className="w-4 h-4 ml-2" />
-            انصراف
+            <X className="w-4 h-4 ml-1 sm:ml-2" />
+            <span className="sm:inline">انصراف</span>
           </Button>
-          <div className="flex items-center gap-3">
+
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            {/* متن وضعیت (فقط دسکتاپ) */}
             {!isEditing && (
               <span
-                className={`text-sm ${watchPatientId ? "text-green-600" : "text-muted-foreground"}`}
+                className={`hidden sm:inline text-sm whitespace-nowrap ${watchPatientId ? "text-green-600" : "text-muted-foreground"
+                  }`}
               >
                 {watchPatientId ? "✓ بیمار انتخاب شد" : "! لطفاً بیمار را انتخاب کنید"}
               </span>
             )}
+
             <Button
               type="submit"
               disabled={!watchPatientId || isSubmitting}
               size="lg"
-              className="min-w-[130px]"
+              className="min-w-0 sm:min-w-[130px] flex-1 sm:flex-none"
               onClick={handleSubmit(onSubmit)}
             >
               <span className="inline-flex items-center justify-center gap-2">
@@ -945,7 +968,7 @@ export function AppointmentForm({
                 ) : (
                   <Plus className="w-4 h-4 shrink-0" />
                 )}
-                <span>{isEditing ? "ذخیره تغییرات" : "ثبت نوبت"}</span>
+                <span className="truncate">{isEditing ? "ذخیره تغییرات" : "ثبت نوبت"}</span>
               </span>
             </Button>
           </div>

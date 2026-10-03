@@ -46,10 +46,10 @@ export default function NewCampaignPage() {
   const createCampaign = useCreateCampaign();
 
   // ✅ Preview with React Query (manual trigger)
-  const { 
-    data: recipientsCount, 
-    refetch: previewRecipients, 
-    isFetching: isPreviewing 
+  const {
+    data: recipientsCount,
+    refetch: previewRecipients,
+    isFetching: isPreviewing
   } = usePreviewRecipients(filters);
 
   const handlePreview = async () => {
@@ -88,17 +88,22 @@ export default function NewCampaignPage() {
   return (
     <div className="p-6 space-y-6 max-w-4xl mx-auto">
       {/* هدر */}
-      <div className="flex items-center gap-4">
-        <Button variant="outline" onClick={() => router.back()}>
-          <ArrowRight className="w-4 h-4 ml-2" />
-          بازگشت
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold">کمپین جدید</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-lg sm:text-2xl font-bold truncate">کمپین جدید</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             ایجاد کمپین ارسال پیامک گروهی به بیماران
           </p>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => router.back()}
+          className="shrink-0"
+        >
+          <ArrowRight className="w-4 h-4" />
+          <span className="hidden sm:inline mr-1">بازگشت</span>
+        </Button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">

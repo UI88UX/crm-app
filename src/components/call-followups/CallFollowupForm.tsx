@@ -66,17 +66,17 @@ export function CallFollowupForm({
 
   return (
     <Card className="border-2 border-primary/20 bg-primary/5">
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* هدر */}
-          <div className="flex items-start gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
               <Phone className="w-5 h-5 text-primary" />
             </div>
-            <div>
-              <h3 className="font-bold text-lg">ثبت قرار تماس تلفنی</h3>
-              <p className="text-sm text-muted-foreground">
-                برای بیمار <strong>{patientName}</strong> یک قرار تماس تعیین کنید
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-sm sm:text-lg">ثبت قرار تماس تلفنی</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                برای بیمار <strong className="break-words">{patientName}</strong> یک قرار تماس تعیین کنید
               </p>
             </div>
           </div>
@@ -84,8 +84,8 @@ export function CallFollowupForm({
           {/* تاریخ و زمان */}
           <div className="space-y-2">
             <Label className="flex items-center gap-2 font-medium">
-              <Calendar className="w-4 h-4 text-primary" />
-              تاریخ و ساعت تماس
+              <Calendar className="w-4 h-4 text-primary flex-shrink-0" />
+              <span className="whitespace-nowrap">تاریخ و ساعت تماس</span>
               <span className="text-red-500">*</span>
             </Label>
             <DatePicker
@@ -103,17 +103,17 @@ export function CallFollowupForm({
               calendarPosition="bottom-right"
               plugins={[<TimePicker key="time" position="right" hideSeconds />]}
               placeholder="انتخاب تاریخ و ساعت"
-              className="w-full p-2.5 border rounded-lg bg-background hover:border-primary/50 transition-colors"
               containerClassName="w-full"
+              inputClass="w-full h-11 px-3 border rounded-lg bg-background text-sm hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20"
               disabled={createCallFollowup.isPending}
             />
           </div>
 
           {/* یادداشت */}
           <div className="space-y-2">
-            <Label className="flex items-center gap-2 font-medium">
-              <FileText className="w-4 h-4 text-primary" />
-              یادداشت (هدف تماس)
+            <Label className="flex items-center gap-2 font-medium flex-wrap">
+              <FileText className="w-4 h-4 text-primary flex-shrink-0" />
+              <span>یادداشت (هدف تماس)</span>
               <span className="text-xs text-muted-foreground font-normal">
                 (اختیاری)
               </span>
@@ -136,11 +136,11 @@ export function CallFollowupForm({
           )}
 
           {/* دکمه‌ها */}
-          <div className="flex gap-3 pt-2 border-t">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2 border-t">
             <Button
               type="submit"
               disabled={createCallFollowup.isPending}
-              className="min-w-[140px]"
+              className="w-full sm:w-auto sm:min-w-[140px]"
             >
               {createCallFollowup.isPending ? (
                 <>
@@ -160,6 +160,7 @@ export function CallFollowupForm({
                 variant="outline"
                 onClick={onCancel}
                 disabled={createCallFollowup.isPending}
+                className="w-full sm:w-auto"
               >
                 انصراف
               </Button>

@@ -188,8 +188,8 @@ export function CompleteCallFollowupDialog({
                 calendarPosition="bottom-right"
                 plugins={[<TimePicker key="time" position="right" hideSeconds />]}
                 placeholder="انتخاب تاریخ و ساعت تماس مجدد"
-                className="w-full p-2.5 border rounded-lg bg-white dark:bg-gray-800"
                 containerClassName="w-full"
+                inputClass="w-full h-11 px-3 border rounded-lg bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 disabled={completeCallFollowup.isPending}
               />
               <p className="text-xs text-blue-600 dark:text-blue-400">
@@ -224,19 +224,20 @@ export function CompleteCallFollowupDialog({
           )}
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0">
           <Button
             variant="outline"
             data-loading="false"
             onClick={() => onOpenChange(false)}
             disabled={completeCallFollowup.isPending}
+            className="w-full sm:w-auto"
           >
             انصراف
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={!selectedResult || completeCallFollowup.isPending}
-            className="min-w-[140px]"
+            className="w-full sm:w-auto sm:min-w-[140px]"
           >
             {completeCallFollowup.isPending ? (
               <>

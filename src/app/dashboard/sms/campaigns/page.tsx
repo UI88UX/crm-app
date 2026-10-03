@@ -108,7 +108,7 @@ export default function CampaignsPage() {
 
   // ============ Main ============
   return (
-    <div className="p-4 sm:p-6 space-y-6" dir="rtl">
+    <div className="p-4 sm:p-6 space-y-6">
       {/* ============ هدر ============ */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

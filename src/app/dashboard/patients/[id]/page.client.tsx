@@ -1134,18 +1134,24 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between flex-wrap gap-3">
-                <CardTitle className="flex items-center gap-2">
-                  <Phone className="w-5 h-5" />
-                  پیگیری‌های تلفنی
-                  {activeFollowups.length > 0 && (
-                    <span className="text-sm font-normal text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-                      {activeFollowups.length} فعال
+                <div className="space-y-1.5">
+                  <CardTitle className="flex items-center gap-2">
+                    <Phone className="w-5 h-5" />
+                    پیگیری‌های تلفنی
+                  </CardTitle>
+
+                  {/* بج‌ها - ردیف جدا زیر عنوان */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {activeFollowups.length > 0 && (
+                      <span className="text-xs font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                        {activeFollowups.length} فعال
+                      </span>
+                    )}
+                    <span className="text-xs text-gray-500">
+                      {callFollowups.length} کل
                     </span>
-                  )}
-                  <span className="text-sm font-normal text-gray-500">
-                    ({callFollowups.length} کل)
-                  </span>
-                </CardTitle>
+                  </div>
+                </div>
 
                 <Button
                   size="sm"

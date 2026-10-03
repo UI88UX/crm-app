@@ -73,27 +73,35 @@ export function CallFollowupCard({
   // حالت فشرده برای تاریخچه
   if (compact) {
     return (
-      <div className="flex items-center justify-between py-2 px-3 hover:bg-muted/50 rounded-md transition-colors text-sm">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <CallFollowupStatusBadge status={followup.status} size="sm" />
-          {followup.result && (
-            <CallResultBadge result={followup.result} size="sm" />
-          )}
-          <span className="text-xs text-muted-foreground truncate">
+      <div className="flex items-start justify-between gap-2 py-2 px-3 hover:bg-muted/50 rounded-md transition-colors text-sm">
+        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+          {/* Badgeها */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <CallFollowupStatusBadge status={followup.status} size="sm" />
+            {followup.result && (
+              <CallResultBadge result={followup.result} size="sm" />
+            )}
+          </div>
+
+          {/* تاریخ */}
+          <span className="text-xs text-muted-foreground">
             قرار: {toJalaliDisplay(followup.due_date, "DD MMM YY - HH:mm")}
           </span>
+
+          {/* یادداشت */}
           {followup.call_notes && (
-            <span className="text-xs text-muted-foreground truncate">
-              • {followup.call_notes}
+            <span className="text-xs text-muted-foreground line-clamp-2">
+              {followup.call_notes}
             </span>
           )}
         </div>
+
         <Button
           variant="ghost"
           size="sm"
           onClick={handleDelete}
           disabled={deleteFollowup.isPending}
-          className={`h-7 px-2 text-xs ${showDeleteConfirm
+          className={`h-7 px-2 text-xs flex-shrink-0 ${showDeleteConfirm
             ? 'bg-red-100 text-red-700 hover:bg-red-200'
             : 'text-gray-400 hover:text-red-600'
             }`}
@@ -117,18 +125,17 @@ export function CallFollowupCard({
         : ''
         }`}
     >
-      <CardContent className="p-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          {/* اطلاعات */}
-          <div className="flex-1 space-y-2">
-            {/* ✅ نام بیمار + تلفن */}
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex flex-col gap-3">
+          {/* ردیف ۱: آواتار + اسم + بج‌ها */}
+          <div className="flex items-start gap-3">
             {followup.patient && (
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <>
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Phone className="w-4 h-4 text-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold text-base">
+                  <p className="font-bold text-sm sm:text-base truncate">
                     {followup.patient.first_name} {followup.patient.last_name}
                   </p>
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
@@ -136,76 +143,75 @@ export function CallFollowupCard({
                     <span dir="ltr">{followup.patient.phone || '---'}</span>
                   </p>
                 </div>
-              </div>
-            )}
-
-            {/* Badgeها */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <CallFollowupStatusBadge status={followup.status} size="sm" />
-              {followup.result && (
-                <CallResultBadge result={followup.result} size="sm" />
-              )}
-              {isDue && isPending && (
-                <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold animate-pulse">
-                  سررسید شده
-                </span>
-              )}
-            </div>
-
-            {/* تاریخ و زمان */}
-            <div className="flex items-center gap-4 text-sm flex-wrap">
-              <span className="text-gray-600 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5" />
-                <span className="text-gray-500">قرار تماس:</span>
-                <strong>
-                  {toJalaliDisplay(followup.due_date, "dddd DD MMMM")}
-                </strong>
-                <span className="text-blue-600 font-medium">
-                  ساعت {toJalaliDisplay(followup.due_date, "HH:mm")}
-                </span>
-              </span>
-
-              {followup.completed_at && (
-                <span className="text-gray-600 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5" />
-                  <span className="text-gray-500">تماس گرفته شد:</span>
-                  <strong>{formatJalaliDateTime(followup.completed_at)}</strong>
-                </span>
-              )}
-            </div>
-
-            {followup.notes && (
-              <p className="text-sm text-gray-600 flex items-start gap-1.5">
-                <FileText className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                <span className="line-clamp-2">{followup.notes}</span>
-              </p>
-            )}
-
-            {followup.call_notes && (
-              <div className="bg-muted/50 p-2 rounded-md">
-                <p className="text-xs text-muted-foreground font-medium mb-1">
-                  یادداشت مکالمه:
-                </p>
-                <p className="text-sm">{followup.call_notes}</p>
-              </div>
-            )}
-
-            {followup.next_followup_date && (
-              <p className="text-xs text-blue-600 flex items-center gap-1.5">
-                <Clock className="w-3 h-3" />
-                پیگیری بعدی:{' '}
-                {toJalaliDisplay(followup.next_followup_date, "DD MMM YYYY - HH:mm")}
-              </p>
+              </>
             )}
           </div>
 
-          {/* دکمه‌ها */}
-          <div className="flex gap-2 mt-2 md:mt-0 flex-shrink-0 items-center">
+          {/* ردیف ۲: بج‌ها */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <CallFollowupStatusBadge status={followup.status} size="sm" />
+            {followup.result && (
+              <CallResultBadge result={followup.result} size="sm" />
+            )}
+            {isDue && isPending && (
+              <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold animate-pulse">
+                سررسید شده
+              </span>
+            )}
+          </div>
+
+          {/* ردیف ۳: تاریخ و زمان */}
+          <div className="space-y-1.5 text-xs sm:text-sm">
+            <div className="flex items-center gap-1.5 text-gray-600">
+              <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="text-gray-500">قرار تماس:</span>
+              <strong>{toJalaliDisplay(followup.due_date, "dddd DD MMMM")}</strong>
+            </div>
+            <div className="flex items-center gap-1.5 text-blue-600">
+              <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>ساعت {toJalaliDisplay(followup.due_date, "HH:mm")}</span>
+            </div>
+            {followup.completed_at && (
+              <div className="flex items-center gap-1.5 text-gray-600">
+                <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="text-gray-500">تماس گرفته شد:</span>
+                <strong>{formatJalaliDateTime(followup.completed_at)}</strong>
+              </div>
+            )}
+          </div>
+
+          {/* ردیف ۴: یادداشت‌ها */}
+          {followup.notes && (
+            <p className="text-xs sm:text-sm text-gray-600 flex items-start gap-1.5">
+              <FileText className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+              <span className="line-clamp-2">{followup.notes}</span>
+            </p>
+          )}
+
+          {followup.call_notes && (
+            <div className="bg-muted/50 p-2 rounded-md">
+              <p className="text-xs text-muted-foreground font-medium mb-1">
+                یادداشت مکالمه:
+              </p>
+              <p className="text-xs sm:text-sm">{followup.call_notes}</p>
+            </div>
+          )}
+
+          {followup.next_followup_date && (
+            <p className="text-xs text-blue-600 flex items-center gap-1.5">
+              <Clock className="w-3 h-3" />
+              پیگیری بعدی:{' '}
+              {toJalaliDisplay(followup.next_followup_date, "DD MMM YYYY - HH:mm")}
+            </p>
+          )}
+
+          {/* ردیف ۵: دکمه‌ها */}
+          <div className="flex flex-wrap gap-2 pt-2 border-t">
             {isPending && onComplete && (
               <Button
                 size="sm"
                 onClick={() => onComplete(followup)}
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none"
               >
                 <CheckCircle2 className="w-4 h-4 ml-1" />
                 ثبت نتیجه
@@ -220,9 +226,8 @@ export function CallFollowupCard({
                     cancelFollowup.mutate(followup.id);
                   }
                 }}
-                data-loading="false"
                 disabled={cancelFollowup.isPending && cancelFollowup.variables === followup.id}
-                className="min-w-[80px]"
+                className="flex-1 sm:flex-none"
               >
                 {cancelFollowup.isPending && cancelFollowup.variables === followup.id ? (
                   <>
@@ -237,7 +242,6 @@ export function CallFollowupCard({
                 )}
               </Button>
             )}
-            {/* منوی حذف - برای همه‌ی کارت‌ها */}
             <Button
               size="sm"
               variant="ghost"
