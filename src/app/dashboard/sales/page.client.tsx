@@ -1,6 +1,8 @@
+// src/app/dashboard/sales/page.client.tsx
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,12 +22,12 @@ import {
   FileText,
   Search,
   Loader2,
+  Pencil,
+  Eye,
 } from "lucide-react";
 
-// ✅ ایمپورت React Query
 import { useSales, useDeleteSale, useCreateSale } from "@/hooks/useSales";
 
-// تعریف نوع ساده برای Patient
 interface PatientSimple {
   id: string;
   first_name: string;
@@ -41,14 +43,13 @@ export default function SalesClient({ patients }: SalesClientProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  // ✅ استفاده از React Query
-  const { 
-    data: sales = [], 
-    isLoading, 
-    isError, 
-    error, 
+  const {
+    data: sales = [],
+    isLoading,
+    isError,
+    error,
     refetch,
-    isFetching 
+    isFetching,
   } = useSales();
 
   const deleteSale = useDeleteSale();
@@ -59,22 +60,23 @@ export default function SalesClient({ patients }: SalesClientProps) {
     hearing_aid_model: "",
     hearing_aid_serial: "",
     price: "",
-    sale_date: new Date().toISOString().split('T')[0],
+    sale_date: new Date().toISOString().split("T")[0],
     warranty_expiry: "",
     notes: "",
   });
 
-  // ✅ فیلتر کردن با useMemo
+  // فیلتر کردن
   const filteredSales = useMemo(() => {
     if (!searchTerm.trim()) return sales;
 
     const lowercasedTerm = searchTerm.toLowerCase().trim();
     return sales.filter((sale) => {
-      const patientName = `${sale.patient?.first_name || ''} ${sale.patient?.last_name || ''}`.toLowerCase();
+      const patientName =
+        `${sale.patient?.first_name || ""} ${sale.patient?.last_name || ""}`.toLowerCase();
       const model = sale.hearing_aid_model.toLowerCase();
       const serial = sale.hearing_aid_serial.toLowerCase();
       const nationalCode = sale.patient?.national_code?.toLowerCase() || "";
-      
+
       return (
         patientName.includes(lowercasedTerm) ||
         model.includes(lowercasedTerm) ||
@@ -84,12 +86,10 @@ export default function SalesClient({ patients }: SalesClientProps) {
     });
   }, [sales, searchTerm]);
 
-  // ✅ جستجو
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
 
-  // ✅ ثبت فروش با React Query
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -97,68 +97,63 @@ export default function SalesClient({ patients }: SalesClientProps) {
       toast.error("لطفاً یک بیمار را انتخاب کنید");
       return;
     }
-
     if (!formData.hearing_aid_model.trim()) {
       toast.error("لطفاً مدل سمعک را وارد کنید");
       return;
     }
-
     if (!formData.hearing_aid_serial.trim()) {
       toast.error("لطفاً سریال سمعک را وارد کنید");
       return;
     }
-
     if (!formData.price || parseFloat(formData.price) <= 0) {
       toast.error("لطفاً قیمت معتبر وارد کنید");
       return;
     }
 
-    createSale.mutate({
-      patient_id: formData.patient_id,
-      hearing_aid_model: formData.hearing_aid_model.trim(),
-      hearing_aid_serial: formData.hearing_aid_serial.trim(),
-      price: parseFloat(formData.price),
-      sale_date: formData.sale_date,
-      warranty_expiry: formData.warranty_expiry || null,
-      notes: formData.notes || null,
-    }, {
-      onSuccess: () => {
-        resetForm();
-        setIsFormOpen(false);
+    createSale.mutate(
+      {
+        patient_id: formData.patient_id,
+        hearing_aid_model: formData.hearing_aid_model.trim(),
+        hearing_aid_serial: formData.hearing_aid_serial.trim(),
+        price: parseFloat(formData.price),
+        sale_date: formData.sale_date,
+        warranty_expiry: formData.warranty_expiry || null,
+        notes: formData.notes || null,
+      },
+      {
+        onSuccess: () => {
+          resetForm();
+          setIsFormOpen(false);
+        },
       }
-    });
+    );
   };
 
-  // ✅ حذف با React Query
   const handleDelete = (id: string) => {
     if (!confirm("آیا از حذف این فروش اطمینان دارید؟")) return;
     deleteSale.mutate(id);
   };
 
-  // ریست فرم
   const resetForm = () => {
     setFormData({
       patient_id: "",
       hearing_aid_model: "",
       hearing_aid_serial: "",
       price: "",
-      sale_date: new Date().toISOString().split('T')[0],
+      sale_date: new Date().toISOString().split("T")[0],
       warranty_expiry: "",
       notes: "",
     });
   };
 
-  // فرمت قیمت
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fa-IR').format(price);
+    return new Intl.NumberFormat("fa-IR").format(price);
   };
 
-  // فرمت تاریخ
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('fa-IR');
+    return new Date(date).toLocaleDateString("fa-IR");
   };
 
-  // محاسبه مجموع فروش
   const totalRevenue = filteredSales.reduce((sum, sale) => sum + sale.price, 0);
 
   return (
@@ -207,7 +202,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     required
                     className="w-full p-2 border rounded-md mt-1 bg-white"
                     value={formData.patient_id}
-                    onChange={(e) => setFormData({ ...formData, patient_id: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, patient_id: e.target.value })
+                    }
                   >
                     <option value="">انتخاب بیمار...</option>
                     {patients.map((patient) => (
@@ -228,7 +225,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     id="hearing_aid_model"
                     required
                     value={formData.hearing_aid_model}
-                    onChange={(e) => setFormData({ ...formData, hearing_aid_model: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, hearing_aid_model: e.target.value })
+                    }
                     placeholder="مثلاً: Phonak Audeo"
                   />
                 </div>
@@ -243,7 +242,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     id="hearing_aid_serial"
                     required
                     value={formData.hearing_aid_serial}
-                    onChange={(e) => setFormData({ ...formData, hearing_aid_serial: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, hearing_aid_serial: e.target.value })
+                    }
                     placeholder="شماره سریال"
                   />
                 </div>
@@ -261,7 +262,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     min="0"
                     step="1000"
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price: e.target.value })
+                    }
                     placeholder="۰"
                   />
                 </div>
@@ -277,7 +280,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     type="date"
                     required
                     value={formData.sale_date}
-                    onChange={(e) => setFormData({ ...formData, sale_date: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sale_date: e.target.value })
+                    }
                   />
                 </div>
 
@@ -291,7 +296,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     id="warranty_expiry"
                     type="date"
                     value={formData.warranty_expiry}
-                    onChange={(e) => setFormData({ ...formData, warranty_expiry: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, warranty_expiry: e.target.value })
+                    }
                   />
                 </div>
 
@@ -305,7 +312,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     id="notes"
                     className="w-full p-2 border rounded-md mt-1 min-h-[80px]"
                     value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, notes: e.target.value })
+                    }
                     placeholder="توضیحات اضافی..."
                   />
                 </div>
@@ -322,9 +331,9 @@ export default function SalesClient({ patients }: SalesClientProps) {
                     "ثبت فروش"
                   )}
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => {
                     setIsFormOpen(false);
                     resetForm();
@@ -355,7 +364,8 @@ export default function SalesClient({ patients }: SalesClientProps) {
             تعداد کل: <strong className="text-gray-900">{filteredSales.length}</strong>
           </span>
           <span className="text-gray-500">
-            مجموع فروش: <strong className="text-green-600">{formatPrice(totalRevenue)} تومان</strong>
+            مجموع فروش:{" "}
+            <strong className="text-green-600">{formatPrice(totalRevenue)} تومان</strong>
           </span>
         </div>
       </div>
@@ -385,8 +395,8 @@ export default function SalesClient({ patients }: SalesClientProps) {
                 {searchTerm ? "هیچ فروشی با این جستجو یافت نشد" : "هیچ فروشی ثبت نشده است"}
               </p>
               {!searchTerm && (
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="mt-4"
                   onClick={() => setIsFormOpen(true)}
                 >
@@ -412,20 +422,24 @@ export default function SalesClient({ patients }: SalesClientProps) {
                         سریال: {sale.hearing_aid_serial}
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center gap-4 text-sm flex-wrap">
                       <span className="font-medium text-gray-900">
                         <User className="w-3 h-3 inline ml-1" />
                         {sale.patient?.first_name} {sale.patient?.last_name}
                       </span>
                       {sale.patient?.national_code && (
-                        <span className="text-gray-500">کد ملی: {sale.patient.national_code}</span>
+                        <span className="text-gray-500">
+                          کد ملی: {sale.patient.national_code}
+                        </span>
                       )}
                       {sale.patient?.phone && (
-                        <span className="text-gray-500">تلفن: {sale.patient.phone}</span>
+                        <span className="text-gray-500">
+                          تلفن: {sale.patient.phone}
+                        </span>
                       )}
                     </div>
-                    
+
                     {sale.notes && (
                       <p className="text-sm text-gray-500 flex items-start gap-1">
                         <FileText className="w-3 h-3 inline mt-0.5" />
@@ -433,9 +447,10 @@ export default function SalesClient({ patients }: SalesClientProps) {
                       </p>
                     )}
                   </div>
-                  
+
+                  {/* بخش عملیات */}
                   <div className="flex flex-col sm:flex-row sm:items-end lg:items-end gap-2 mt-3 lg:mt-0">
-                    <div className="text-left">
+                    <div className="text-left sm:text-right lg:text-left">
                       <div className="text-lg font-bold text-green-600">
                         {formatPrice(sale.price)} تومان
                       </div>
@@ -449,20 +464,36 @@ export default function SalesClient({ patients }: SalesClientProps) {
                         )}
                       </div>
                     </div>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDelete(sale.id)}
-                      disabled={deleteSale.isPending && deleteSale.variables === sale.id}
-                      className="w-full sm:w-auto"
-                    >
-                      {deleteSale.isPending && deleteSale.variables === sale.id ? (
-                        <Loader2 className="w-4 h-4 ml-1 animate-spin" />
-                      ) : (
-                        <Trash2 className="w-4 h-4 ml-1" />
-                      )}
-                      حذف
-                    </Button>
+
+                    {/* دکمه‌های عملیات */}
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <Link
+                        href={`/dashboard/sales/${sale.id}`}
+                        className="flex-1 sm:flex-none"
+                      >
+                        <Button variant="outline" size="sm" className="w-full">
+                          <Eye className="w-4 h-4 ml-1" />
+                          مشاهده
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDelete(sale.id)}
+                        disabled={
+                          deleteSale.isPending && deleteSale.variables === sale.id
+                        }
+                        className="flex-1 sm:flex-none"
+                      >
+                        {deleteSale.isPending &&
+                        deleteSale.variables === sale.id ? (
+                          <Loader2 className="w-4 h-4 ml-1 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4 ml-1" />
+                        )}
+                        حذف
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}

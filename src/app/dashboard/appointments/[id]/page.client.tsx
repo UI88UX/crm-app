@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { AppointmentStatusBadge } from "@/components/appointments/AppointmentStatusBadge";
 import { AppointmentForm } from "@/components/appointments/AppointmentForm";
-import { toJalaliDisplay, formatJalaliDateTime } from "@/lib/util/jalaliDate";
+import { formatJalaliDateTimeIntl, formatJalaliDateTime } from "@/lib/util/jalaliDate";
 import { APPOINTMENT_TYPE_MAP, type Appointment } from "@/types";
 import { appointmentKeys } from "@/hooks/useAppointments";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ export function AppointmentDetailClient({ id }: AppointmentDetailClientProps) {
   const [showEditForm, setShowEditForm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
-  
+
   const {
     data: appointment,
     isLoading,
@@ -150,67 +150,81 @@ export function AppointmentDetailClient({ id }: AppointmentDetailClientProps) {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* هدر */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">جزئیات نوبت</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-lg sm:text-2xl font-bold truncate">جزئیات نوبت</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             مشاهده و مدیریت اطلاعات نوبت
           </p>
         </div>
-        <Button variant="outline" onClick={() => router.push("/dashboard/appointments")}>
-          <ArrowRight className="w-4 h-4 ml-2" />
-          بازگشت
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => router.push("/dashboard/appointments")}
+          className="shrink-0"
+        >
+          <ArrowRight className="w-4 h-4" />
+          <span className="hidden sm:inline mr-1">بازگشت</span>
         </Button>
       </div>
 
       {/* اطلاعات اصلی */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-xl">
-                {appointment.title || "نوبت بدون عنوان"}
-              </CardTitle>
-              <CardDescription className="mt-1">
-                <AppointmentStatusBadge status={appointment.status} />
-              </CardDescription>
-            </div>
-            <div className="flex gap-2">
-              {appointment.status !== "cancelled" &&
-                appointment.status !== "completed" &&
-                appointment.status !== "no_show" && (
-                  <Button
-                    variant="outline"
-                    className="text-orange-600"
-                    onClick={handleCancel}
-                    disabled={isCanceling}
-                  >
-                    {isCanceling && <Loader2 className="w-4 h-4 ml-2 animate-spin" />}
-                    لغو نوبت
-                  </Button>
-                )}
-              <Button variant="outline" onClick={() => setShowEditForm(true)}>
-                <Edit className="w-4 h-4 ml-2" />
-                ویرایش
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={handleDelete}
-                disabled={isDeleting}
-              >
-                {isDeleting ? (
-                  <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                ) : (
-                  <Trash2 className="w-4 h-4 ml-2" />
-                )}
-                حذف
-              </Button>
-            </div>
+        <CardHeader className="space-y-4">
+          {/* ردیف ۱: عنوان + بج */}
+          <div className="space-y-2">
+            <CardTitle className="text-lg sm:text-xl">
+              {appointment.title || "نوبت بدون عنوان"}
+            </CardTitle>
+            <CardDescription>
+              <AppointmentStatusBadge status={appointment.status} />
+            </CardDescription>
+          </div>
+
+          {/* ردیف ۲: دکمه‌ها */}
+          <div className="flex flex-wrap gap-2">
+            {appointment.status !== "cancelled" &&
+              appointment.status !== "completed" &&
+              appointment.status !== "no_show" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-orange-600 flex-1 sm:flex-none"
+                  onClick={handleCancel}
+                  disabled={isCanceling}
+                >
+                  {isCanceling && <Loader2 className="w-4 h-4 ml-2 animate-spin" />}
+                  لغو نوبت
+                </Button>
+              )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowEditForm(true)}
+              className="flex-1 sm:flex-none"
+            >
+              <Edit className="w-4 h-4 ml-2" />
+              ویرایش
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="flex-1 sm:flex-none"
+            >
+              {isDeleting ? (
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4 ml-2" />
+              )}
+              حذف
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* اطلاعات بیمار */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="w-4 h-4" />
@@ -233,7 +247,7 @@ export function AppointmentDetailClient({ id }: AppointmentDetailClientProps) {
                 تاریخ و زمان
               </div>
               <div className="font-medium">
-                {toJalaliDisplay(appointment.start_time)}
+                {formatJalaliDateTimeIntl(appointment.start_time)}
               </div>
               <div className="text-sm text-muted-foreground">
                 ساعت: {moment(appointment.start_time).format("HH:mm")} -{" "}
@@ -244,7 +258,7 @@ export function AppointmentDetailClient({ id }: AppointmentDetailClientProps) {
                 {Math.round(
                   (new Date(appointment.end_time).getTime() -
                     new Date(appointment.start_time).getTime()) /
-                    (1000 * 60)
+                  (1000 * 60)
                 )}{" "}
                 دقیقه
               </div>

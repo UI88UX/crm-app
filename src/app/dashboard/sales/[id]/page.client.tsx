@@ -10,18 +10,19 @@ import { toast } from "sonner";
 // ✅ ایمپورت React Query
 import { useSale, useDeleteSale } from "@/hooks/useSales";
 
-import { toJalaliDisplay, formatJalaliDateTime } from "@/lib/util/jalaliDate";
-import { 
-  ArrowRight, 
-  Package, 
-  User, 
-  Calendar, 
-  DollarSign, 
-  Trash2, 
-  Loader2, 
+import { formatJalaliDateTimeIntl, formatJalaliDateTime } from "@/lib/util/jalaliDate";
+import {
+  ArrowRight,
+  Package,
+  User,
+  Calendar,
+  DollarSign,
+  Trash2,
+  Loader2,
   Hash,
   FileText,
   Phone,
+  Pencil,
 } from "lucide-react";
 
 interface SaleDetailClientProps {
@@ -32,11 +33,11 @@ export default function SaleDetailClient({ saleId }: SaleDetailClientProps) {
   const router = useRouter();
 
   // ✅ دریافت فروش با React Query
-  const { 
-    data: sale, 
-    isLoading, 
-    isError, 
-    error 
+  const {
+    data: sale,
+    isLoading,
+    isError,
+    error
   } = useSale(saleId);
 
   // ✅ حذف با React Query
@@ -45,7 +46,7 @@ export default function SaleDetailClient({ saleId }: SaleDetailClientProps) {
   const handleDelete = () => {
     if (!sale) return;
     if (!confirm("آیا از حذف این فروش اطمینان دارید؟")) return;
-    
+
     deleteSale.mutate(saleId, {
       onSuccess: () => {
         toast.success("فروش با موفقیت حذف شد!");
@@ -84,7 +85,7 @@ export default function SaleDetailClient({ saleId }: SaleDetailClientProps) {
   }
 
   return (
-    <div className="p-6 space-y-6" dir="rtl">
+    <div className="p-6 space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold">جزئیات فروش</h1>
@@ -92,27 +93,37 @@ export default function SaleDetailClient({ saleId }: SaleDetailClientProps) {
             {sale.patient?.first_name} {sale.patient?.last_name}
           </p>
         </div>
-        <div className="flex gap-2 flex-wrap">
-          <Link href="/dashboard/sales">
-            <Button variant="outline">
-              <ArrowRight className="w-4 h-4 ml-2" />
-              بازگشت به لیست
+
+          <div className="flex gap-2 flex-wrap">
+            <Link href="/dashboard/sales">
+              <Button variant="outline">
+                <ArrowRight className="w-4 h-4 ml-2" />
+                بازگشت به لیست
+              </Button>
+            </Link>
+
+            {/* ✅ دکمه ویرایش */}
+            <Link href={`/dashboard/sales/${saleId}/edit`}>
+              <Button variant="default">
+                <Pencil className="w-4 h-4 ml-2" />
+                ویرایش
+              </Button>
+            </Link>
+
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleteSale.isPending}
+            >
+              {deleteSale.isPending ? (
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4 ml-2" />
+              )}
+              حذف
             </Button>
-          </Link>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={deleteSale.isPending}
-          >
-            {deleteSale.isPending ? (
-              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-            ) : (
-              <Trash2 className="w-4 h-4 ml-2" />
-            )}
-            حذف
-          </Button>
+          </div>
         </div>
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* اطلاعات فروش */}
@@ -141,12 +152,12 @@ export default function SaleDetailClient({ saleId }: SaleDetailClientProps) {
             </div>
             <div>
               <span className="text-sm text-gray-500">تاریخ فروش</span>
-              <p className="font-medium">{toJalaliDisplay(sale.sale_date, "DD MMM YYYY")}</p>
+              <p className="font-medium">{formatJalaliDateTimeIntl(sale.sale_date)}</p>
             </div>
             {sale.warranty_expiry && (
               <div>
                 <span className="text-sm text-gray-500">انقضای گارانتی</span>
-                <p className="font-medium">{toJalaliDisplay(sale.warranty_expiry, "DD MMM YYYY")}</p>
+                <p className="font-medium">{formatJalaliDateTimeIntl(sale.warranty_expiry)}</p>
               </div>
             )}
             {sale.notes && (

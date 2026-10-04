@@ -6,8 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
+
 ) {
   try {
+    const { id } = await params; 
     const supabase = await createClient();
     const tenantId = await getCurrentTenantId(supabase);
 
@@ -30,7 +32,7 @@ export async function GET(
           phone
         )
       `)
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("tenant_id", tenantId)
       .is("deleted_at", null)
       .single();
@@ -64,6 +66,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
     const tenantId = await getCurrentTenantId(supabase);
 
@@ -77,12 +80,12 @@ export async function PUT(
     const body = await request.json();
 
     // حذف فیلدهای غیرمجاز برای به‌روزرسانی
-    const { patient, created_at, created_by, ...updateData } = body;
+    const { patient, created_at, created_by, tenant_id, ...updateData } = body;
 
     const { data, error } = await supabase
       .from("sales")
       .update(updateData)
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("tenant_id", tenantId)
       .is("deleted_at", null)
       .select(`
@@ -132,6 +135,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
     const tenantId = await getCurrentTenantId(supabase);
 
@@ -147,7 +151,7 @@ export async function DELETE(
       .update({
         deleted_at: new Date().toISOString()
       })
-      .eq("id", params.id)
+      .eq("id", id)
       .eq("tenant_id", tenantId)
       .is("deleted_at", null);
 
@@ -158,7 +162,7 @@ export async function DELETE(
       );
     }
 
-    return NextResponse.json({ data: { success: true, id: params.id }, error: null });
+    return NextResponse.json({ data: { success: true, id: id }, error: null });
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json(

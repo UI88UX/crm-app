@@ -16,7 +16,7 @@ import { getPatientFiles, type PatientFile } from "@/src/lib/storage/patientFile
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import { formatJalaliDateTime, fromJalaliToDate, toJalaliDisplay, toJalali } from "@/src/lib/util/jalaliDate";
+import { formatJalaliDateTime, formatJalaliDateTimeIntl } from "@/src/lib/util/jalaliDate";
 import moment from 'moment-jalaali';
 import { AppointmentStatusBadge } from "@/components/appointments/AppointmentStatusBadge";
 import { APPOINTMENT_TYPE_MAP } from "@/types";
@@ -929,7 +929,7 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
                     <div className="flex items-center gap-4 text-sm flex-wrap">
                       <span className="text-gray-600 flex items-center gap-1">
                         <CalendarIcon className="w-3 h-3" />
-                        تاریخ فروش: {toJalaliDisplay(sale.sale_date, "DD MMM YYYY")}
+                        تاریخ فروش: {formatJalaliDateTimeIntl(sale.sale_date)}
                       </span>
                       <span className="text-gray-600 flex items-center gap-1">
                         <DollarSign className="w-3 h-3" />
@@ -938,7 +938,7 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
                       {sale.warranty_expiry && (
                         <span className="text-gray-600 flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          گارانتی تا: {toJalaliDisplay(sale.warranty_expiry, "DD MMM YYYY")}
+                          گارانتی تا: {formatJalaliDateTimeIntl(sale.warranty_expiry)}
                         </span>
                       )}
                     </div>
@@ -1017,7 +1017,7 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
                     <div className="flex items-center gap-4 text-sm flex-wrap">
                       <span className="text-gray-600 flex items-center gap-1">
                         <CalendarIcon className="w-3 h-3" />
-                        {toJalaliDisplay(appointment.start_time)}
+                        {formatJalaliDateTimeIntl(appointment.start_time)}
                       </span>
                       <span className="text-gray-600 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
