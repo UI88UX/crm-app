@@ -9,6 +9,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // اضافه کردن /admin به مسیرهای محافظت‌شده
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)",
+    "/((?!_next/static|_next/image|icon.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)",
   ],
 };
