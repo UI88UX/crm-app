@@ -11,6 +11,7 @@ import {
   Plus,
   AlertCircle,
   RefreshCw,
+  Loader2,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -24,11 +25,13 @@ import { SubscriptionStatus } from '@/components/dashboard/SubscriptionStatus';
 import { SalesChart } from '@/components/dashboard/SalesChart';
 
 import { useDashboardStats } from '@/hooks/useDashboardStats';
+import { useNavigationLoading } from '@/hooks/useNavigationLoading';
 
 export default function DashboardClient() {
   const [mounted, setMounted] = useState(false);
   const { data, isLoading, isError, error, refetch, isFetching } =
-    useDashboardStats();
+  useDashboardStats();
+  const { isNavigating, navigate } = useNavigationLoading();
 
   useEffect(() => {
     setMounted(true);
@@ -81,12 +84,18 @@ export default function DashboardClient() {
               در حال بروزرسانی...
             </span>
           )}
-          <Link href="/dashboard/patients/new">
-            <Button>
+          <Button
+            size="sm"
+            onClick={() => navigate("/dashboard/patients/new")}
+            disabled={isNavigating}
+          >
+            {isNavigating ? (
+              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+            ) : (
               <Plus className="w-4 h-4 ml-2" />
-              بیمار جدید
-            </Button>
-          </Link>
+            )}
+            بیمار جدید
+          </Button>
         </div>
       </div>
 

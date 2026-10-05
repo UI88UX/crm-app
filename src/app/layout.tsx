@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning className={vazir.variable}>
-      <body suppressHydrationWarning className="font-vazir antialiased">
+      <body suppressHydrationWarning className="font-vazir antialiased overflow-hidden">
         <QueryProvider>
           <Providers>
             <ClientBody>

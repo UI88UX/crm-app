@@ -29,16 +29,20 @@ import {
   Filter,
   X,
   PhoneCall,
+  Loader2,
+  Plus,
 } from "lucide-react";
 
 import { usePatients, useDeletePatient } from "@/hooks/usePatients";
 import { CallResultBadge } from "@/components/call-followups/CallResultBadge";
 import { CALL_RESULTS, type CallResult } from "@/types";
+import { useNavigationLoading } from "@/hooks/useNavigationLoading";
 
 export default function PatientsPageClient() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { isNavigating, navigate } = useNavigationLoading();
 
   // خواندن فیلترها از URL
   const searchTerm = searchParams.get("q") || "";
@@ -170,12 +174,20 @@ export default function PatientsPageClient() {
             />
             {isFetching ? "در حال بارگذاری..." : "بروزرسانی"}
           </Button>
-          <Link href="/dashboard/patients/new">
-            <Button size="sm">
-              <UserPlus className="w-4 h-4 ml-2" />
-              بیمار جدید
-            </Button>
-          </Link>
+
+          <Button
+            size="sm"
+            onClick={() => navigate("/dashboard/patients/new")}
+            disabled={isNavigating}
+          >
+            {isNavigating ? (
+              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+            ) : (
+              <Plus className="w-4 h-4 ml-2" />
+            )}
+            بیمار جدید
+          </Button>
+
         </div>
       </div>
 

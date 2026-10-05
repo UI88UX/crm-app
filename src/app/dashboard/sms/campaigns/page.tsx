@@ -21,6 +21,7 @@ import {
   formatJalaliDateIntl,
   toPersianNumber,
 } from "@/lib/util/jalaliDate";
+import { useNavigationLoading } from "@/hooks/useNavigationLoading";
 
 const statusColors: Record<string, string> = {
   draft: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
@@ -46,6 +47,7 @@ export default function CampaignsPage() {
   const { data: campaigns = [], isLoading, isError, error, refetch } = useCampaigns();
   const sendCampaign = useSendCampaign();
   const deleteCampaign = useDeleteCampaign();
+  const { isNavigating, navigate } = useNavigationLoading();
 
   const handleSendCampaign = (id: string) => {
     if (!confirm("آیا از ارسال این کمپین اطمینان دارید؟")) return;
@@ -118,10 +120,15 @@ export default function CampaignsPage() {
           </p>
         </div>
         <Button
-          onClick={() => router.push("/dashboard/sms/campaigns/new")}
-          className="w-full sm:w-auto"
+        size="sm"
+          onClick={() => navigate("/dashboard/sms/campaigns/new")}
+          disabled={isNavigating}
         >
-          <Plus className="w-4 h-4 ml-2" />
+          {isNavigating ? (
+              <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+            ) : (
+              <Plus className="w-4 h-4 ml-2" />
+            )}
           کمپین جدید
         </Button>
       </div>
