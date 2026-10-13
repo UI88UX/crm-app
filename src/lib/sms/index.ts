@@ -10,7 +10,7 @@ function getProvider(): MelipayamakProvider {
     const username = process.env.MELIPAYAMAK_USERNAME;
     const password = process.env.MELIPAYAMAK_PASSWORD;
     const from = process.env.MELIPAYAMAK_FROM;
-    const bodyId = parseInt(process.env.MELIPAYAMAK_BODY_ID || '521180');
+    const defaultBodyId = parseInt(process.env.MELIPAYAMAK_BODY_ID_DEFAULT || '521180');
 
     if (!username || !password || !from) {
       throw new Error(
@@ -18,22 +18,22 @@ function getProvider(): MelipayamakProvider {
       );
     }
 
-    instance = new MelipayamakProvider(username, password, from, bodyId);
+    instance = new MelipayamakProvider(username, password, from, defaultBodyId);
   }
   return instance;
 }
 
 /**
- * ارسال پیامک با یک متغیر (برای الگوی تست)
+ * ارسال پیامک تک‌متغیره
  */
 export async function sendSms(
   phone: string,
-  code: string  // ✅ فقط یک متغیر
+  code: string,
+  bodyId?: number
 ): Promise<SmsSendResult> {
   try {
     const provider = getProvider();
-    // ✅ فقط یک متغیر به آرایه اضافه می‌کنیم
-    return await provider.sendWithArray(phone, [code]);
+    return await provider.sendWithArray(phone, [code], bodyId);
   } catch (error) {
     return {
       success: false,
@@ -43,15 +43,16 @@ export async function sendSms(
 }
 
 /**
- * ارسال با آرایه (برای آینده که الگوی اصلی تایید شود)
+ * ارسال پیامک چندمتغیره
  */
 export async function sendSmsWithArray(
   phone: string,
-  textArray: string[]
+  textArray: string[],
+  bodyId?: number
 ): Promise<SmsSendResult> {
   try {
     const provider = getProvider();
-    return await provider.sendWithArray(phone, textArray);
+    return await provider.sendWithArray(phone, textArray, bodyId);
   } catch (error) {
     return {
       success: false,

@@ -169,25 +169,25 @@ Then fill in the values:
 ```env
 # ─── Supabase ────────────────────────────────────────────────
 # Project URL from Supabase Dashboard → Settings → API
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_URL=supabase_project_url
 
 # Public anon key — safe to expose to the browser (RLS protects data)
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=supabase_anon_key
 
 # ⚠️ Server-only. Never expose this to the client.
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_SERVICE_ROLE_KEY=service_role_key
 
 # ─── App ─────────────────────────────────────────────────────
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 # ─── SMS (Melipayamak) ───────────────────────────────────────
-MELIPAYAMAK_USERNAME=your_username
-MELIPAYAMAK_PASSWORD=your_password
-MELIPAYAMAK_FROM=your_sender_number
-MELIPAYAMAK_BODY_ID=your_template_id
+MELIPAYAMAK_USERNAME=username
+MELIPAYAMAK_PASSWORD=password
+MELIPAYAMAK_FROM=sender_number
+MELIPAYAMAK_BODY_ID=template_id
 
 # ─── Internal ────────────────────────────────────────────────
-BACKUP_CRON_SECRET=your_random_secret
+BACKUP_CRON_SECRET=random_secret
 ```
 
 ### Variable reference

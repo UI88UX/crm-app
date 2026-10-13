@@ -5,75 +5,44 @@ import { BaseSmsProvider, SmsSendResult } from './base';
 export class MelipayamakProvider extends BaseSmsProvider {
   private username: string;
   private password: string;
-  private bodyId: number;
+  private defaultBodyId: number;
 
-  constructor(username: string, password: string, from: string, bodyId: number = 521180) {
+  constructor(
+    username: string,
+    password: string,
+    from: string,
+    defaultBodyId: number = 554139
+  ) {
     super(from);
     this.username = username;
     this.password = password;
-    this.bodyId = bodyId;
+    this.defaultBodyId = defaultBodyId;
   }
 
-  async send(phone: string, message: string): Promise<SmsSendResult> {
-    try {
-      const normalizedPhone = this.normalizePhone(phone);
-
-      let url = `http://api.payamak-panel.com/post/Send.asmx/SendByBaseNumber2?`;
-      url += `username=${encodeURIComponent(this.username)}`;
-      url += `&password=${encodeURIComponent(this.password)}`;
-      url += `&to=${encodeURIComponent(normalizedPhone)}`;
-      url += `&bodyId=${this.bodyId}`; // ✅ bodyId = 521180
-
-      const textArray = [message];
-      textArray.forEach((value, index) => {
-        url += `&text[${index}]=${encodeURIComponent(value)}`;
-      });
-
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'text/xml; charset=utf-8',
-        },
-      });
-
-      const text = await response.text();
-
-      const match = text.match(/<string[^>]*>(.*?)<\/string>/);
-
-      if (!response.ok || !match) {
-        return {
-          success: false,
-          error: 'خطا در ارسال پیامک',
-          providerResponse: text,
-        };
-      }
-
-      const result = match[1].trim();
-
-      if (/^\d+$/.test(result)) {
-        return {
-          success: true,
-          messageId: result,
-          providerResponse: text,
-        };
-      }
-
-      return {
-        success: false,
-        error: result || 'خطا در ارسال پیامک',
-        providerResponse: text,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'خطای ناشناخته',
-      };
-    }
+  /**
+   * ارسال پیامک با یک متغیر (برای پیامک‌های تک‌متغیره)
+   * bodyId: اگر داده شود، از آن استفاده می‌شود؛ در غیر این صورت defaultBodyId
+   */
+  async send(
+    phone: string,
+    message: string,
+    bodyId?: number
+  ): Promise<SmsSendResult> {
+    return this.sendWithArray(phone, [message], bodyId);
   }
 
-  async sendWithArray(phone: string, textArray: string[]): Promise<SmsSendResult> {
+  /**
+   * ارسال پیامک با آرایه‌ای از متغیرها
+   * ترتیب آرایه باید مطابق {0}, {1}, {2}, ... در الگوی پنل ملی‌پیامک باشد
+   */
+  async sendWithArray(
+    phone: string,
+    textArray: string[],
+    bodyId?: number
+  ): Promise<SmsSendResult> {
     try {
       const normalizedPhone = this.normalizePhone(phone);
+      const effectiveBodyId = bodyId ?? this.defaultBodyId;
 
       // ✅ ترکیب آرایه با جداکننده ;
       const textString = textArray.join(';');
@@ -82,8 +51,8 @@ export class MelipayamakProvider extends BaseSmsProvider {
       url += `username=${encodeURIComponent(this.username)}`;
       url += `&password=${encodeURIComponent(this.password)}`;
       url += `&to=${encodeURIComponent(normalizedPhone)}`;
-      url += `&bodyId=${this.bodyId}`;
-      url += `&text=${encodeURIComponent(textString)}`; // ✅ یک رشته با ;
+      url += `&bodyId=${effectiveBodyId}`;
+      url += `&text=${encodeURIComponent(textString)}`;
 
       const response = await fetch(url, { method: 'GET' });
       const text = await response.text();

@@ -1,7 +1,7 @@
 // src/lib/sms/queue.ts
 
 import { createClient } from '@/lib/supabase/server';
-import { sendSms } from './index';
+import { sendSms, sendSmsWithArray } from './index';
 import { SmsQueue, SmsQueueStatus, SmsQueueType } from '@/types/messaging';
 
 export interface AddToQueueParams {
@@ -81,91 +81,104 @@ export async function addToQueue(params: AddToQueueParams): Promise<{ success: b
  * پردازش یک آیتم صف
  */
 export async function processQueueItem(queueId: string): Promise<{ success: boolean; error?: string }> {
-    try {
-      const supabase = await createClient();
-  
-      const { data: queueItem, error: fetchError } = await supabase
+  try {
+    const supabase = await createClient();
+
+    const { data: queueItem, error: fetchError } = await supabase
+      .from('sms_queue')
+      .select('*')
+      .eq('id', queueId)
+      .eq('status', 'pending')
+      .single();
+
+    if (fetchError || !queueItem) {
+      return { success: false, error: 'آیتم صف یافت نشد یا قبلاً پردازش شده است' };
+    }
+
+    // بررسی ساعات مجاز ارسال
+    const now = new Date();
+    const hour = now.getHours();
+    if (hour < 9 || hour > 20) {
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(9, 0, 0, 0);
+
+      await supabase
         .from('sms_queue')
-        .select('*')
-        .eq('id', queueId)
-        .eq('status', 'pending')
-        .single();
-  
-      if (fetchError || !queueItem) {
-        return { success: false, error: 'آیتم صف یافت نشد یا قبلاً پردازش شده است' };
-      }
-  
-      // بررسی ساعات مجاز ارسال
-      const now = new Date();
-      const hour = now.getHours();
-      if (hour < 9 || hour > 20) {
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(9, 0, 0, 0);
-  
-        await supabase
-          .from('sms_queue')
-          .update({ scheduled_at: tomorrow.toISOString() })
-          .eq('id', queueId);
-  
-        return { success: false, error: 'ساعت ارسال مجاز نیست، به فردا موکول شد' };
-      }
-  
-      // ✅ ارسال با یک متغیر (برای الگوی تست)
-      // اگر محتوای پیام یک کد است، آن را به‌عنوان متغیر ارسال کن
-      const sendResult = await sendSms(queueItem.phone, queueItem.content);
-  
-      // ثبت لاگ
-      await supabase.from('sms_logs').insert({
-        tenant_id: queueItem.tenant_id,
-        queue_id: queueItem.id,
-        patient_id: queueItem.patient_id,
-        phone: queueItem.phone,
-        message: queueItem.content,
-        type: queueItem.type,
-        provider: 'melipayamak',
+        .update({ scheduled_at: tomorrow.toISOString() })
+        .eq('id', queueId);
+
+      return { success: false, error: 'ساعت ارسال مجاز نیست، به فردا موکول شد' };
+    }
+
+    // ✅ ارسال با یک متغیر (برای الگوی تست)
+    // اگر محتوای پیام یک کد است، آن را به‌عنوان متغیر ارسال کن
+    let sendResult;
+
+    const variables = queueItem.variables as Record<string, any> | null;
+
+    if (variables && Array.isArray(variables._array) && variables._array.length > 0) {
+      // ارسال آرایه‌ی متغیرها به provider
+      sendResult = await sendSmsWithArray(
+        queueItem.phone,
+        variables._array.map((v: any) => String(v ?? ''))
+      );
+    } else {
+      // fallback: ارسال مستقیم متن (برای پیامک‌های ساده)
+      sendResult = await sendSms(queueItem.phone, queueItem.content);
+    }
+
+    // ثبت لاگ
+    await supabase.from('sms_logs').insert({
+      tenant_id: queueItem.tenant_id,
+      queue_id: queueItem.id,
+      patient_id: queueItem.patient_id,
+      phone: queueItem.phone,
+      message: queueItem.content,
+      type: queueItem.type,
+      provider: 'melipayamak',
+      status: sendResult.success ? 'sent' : 'failed',
+      error: sendResult.error || null,
+      provider_response: sendResult.providerResponse || null,
+      cost: sendResult.success ? 150 : 0,
+    });
+
+    // بروزرسانی وضعیت صف
+    await supabase
+      .from('sms_queue')
+      .update({
         status: sendResult.success ? 'sent' : 'failed',
-        error: sendResult.error || null,
-        provider_response: sendResult.providerResponse || null,
-        cost: sendResult.success ? 150 : 0,
-      });
-  
-      // بروزرسانی وضعیت صف
+        provider: 'melipayamak',
+        provider_message_id: sendResult.messageId || null,
+        sent_at: sendResult.success ? new Date().toISOString() : null,
+        attempts: queueItem.attempts + 1,
+        last_error: sendResult.error || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', queueId);
+
+    // تلاش مجدد 
+    if (!sendResult.success && queueItem.attempts + 1 < queueItem.max_attempts) {
+      const retryDelay = 60 * 60 * 1000;
+      const retryTime = new Date(Date.now() + retryDelay);
+
       await supabase
         .from('sms_queue')
         .update({
-          status: sendResult.success ? 'sent' : 'failed',
-          provider: 'melipayamak',
-          provider_message_id: sendResult.messageId || null,
-          sent_at: sendResult.success ? new Date().toISOString() : null,
-          attempts: queueItem.attempts + 1,
-          last_error: sendResult.error || null,
-          updated_at: new Date().toISOString(),
+          status: 'pending',
+          scheduled_at: retryTime.toISOString(),
         })
         .eq('id', queueId);
-  
-      // تلاش مجدد 
-      if (!sendResult.success && queueItem.attempts + 1 < queueItem.max_attempts) {
-        const retryDelay = 60 * 60 * 1000;
-        const retryTime = new Date(Date.now() + retryDelay);
-  
-        await supabase
-          .from('sms_queue')
-          .update({
-            status: 'pending',
-            scheduled_at: retryTime.toISOString(),
-          })
-          .eq('id', queueId);
-  
-        return { success: false, error: `تلاش مجدد در ${retryTime.toISOString()}` };
-      }
-  
-      return { success: sendResult.success, error: sendResult.error };
-    } catch (error) {
-      console.error('Error in processQueueItem:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'خطای ناشناخته' };
+
+      return { success: false, error: `تلاش مجدد در ${retryTime.toISOString()}` };
     }
+
+    return { success: sendResult.success, error: sendResult.error };
+  } catch (error) {
+    console.error('Error in processQueueItem:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'خطای ناشناخته' };
   }
+}
 
 
 /**

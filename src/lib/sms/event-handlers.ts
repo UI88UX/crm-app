@@ -10,7 +10,7 @@ import moment from 'moment-jalaali';
  */
 async function getSmsSettings(tenantId: string) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
     .from('sms_settings')
     .select('*')
@@ -35,7 +35,7 @@ async function getSmsSettings(tenantId: string) {
  */
 async function getPatientInfo(patientId: string) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
     .from('patients')
     .select('id, first_name, last_name, phone, national_code')
@@ -54,7 +54,7 @@ async function getPatientInfo(patientId: string) {
  */
 async function getAppointmentInfo(appointmentId: string) {
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
     .from('appointments')
     .select(`
@@ -74,11 +74,15 @@ async function getAppointmentInfo(appointmentId: string) {
 /**
  * رویداد: نوبت ثبت شد
  */
+// src/lib/sms/event-handlers.ts
+
+/**
+ * رویداد: نوبت ثبت شد
+ */
 export async function onAppointmentCreated(appointmentId: string) {
   try {
     const supabase = await createClient();
-    
-    // دریافت اطلاعات نوبت
+
     const appointment = await getAppointmentInfo(appointmentId);
     if (!appointment || !appointment.patient) {
       console.error('Appointment or patient not found:', appointmentId);
@@ -88,52 +92,53 @@ export async function onAppointmentCreated(appointmentId: string) {
     const tenantId = appointment.tenant_id;
     const settings = await getSmsSettings(tenantId);
 
-    // اگر سیستم پیامک غیرفعال است
     if (!settings.is_enabled) {
       console.log('SMS system is disabled for tenant:', tenantId);
       return;
     }
 
     const patient = appointment.patient;
-    const clinicName = settings.clinic_name || 'مطب';
 
     // تبدیل تاریخ به شمسی
     const jalaliDate = toJalali(appointment.start_time);
     const time = moment(appointment.start_time).format('HH:mm');
+    const dateTime = `${jalaliDate} ساعت ${time}`;
 
-    // ✅ ارسال پیامک تأیید نوبت (با یک متغیر - کد تأیید)
-    // چون الگوی تست فقط یک متغیر دارد، از کد تأیید استفاده می‌کنیم
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-    
+    // ✅ متغیرهای الگوی 521180 به ترتیب:
+    // {0} = first_name
+    // {1} = last_name
+    // {2} = dateTime
+    const templateVariables = [
+      patient.first_name || '',
+      patient.last_name || '',
+      dateTime,
+    ];
+
+    // متن برای ذخیره در دیتابیس (نمایشی)
+    const displayContent = `جناب آقای/خانم ${patient.first_name} ${patient.last_name} نوبت شما برای روز ${dateTime} ثبت شد. لطفا ۱۵ دقیقه قبل از موعد مقرر حاضر شوید.\ncrm-app-zeta-peach.vercel.app`;
+
     await addToQueue({
       tenant_id: tenantId,
       patient_id: patient.id,
       phone: patient.phone,
-      content: verificationCode, // فقط یک متغیر (کد تأیید)
+      content: displayContent,        // ← برای نمایش در UI
       type: 'appointment_confirmation',
       reference_id: appointmentId,
       reference_type: 'appointments',
       priority: 2,
+      variables: {
+        // ✅ آرایه‌ی مرتب برای provider
+        _array: templateVariables,
+        first_name: patient.first_name || '',
+        last_name: patient.last_name || '',
+        datetime: dateTime,
+      },
     });
-
-    // ذخیره کد تأیید در دیتابیس (برای پیگیری)
-    await supabase
-      .from('appointments')
-      .update({
-        metadata: {
-          ...appointment.metadata,
-          sms_verification_code: verificationCode,
-          sms_sent_at: new Date().toISOString(),
-        }
-      })
-      .eq('id', appointmentId);
 
     console.log(`✅ Appointment confirmation SMS queued for ${patient.first_name} ${patient.last_name}`);
 
-    // ⏰ برنامه‌ریزی یادآوری ۲۴ ساعت قبل
+    // ⏰ یادآوری ۲۴ ساعت و ۲ ساعت
     await scheduleAppointmentReminder(appointmentId);
-
-    // ⏰ برنامه‌ریزی یادآوری ۲ ساعت قبل
     await scheduleAppointmentReminder2h(appointmentId);
 
   } catch (error) {
@@ -148,7 +153,7 @@ async function scheduleAppointmentReminder(appointmentId: string) {
   try {
     const supabase = await createClient();
     const appointment = await getAppointmentInfo(appointmentId);
-    
+
     if (!appointment || !appointment.patient) return;
 
     const tenantId = appointment.tenant_id;
@@ -208,7 +213,7 @@ async function scheduleAppointmentReminder2h(appointmentId: string) {
   try {
     const supabase = await createClient();
     const appointment = await getAppointmentInfo(appointmentId);
-    
+
     if (!appointment || !appointment.patient) return;
 
     const tenantId = appointment.tenant_id;
