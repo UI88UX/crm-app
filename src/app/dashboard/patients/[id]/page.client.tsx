@@ -53,8 +53,14 @@ import {
   Calendar as CalendarIcon,
   Hash,
   Info,
-  Package
+  Package,
+  Activity
 } from "lucide-react";
+
+// ✅ ایمپورت کامپوننت تست‌های شنوایی
+import { PatientHearingTestsTab } from "@/components/patients/PatientHearingTestsTab";
+// ✅ ایمپورت Tabs از Shadcn/UI
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Patient {
   id: string;
@@ -93,6 +99,7 @@ interface PatientEditClientProps {
   patientId: string;
   initialPatient?: Patient | null;
 }
+
 export default function PatientEditClient({ patientId, initialPatient = null }: PatientEditClientProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -169,7 +176,6 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
     }
 
     try {
-      // تاریخ میلادی را به شمسی تبدیل کن برای نمایش در DatePicker
       const m = moment(birthDate);
       if (m.isValid()) {
         const jalaliDate = m.format('jYYYY/jMM/jDD');
@@ -185,7 +191,6 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
   useEffect(() => {
     if (formData.birth_date) {
       try {
-        // تبدیل تاریخ میلادی به شمسی برای نمایش در DatePicker
         const m = moment(formData.birth_date);
         if (m.isValid()) {
           const jalaliDate = m.format('jYYYY/jMM/jDD');
@@ -206,8 +211,6 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
     if (initialPatient) {
       hasLoadedRef.current = true;
       setFormData(initialPatient);
-
-      // تنظیم birthDatePicker از تاریخ تولد
       setBirthDateFromDate(initialPatient.birth_date);
       return;
     }
@@ -219,8 +222,6 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
           if (result.data) {
             hasLoadedRef.current = true;
             setFormData(result.data);
-
-            // تنظیم birthDatePicker از تاریخ تولد
             setBirthDateFromDate(result.data.birth_date);
           } else if (result.error) {
             setError(result.error);
@@ -316,17 +317,11 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
     }
   };
 
-  // تغییر تاریخ تولد
-  // ✅ تابع اصلاح شده برای handleBirthDateChange
+  // ✅ تغییر تاریخ تولد
   const handleBirthDateChange = (date: any) => {
     if (date && date.isValid) {
-      // روش صحیح برای دریافت تاریخ میلادی با در نظر گرفتن منطقه زمانی
       const gregorianDate = date.toDate();
-
-      // تنظیم ساعت به 12:00:00 برای جلوگیری از مشکل منطقه زمانی
       gregorianDate.setHours(12, 0, 0, 0);
-
-      // استفاده از toISOString و سپس گرفتن فقط بخش تاریخ
       const isoDate = gregorianDate.toISOString().split('T')[0];
 
       console.log('Selected Jalali:', date.format('YYYY/MM/DD'));
@@ -381,7 +376,6 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
           toast.error(result.error);
         }
       } else if (result.data) {
-        // به‌روزرسانی formData با داده‌های جدید
         setFormData({
           first_name: result.data.first_name || '',
           last_name: result.data.last_name || '',
@@ -399,7 +393,6 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
           notes: result.data.notes || null,
         });
 
-        // ✅ به‌روزرسانی birthDatePicker با تاریخ جدید
         if (result.data.birth_date) {
           try {
             const m = moment(result.data.birth_date);
@@ -541,7 +534,6 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
             </Button>
           </Link>
 
-          {/* دکمه حذف دائم - فقط بعد از بارگذاری کامل نمایش داده شود */}
           {!isCheckingAdmin && isSuperAdmin && (
             <Button
               variant="destructive"
@@ -615,735 +607,759 @@ export default function PatientEditClient({ patientId, initialPatient = null }: 
         </Card>
       )}
 
-      {/* فرم اطلاعات بیمار */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="w-5 h-5" />
+      {/* ============================================================
+          ✅ Tabs اصلی صفحه
+          ============================================================ */}
+      <Tabs defaultValue="info" className="w-full" dir='rtl'>
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsTrigger value="info" className="flex items-center gap-2">
+            <User className="w-4 h-4" />
             اطلاعات بیمار
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* اطلاعات شخصی */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="first_name" className="flex items-center gap-2">
-                  نام <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="first_name"
-                  name="first_name"
-                  value={formData.first_name || ""}
-                  onChange={handleChange}
-                  placeholder="نام"
-                  required
-                  className={errors.first_name ? "border-red-500" : ""}
-                />
-                {errors.first_name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.first_name[0]}</p>
-                )}
-              </div>
+          </TabsTrigger>
+          <TabsTrigger value="hearing-tests" className="flex items-center gap-2">
+            <Activity className="w-4 h-4" />
+            تست‌های شنوایی
+          </TabsTrigger>
+        </TabsList>
 
-              <div>
-                <Label htmlFor="last_name" className="flex items-center gap-2">
-                  نام خانوادگی <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="last_name"
-                  name="last_name"
-                  value={formData.last_name || ""}
-                  onChange={handleChange}
-                  placeholder="نام خانوادگی"
-                  required
-                  className={errors.last_name ? "border-red-500" : ""}
-                />
-                {errors.last_name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
-                )}
-              </div>
+        {/* ------------------------------------------------ */}
+        {/* تب ۱: اطلاعات بیمار */}
+        {/* ------------------------------------------------ */}
+        <TabsContent value="info" className="space-y-6 mt-6 text-foreground">
+          {/* فرم اطلاعات بیمار */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="w-5 h-5" />
+                اطلاعات بیمار
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* اطلاعات شخصی */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="first_name" className="flex items-center gap-2">
+                      نام <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="first_name"
+                      name="first_name"
+                      value={formData.first_name || ""}
+                      onChange={handleChange}
+                      placeholder="نام"
+                      required
+                      className={errors.first_name ? "border-red-500" : ""}
+                    />
+                    {errors.first_name && (
+                      <p className="text-red-500 text-sm mt-1">{errors.first_name[0]}</p>
+                    )}
+                  </div>
 
-              <div>
-                <Label htmlFor="national_code" className="flex items-center gap-2">
-                  کد ملی <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="national_code"
-                  name="national_code"
-                  value={formData.national_code || ""}
-                  onChange={handleChange}
-                  placeholder="کد ملی ۱۰ رقمی"
-                  maxLength={10}
-                  required
-                  className={errors.national_code ? "border-red-500" : ""}
-                />
-                {errors.national_code && (
-                  <p className="text-red-500 text-sm mt-1">{errors.national_code[0]}</p>
-                )}
-              </div>
+                  <div>
+                    <Label htmlFor="last_name" className="flex items-center gap-2">
+                      نام خانوادگی <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="last_name"
+                      name="last_name"
+                      value={formData.last_name || ""}
+                      onChange={handleChange}
+                      placeholder="نام خانوادگی"
+                      required
+                      className={errors.last_name ? "border-red-500" : ""}
+                    />
+                    {errors.last_name && (
+                      <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
+                    )}
+                  </div>
 
-              <div>
-                <Label htmlFor="phone" className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  تلفن همراه <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  value={formData.phone || ""}
-                  onChange={handleChange}
-                  placeholder="۰۹۱۲۳۴۵۶۷۸۹"
-                  required
-                  className={errors.phone ? "border-red-500" : ""}
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
-                )}
-              </div>
+                  <div>
+                    <Label htmlFor="national_code" className="flex items-center gap-2">
+                      کد ملی <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="national_code"
+                      name="national_code"
+                      value={formData.national_code || ""}
+                      onChange={handleChange}
+                      placeholder="کد ملی ۱۰ رقمی"
+                      maxLength={10}
+                      required
+                      className={errors.national_code ? "border-red-500" : ""}
+                    />
+                    {errors.national_code && (
+                      <p className="text-red-500 text-sm mt-1">{errors.national_code[0]}</p>
+                    )}
+                  </div>
 
-              <div>
-                <Label htmlFor="email" className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  ایمیل
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email || ""}
-                  onChange={handleChange}
-                  placeholder="example@email.com"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
-                )}
-              </div>
+                  <div>
+                    <Label htmlFor="phone" className="flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      تلفن همراه <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      value={formData.phone || ""}
+                      onChange={handleChange}
+                      placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                      required
+                      className={errors.phone ? "border-red-500" : ""}
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+                    )}
+                  </div>
 
-              <div>
-                <Label htmlFor="birth_date" className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  تاریخ تولد
-                </Label>
-                <DatePicker
-                  calendar={persian}
-                  locale={persian_fa}
-                  value={birthDatePicker || ""}
-                  onChange={handleBirthDateChange}
-                  format="YYYY/MM/DD"
-                  placeholder="انتخاب تاریخ تولد"
-                  className="w-full p-2 border rounded-md mt-1 bg-white dark:bg-gray-800"
-                  containerClassName="w-full"
-                  inputClass="w-full p-2 border rounded-md bg-white dark:bg-gray-800"
-                />
-                {formData.birth_date && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    میلادی: {formData.birth_date}
-                  </p>
-                )}
-              </div>
+                  <div>
+                    <Label htmlFor="email" className="flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      ایمیل
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email || ""}
+                      onChange={handleChange}
+                      placeholder="example@email.com"
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+                    )}
+                  </div>
 
-              <div>
-                <Label htmlFor="gender" className="flex items-center gap-2">
-                  <UserCircle className="w-4 h-4" />
-                  جنسیت
-                </Label>
-                <select
-                  id="gender"
-                  name="gender"
-                  value={formData.gender || ""}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-md mt-1 bg-white"
-                >
-                  <option value="">انتخاب جنسیت...</option>
-                  <option value="male">مرد</option>
-                  <option value="female">زن</option>
-                  <option value="other">سایر</option>
-                </select>
-              </div>
-            </div>
+                  <div>
+                    <Label htmlFor="birth_date" className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      تاریخ تولد
+                    </Label>
+                    <DatePicker
+                      calendar={persian}
+                      locale={persian_fa}
+                      value={birthDatePicker || ""}
+                      onChange={handleBirthDateChange}
+                      format="YYYY/MM/DD"
+                      placeholder="انتخاب تاریخ تولد"
+                      className="w-full p-2 border rounded-md mt-1 bg-white dark:bg-gray-800"
+                      containerClassName="w-full"
+                      inputClass="w-full p-2 border rounded-md bg-white dark:bg-gray-800"
+                    />
+                    {formData.birth_date && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        میلادی: {formData.birth_date}
+                      </p>
+                    )}
+                  </div>
 
-            {/* آدرس */}
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
-                آدرس
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="address" className="flex items-center gap-2">
-                    <Home className="w-4 h-4" />
+                  <div>
+                    <Label htmlFor="gender" className="flex items-center gap-2">
+                      <UserCircle className="w-4 h-4" />
+                      جنسیت
+                    </Label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      value={formData.gender || ""}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-md mt-1 bg-white"
+                    >
+                      <option value="">انتخاب جنسیت...</option>
+                      <option value="male">مرد</option>
+                      <option value="female">زن</option>
+                      <option value="other">سایر</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* آدرس */}
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <MapPin className="w-5 h-5" />
                     آدرس
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="address" className="flex items-center gap-2">
+                        <Home className="w-4 h-4" />
+                        آدرس
+                      </Label>
+                      <textarea
+                        id="address"
+                        name="address"
+                        value={formData.address || ""}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded-md mt-1 min-h-[80px]"
+                        placeholder="آدرس کامل"
+                      />
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="city">شهر</Label>
+                        <Input
+                          id="city"
+                          name="city"
+                          value={formData.city || ""}
+                          onChange={handleChange}
+                          placeholder="شهر"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="province">استان</Label>
+                        <Input
+                          id="province"
+                          name="province"
+                          value={formData.province || ""}
+                          onChange={handleChange}
+                          placeholder="استان"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="postal_code">کد پستی</Label>
+                        <Input
+                          id="postal_code"
+                          name="postal_code"
+                          value={formData.postal_code || ""}
+                          onChange={handleChange}
+                          placeholder="کد پستی"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* اطلاعات اضطراری */}
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <PhoneCall className="w-5 h-5" />
+                    تماس اضطراری
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="emergency_contact_name">نام و نام خانوادگی</Label>
+                      <Input
+                        id="emergency_contact_name"
+                        name="emergency_contact_name"
+                        value={formData.emergency_contact_name || ""}
+                        onChange={handleChange}
+                        placeholder="نام فرد معتمد"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="emergency_contact_phone">شماره تماس</Label>
+                      <Input
+                        id="emergency_contact_phone"
+                        name="emergency_contact_phone"
+                        value={formData.emergency_contact_phone || ""}
+                        onChange={handleChange}
+                        placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* توضیحات */}
+                <div className="border-t pt-6">
+                  <Label htmlFor="notes" className="flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    توضیحات
                   </Label>
                   <textarea
-                    id="address"
-                    name="address"
-                    value={formData.address || ""}
+                    id="notes"
+                    name="notes"
+                    value={formData.notes || ""}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded-md mt-1 min-h-[80px]"
-                    placeholder="آدرس کامل"
+                    className="w-full p-2 border rounded-md mt-1 min-h-[100px]"
+                    placeholder="توضیحات اضافی..."
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="city">شهر</Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      value={formData.city || ""}
-                      onChange={handleChange}
-                      placeholder="شهر"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="province">استان</Label>
-                    <Input
-                      id="province"
-                      name="province"
-                      value={formData.province || ""}
-                      onChange={handleChange}
-                      placeholder="استان"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="postal_code">کد پستی</Label>
-                    <Input
-                      id="postal_code"
-                      name="postal_code"
-                      value={formData.postal_code || ""}
-                      onChange={handleChange}
-                      placeholder="کد پستی"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* اطلاعات اضطراری */}
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <PhoneCall className="w-5 h-5" />
-                تماس اضطراری
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="emergency_contact_name">نام و نام خانوادگی</Label>
-                  <Input
-                    id="emergency_contact_name"
-                    name="emergency_contact_name"
-                    value={formData.emergency_contact_name || ""}
-                    onChange={handleChange}
-                    placeholder="نام فرد معتمد"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="emergency_contact_phone">شماره تماس</Label>
-                  <Input
-                    id="emergency_contact_phone"
-                    name="emergency_contact_phone"
-                    value={formData.emergency_contact_phone || ""}
-                    onChange={handleChange}
-                    placeholder="۰۹۱۲۳۴۵۶۷۸۹"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* توضیحات */}
-            <div className="border-t pt-6">
-              <Label htmlFor="notes" className="flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                توضیحات
-              </Label>
-              <textarea
-                id="notes"
-                name="notes"
-                value={formData.notes || ""}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-md mt-1 min-h-[100px]"
-                placeholder="توضیحات اضافی..."
-              />
-            </div>
-
-            {/* دکمه‌ها */}
-            <div className="flex gap-4 pt-4 border-t flex-wrap">
-              <Button type="submit" disabled={isLoading} className="min-w-[120px]">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                    در حال ذخیره...
-                  </>
-                ) : (
-                  "ذخیره تغییرات"
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/dashboard/patients")}
-              >
-                انصراف
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* بخش سمعک‌های خریداری‌شده */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5" />
-            سمعک‌های خریداری‌شده
-            <span className="text-sm font-normal text-gray-500 mr-2">
-              ({sales.length} مورد)
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoadingSales ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-              <span className="mr-2 text-gray-500">در حال بارگذاری سمعک‌ها...</span>
-            </div>
-          ) : sales.length > 0 ? (
-            <div className="space-y-3">
-              {sales.map((sale) => (
-                <div
-                  key={sale.id}
-                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Package className="w-4 h-4 text-blue-500" />
-                      <span className="font-medium">{sale.hearing_aid_model}</span>
-                      <span className="text-sm text-gray-500">|</span>
-                      <span className="text-sm text-gray-600 flex items-center gap-1">
-                        <Hash className="w-3 h-3" />
-                        سریال: {sale.hearing_aid_serial}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm flex-wrap">
-                      <span className="text-gray-600 flex items-center gap-1">
-                        <CalendarIcon className="w-3 h-3" />
-                        تاریخ فروش: {formatJalaliDateTimeIntl(sale.sale_date)}
-                      </span>
-                      <span className="text-gray-600 flex items-center gap-1">
-                        <DollarSign className="w-3 h-3" />
-                        {formatPrice(sale.price)}
-                      </span>
-                      {sale.warranty_expiry && (
-                        <span className="text-gray-600 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          گارانتی تا: {formatJalaliDateTimeIntl(sale.warranty_expiry)}
-                        </span>
-                      )}
-                    </div>
-                    {sale.notes && (
-                      <p className="text-sm text-gray-500 flex items-center gap-1">
-                        <Info className="w-3 h-3" />
-                        {sale.notes}
-                      </p>
+                {/* دکمه‌ها */}
+                <div className="flex gap-4 pt-4 border-t flex-wrap">
+                  <Button type="submit" disabled={isLoading} className="min-w-[120px]">
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                        در حال ذخیره...
+                      </>
+                    ) : (
+                      "ذخیره تغییرات"
                     )}
-                  </div>
-                  <div className="flex gap-2 mt-2 md:mt-0">
-                    <Link href={`/dashboard/sales/${sale.id}`}>
-                      <Button variant="outline" size="sm">
-                        <Eye className="w-4 h-4 ml-1" />
-                        مشاهده
-                      </Button>
-                    </Link>
-                  </div>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push("/dashboard/patients")}
+                  >
+                    انصراف
+                  </Button>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <ShoppingBag className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-              <p>هیچ سمعکی برای این بیمار ثبت نشده است</p>
-              <Link href={`/dashboard/sales/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
-                <Button variant="outline" className="mt-4">
-                  ثبت فروش جدید
-                </Button>
-              </Link>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              </form>
+            </CardContent>
+          </Card>
 
-      {/* بخش نوبت‌های بیمار */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <CalendarIcon className="w-5 h-5" />
-              نوبت‌های بیمار
-              <span className="text-sm font-normal text-gray-500 mr-2">
-                ({appointments.length} نوبت)
-              </span>
-            </CardTitle>
-            <Link href={`/dashboard/appointments/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
-              <Button size="sm">
-                <Plus className="w-4 h-4 ml-2" />
-                ثبت نوبت
-              </Button>
-            </Link>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {isLoadingAppointments ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-              <span className="mr-2 text-gray-500">در حال بارگذاری نوبت‌ها...</span>
-            </div>
-          ) : appointments.length > 0 ? (
-            <div className="space-y-3">
-              {appointments.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => router.push(`/dashboard/appointments/${appointment.id}`)}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-medium">
-                        {appointment.title || "نوبت بدون عنوان"}
-                      </span>
-                      <AppointmentStatusBadge status={appointment.status} size="sm" />
-                    </div>
-                    <div className="flex items-center gap-4 text-sm flex-wrap">
-                      <span className="text-gray-600 flex items-center gap-1">
-                        <CalendarIcon className="w-3 h-3" />
-                        {formatJalaliDateTimeIntl(appointment.start_time)}
-                      </span>
-                      <span className="text-gray-600 flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {moment(appointment.start_time).format("HH:mm")} -{" "}
-                        {moment(appointment.end_time).format("HH:mm")}
-                      </span>
-                      <span className="text-gray-600 flex items-center gap-1">
-                        <Tag className="w-3 h-3" />
-                        {APPOINTMENT_TYPE_MAP[appointment.type as keyof typeof APPOINTMENT_TYPE_MAP] || appointment.type}
-                      </span>
-                    </div>
-                    {appointment.description && (
-                      <p className="text-sm text-gray-500 line-clamp-1">
-                        {appointment.description}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex gap-2 mt-2 md:mt-0">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/dashboard/appointments/${appointment.id}`}>
-                        <Eye className="w-4 h-4 ml-1" />
-                        مشاهده
-                      </Link>
-                    </Button>
-                  </div>
+          {/* بخش سمعک‌های خریداری‌شده */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5" />
+                سمعک‌های خریداری‌شده
+                <span className="text-sm font-normal text-gray-500 mr-2">
+                  ({sales.length} مورد)
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLoadingSales ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+                  <span className="mr-2 text-gray-500">در حال بارگذاری سمعک‌ها...</span>
                 </div>
-              ))}
-              {appointments.length >= 10 && (
-                <div className="text-center">
-                  <Link href={`/dashboard/appointments?patientId=${patientId}`}>
-                    <Button variant="outline" size="sm">
-                      مشاهده همه نوبت‌ها ({appointments.length})
+              ) : sales.length > 0 ? (
+                <div className="space-y-3">
+                  {sales.map((sale) => (
+                    <div
+                      key={sale.id}
+                      className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Package className="w-4 h-4 text-blue-500" />
+                          <span className="font-medium">{sale.hearing_aid_model}</span>
+                          <span className="text-sm text-gray-500">|</span>
+                          <span className="text-sm text-gray-600 flex items-center gap-1">
+                            <Hash className="w-3 h-3" />
+                            سریال: {sale.hearing_aid_serial}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm flex-wrap">
+                          <span className="text-gray-600 flex items-center gap-1">
+                            <CalendarIcon className="w-3 h-3" />
+                            تاریخ فروش: {formatJalaliDateTimeIntl(sale.sale_date)}
+                          </span>
+                          <span className="text-gray-600 flex items-center gap-1">
+                            <DollarSign className="w-3 h-3" />
+                            {formatPrice(sale.price)}
+                          </span>
+                          {sale.warranty_expiry && (
+                            <span className="text-gray-600 flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              گارانتی تا: {formatJalaliDateTimeIntl(sale.warranty_expiry)}
+                            </span>
+                          )}
+                        </div>
+                        {sale.notes && (
+                          <p className="text-sm text-gray-500 flex items-center gap-1">
+                            <Info className="w-3 h-3" />
+                            {sale.notes}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex gap-2 mt-2 md:mt-0">
+                        <Link href={`/dashboard/sales/${sale.id}`}>
+                          <Button variant="outline" size="sm">
+                            <Eye className="w-4 h-4 ml-1" />
+                            مشاهده
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <ShoppingBag className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                  <p>هیچ سمعکی برای این بیمار ثبت نشده است</p>
+                  <Link href={`/dashboard/sales/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
+                    <Button variant="outline" className="mt-4">
+                      ثبت فروش جدید
                     </Button>
                   </Link>
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <CalendarIcon className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-              <p>هیچ نوبتی برای این بیمار ثبت نشده است</p>
-              <Link href={`/dashboard/appointments/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
-                <Button variant="outline" className="mt-4">
-                  <Plus className="w-4 h-4 ml-2" />
-                  ثبت نوبت جدید
-                </Button>
-              </Link>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
-      {/* بخش فایل‌ها */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FolderOpen className="w-5 h-5" />
-            فایل‌های بیمار
-            <span className="text-sm font-normal text-gray-500 mr-2">
-              ({patientFiles.length} فایل)
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* نمایش فایل‌های موجود */}
-          {isLoadingFiles ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-              <span className="mr-2 text-gray-500">در حال بارگذاری فایل‌ها...</span>
-            </div>
-          ) : patientFiles.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {patientFiles.map((file) => (
-                <div
-                  key={file.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    {getFileIcon(file.metadata.mimetype)}
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium truncate" title={file.name}>
-                        {file.name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {formatFileSize(file.size)}
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => window.open(file.url, '_blank')}
-                    className="h-8 w-8 p-0 flex-shrink-0"
-                    title="مشاهده فایل"
-                  >
-                    <Download className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <File className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-              <p>هیچ فایلی برای این بیمار آپلود نشده است</p>
-              <p className="text-sm text-gray-400 mt-1">
-                با استفاده از بخش زیر می‌توانید فایل آپلود کنید
-              </p>
-            </div>
-          )}
-
-          {/* ============================================ */}
-          {/* بخش پیگیری‌های تلفنی */}
-          {/* ============================================ */}
+          {/* بخش نوبت‌های بیمار */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div className="space-y-1.5">
-                  <CardTitle className="flex items-center gap-2">
-                    <Phone className="w-5 h-5" />
-                    پیگیری‌های تلفنی
-                  </CardTitle>
-
-                  {/* بج‌ها - ردیف جدا زیر عنوان */}
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {activeFollowups.length > 0 && (
-                      <span className="text-xs font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                        {activeFollowups.length} فعال
-                      </span>
-                    )}
-                    <span className="text-xs text-gray-500">
-                      {callFollowups.length} کل
-                    </span>
-                  </div>
-                </div>
-
-                <Button
-                  size="sm"
-                  onClick={() => setShowFollowupForm(true)}
-                  disabled={showFollowupForm || activeFollowups.length > 0}
-                  title={
-                    activeFollowups.length > 0
-                      ? 'ابتدا پیگیری فعال را تکمیل یا لغو کنید'
-                      : undefined
-                  }
-                >
-                  <Plus className="w-4 h-4 ml-2" />
-                  ثبت قرار تماس
-                </Button>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarIcon className="w-5 h-5" />
+                  نوبت‌های بیمار
+                  <span className="text-sm font-normal text-gray-500 mr-2">
+                    ({appointments.length} نوبت)
+                  </span>
+                </CardTitle>
+                <Link href={`/dashboard/appointments/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
+                  <Button size="sm">
+                    <Plus className="w-4 h-4 ml-2" />
+                    ثبت نوبت
+                  </Button>
+                </Link>
               </div>
-
-              {activeFollowups.length > 0 && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  ⚠️ برای ثبت قرار تماس جدید، ابتدا پیگیری فعال فعلی را تکمیل یا لغو کنید
-                </p>
-              )}
             </CardHeader>
-
-            <CardContent className="space-y-4">
-              {/* فرم ثبت پیگیری جدید */}
-              {showFollowupForm && (
-                <CallFollowupForm
-                  patientId={patientId}
-                  patientName={`${formData.first_name || ''} ${formData.last_name || ''}`.trim()}
-                  onSuccess={() => setShowFollowupForm(false)}
-                  onCancel={() => setShowFollowupForm(false)}
-                />
-              )}
-
-              {isLoadingFollowups ? (
+            <CardContent>
+              {isLoadingAppointments ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-                  <span className="mr-2 text-gray-500">در حال بارگذاری پیگیری‌ها...</span>
+                  <span className="mr-2 text-gray-500">در حال بارگذاری نوبت‌ها...</span>
                 </div>
-              ) : callFollowups.length === 0 && !showFollowupForm ? (
-                <div className="text-center py-8 text-gray-500">
-                  <Phone className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-                  <p>هیچ پیگیری تلفنی برای این بیمار ثبت نشده است</p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    با دکمه‌ی بالا می‌توانید یک قرار تماس تعیین کنید
-                  </p>
+              ) : appointments.length > 0 ? (
+                <div className="space-y-3">
+                  {appointments.map((appointment) => (
+                    <div
+                      key={appointment.id}
+                      className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => router.push(`/dashboard/appointments/${appointment.id}`)}
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-medium">
+                            {appointment.title || "نوبت بدون عنوان"}
+                          </span>
+                          <AppointmentStatusBadge status={appointment.status} size="sm" />
+                        </div>
+                        <div className="flex items-center gap-4 text-sm flex-wrap">
+                          <span className="text-gray-600 flex items-center gap-1">
+                            <CalendarIcon className="w-3 h-3" />
+                            {formatJalaliDateTimeIntl(appointment.start_time)}
+                          </span>
+                          <span className="text-gray-600 flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {moment(appointment.start_time).format("HH:mm")} -{" "}
+                            {moment(appointment.end_time).format("HH:mm")}
+                          </span>
+                          <span className="text-gray-600 flex items-center gap-1">
+                            <Tag className="w-3 h-3" />
+                            {APPOINTMENT_TYPE_MAP[appointment.type as keyof typeof APPOINTMENT_TYPE_MAP] || appointment.type}
+                          </span>
+                        </div>
+                        {appointment.description && (
+                          <p className="text-sm text-gray-500 line-clamp-1">
+                            {appointment.description}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex gap-2 mt-2 md:mt-0">
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/dashboard/appointments/${appointment.id}`}>
+                            <Eye className="w-4 h-4 ml-1" />
+                            مشاهده
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  {appointments.length >= 10 && (
+                    <div className="text-center">
+                      <Link href={`/dashboard/appointments?patientId=${patientId}`}>
+                        <Button variant="outline" size="sm">
+                          مشاهده همه نوبت‌ها ({appointments.length})
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
                 </div>
               ) : (
-                <>
-                  {/* پیگیری‌های فعال */}
-                  {activeFollowups.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-blue-500" />
-                        پیگیری‌های فعال ({activeFollowups.length})
-                      </h4>
-                      {activeFollowups.map((followup) => (
-                        <CallFollowupCard
-                          key={followup.id}
-                          followup={followup}
-                          onComplete={(f) => setSelectedFollowupForComplete(f)}
-                          onCancel={handleCancelFollowup}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* تاریخچه collapsible */}
-                  {historyFollowups.length > 0 && (
-                    <div className="border-t pt-4">
-                      <button
-                        type="button"
-                        onClick={() => setShowHistory(!showHistory)}
-                        className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors group"
-                      >
-                        <div className="flex items-center gap-2">
-                          <History className="w-4 h-4 text-gray-500" />
-                          <span className="text-sm font-semibold text-gray-700">
-                            تاریخچه پیگیری‌ها
-                          </span>
-                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                            {historyFollowups.length}
-                          </span>
-                        </div>
-                        {showHistory ? (
-                          <ChevronUp className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
-                        )}
-                      </button>
-
-                      {showHistory && (
-                        <div className="mt-2 space-y-1.5 pr-2 border-r-2 border-gray-200 dark:border-gray-700 mr-1">
-                          {historyFollowups.map((followup) => (
-                            <CallFollowupCard
-                              key={followup.id}
-                              followup={followup}
-                              compact
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </>
+                <div className="text-center py-8 text-gray-500">
+                  <CalendarIcon className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                  <p>هیچ نوبتی برای این بیمار ثبت نشده است</p>
+                  <Link href={`/dashboard/appointments/new?patientId=${patientId}&returnTo=/dashboard/patients/${patientId}`}>
+                    <Button variant="outline" className="mt-4">
+                      <Plus className="w-4 h-4 ml-2" />
+                      ثبت نوبت جدید
+                    </Button>
+                  </Link>
+                </div>
               )}
             </CardContent>
           </Card>
 
-          {/* دیالوگ ثبت نتیجه */}
-          <CompleteCallFollowupDialog
-            followup={selectedFollowupForComplete}
-            open={!!selectedFollowupForComplete}
-            onOpenChange={(open) => {
-              if (!open) setSelectedFollowupForComplete(null);
-            }}
-            onSuccess={() => setSelectedFollowupForComplete(null)}
-          />
-
-          {/* آپلود فایل */}
-          <div className="border-t pt-4 mt-4">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-              آپلود فایل جدید
-            </p>
-            <FileUploader
-              patientId={patientId}
-              initialFiles={patientFiles.map(file => ({
-                id: file.id,
-                name: file.name,
-                path: file.path,
-                url: file.url || '',
-                size: file.size,
-                type: file.metadata.mimetype,
-                createdAt: file.created_at,
-              }))}
-              onUploadComplete={(file) => {
-                const newFile: PatientFile = {
-                  id: file.id,
-                  name: file.name,
-                  path: file.path,
-                  size: file.size,
-                  url: file.url,
-                  created_at: file.createdAt,
-                  updated_at: file.createdAt,
-                  bucket_id: 'patient-files',
-                  metadata: {
-                    mimetype: file.type,
-                    size: file.size,
-                    patient_id: patientId,
-                    original_name: file.name,
-                  },
-                };
-                setPatientFiles(prev => [...prev, newFile]);
-                toast.success(`فایل ${file.name} با موفقیت آپلود شد`);
-              }}
-              onFileDelete={(fileId) => {
-                setPatientFiles(prev => prev.filter(f => f.id !== fileId));
-                toast.success('فایل با موفقیت حذف شد');
-              }}
-              maxFiles={10}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* اطلاعات ثبت */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Info className="w-5 h-5" />
-            اطلاعات ثبت
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-500">تاریخ ثبت:</span>
-              <span className="mr-2 font-medium">
-                {formatJalaliDateTime(formData.created_at)}
-              </span>
-            </div>
-            {formData.updated_at && (
-              <div>
-                <span className="text-gray-500">آخرین ویرایش:</span>
-                <span className="mr-2 font-medium">
-                  {formatJalaliDateTime(formData.updated_at)}
+          {/* بخش فایل‌ها */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FolderOpen className="w-5 h-5" />
+                فایل‌های بیمار
+                <span className="text-sm font-normal text-gray-500 mr-2">
+                  ({patientFiles.length} فایل)
                 </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* نمایش فایل‌های موجود */}
+              {isLoadingFiles ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+                  <span className="mr-2 text-gray-500">در حال بارگذاری فایل‌ها...</span>
+                </div>
+              ) : patientFiles.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {patientFiles.map((file) => (
+                    <div
+                      key={file.id}
+                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        {getFileIcon(file.metadata.mimetype)}
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate" title={file.name}>
+                            {file.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {formatFileSize(file.size)}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => window.open(file.url, '_blank')}
+                        className="h-8 w-8 p-0 flex-shrink-0"
+                        title="مشاهده فایل"
+                      >
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <File className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                  <p>هیچ فایلی برای این بیمار آپلود نشده است</p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    با استفاده از بخش زیر می‌توانید فایل آپلود کنید
+                  </p>
+                </div>
+              )}
+
+              {/* ============================================ */}
+              {/* بخش پیگیری‌های تلفنی */}
+              {/* ============================================ */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div className="space-y-1.5">
+                      <CardTitle className="flex items-center gap-2">
+                        <Phone className="w-5 h-5" />
+                        پیگیری‌های تلفنی
+                      </CardTitle>
+
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {activeFollowups.length > 0 && (
+                          <span className="text-xs font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                            {activeFollowups.length} فعال
+                          </span>
+                        )}
+                        <span className="text-xs text-gray-500">
+                          {callFollowups.length} کل
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button
+                      size="sm"
+                      onClick={() => setShowFollowupForm(true)}
+                      disabled={showFollowupForm || activeFollowups.length > 0}
+                      title={
+                        activeFollowups.length > 0
+                          ? 'ابتدا پیگیری فعال را تکمیل یا لغو کنید'
+                          : undefined
+                      }
+                    >
+                      <Plus className="w-4 h-4 ml-2" />
+                      ثبت قرار تماس
+                    </Button>
+                  </div>
+
+                  {activeFollowups.length > 0 && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      ⚠️ برای ثبت قرار تماس جدید، ابتدا پیگیری فعال فعلی را تکمیل یا لغو کنید
+                    </p>
+                  )}
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  {showFollowupForm && (
+                    <CallFollowupForm
+                      patientId={patientId}
+                      patientName={`${formData.first_name || ''} ${formData.last_name || ''}`.trim()}
+                      onSuccess={() => setShowFollowupForm(false)}
+                      onCancel={() => setShowFollowupForm(false)}
+                    />
+                  )}
+
+                  {isLoadingFollowups ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+                      <span className="mr-2 text-gray-500">در حال بارگذاری پیگیری‌ها...</span>
+                    </div>
+                  ) : callFollowups.length === 0 && !showFollowupForm ? (
+                    <div className="text-center py-8 text-gray-500">
+                      <Phone className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                      <p>هیچ پیگیری تلفنی برای این بیمار ثبت نشده است</p>
+                      <p className="text-sm text-gray-400 mt-1">
+                        با دکمه‌ی بالا می‌توانید یک قرار تماس تعیین کنید
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {activeFollowups.length > 0 && (
+                        <div className="space-y-3">
+                          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-blue-500" />
+                            پیگیری‌های فعال ({activeFollowups.length})
+                          </h4>
+                          {activeFollowups.map((followup) => (
+                            <CallFollowupCard
+                              key={followup.id}
+                              followup={followup}
+                              onComplete={(f) => setSelectedFollowupForComplete(f)}
+                              onCancel={handleCancelFollowup}
+                            />
+                          ))}
+                        </div>
+                      )}
+
+                      {historyFollowups.length > 0 && (
+                        <div className="border-t pt-4">
+                          <button
+                            type="button"
+                            onClick={() => setShowHistory(!showHistory)}
+                            className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors group"
+                          >
+                            <div className="flex items-center gap-2">
+                              <History className="w-4 h-4 text-gray-500" />
+                              <span className="text-sm font-semibold text-gray-700">
+                                تاریخچه پیگیری‌ها
+                              </span>
+                              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                                {historyFollowups.length}
+                              </span>
+                            </div>
+                            {showHistory ? (
+                              <ChevronUp className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                            )}
+                          </button>
+
+                          {showHistory && (
+                            <div className="mt-2 space-y-1.5 pr-2 border-r-2 border-gray-200 dark:border-gray-700 mr-1">
+                              {historyFollowups.map((followup) => (
+                                <CallFollowupCard
+                                  key={followup.id}
+                                  followup={followup}
+                                  compact
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* دیالوگ ثبت نتیجه */}
+              <CompleteCallFollowupDialog
+                followup={selectedFollowupForComplete}
+                open={!!selectedFollowupForComplete}
+                onOpenChange={(open) => {
+                  if (!open) setSelectedFollowupForComplete(null);
+                }}
+                onSuccess={() => setSelectedFollowupForComplete(null)}
+              />
+
+              {/* آپلود فایل */}
+              <div className="border-t pt-4 mt-4">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  آپلود فایل جدید
+                </p>
+                <FileUploader
+                  patientId={patientId}
+                  initialFiles={patientFiles.map(file => ({
+                    id: file.id,
+                    name: file.name,
+                    path: file.path,
+                    url: file.url || '',
+                    size: file.size,
+                    type: file.metadata.mimetype,
+                    createdAt: file.created_at,
+                  }))}
+                  onUploadComplete={(file) => {
+                    const newFile: PatientFile = {
+                      id: file.id,
+                      name: file.name,
+                      path: file.path,
+                      size: file.size,
+                      url: file.url,
+                      created_at: file.createdAt,
+                      updated_at: file.createdAt,
+                      bucket_id: 'patient-files',
+                      metadata: {
+                        mimetype: file.type,
+                        size: file.size,
+                        patient_id: patientId,
+                        original_name: file.name,
+                      },
+                    };
+                    setPatientFiles(prev => [...prev, newFile]);
+                    toast.success(`فایل ${file.name} با موفقیت آپلود شد`);
+                  }}
+                  onFileDelete={(fileId) => {
+                    setPatientFiles(prev => prev.filter(f => f.id !== fileId));
+                    toast.success('فایل با موفقیت حذف شد');
+                  }}
+                  maxFiles={10}
+                />
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+
+          {/* اطلاعات ثبت */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Info className="w-5 h-5" />
+                اطلاعات ثبت
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-500">تاریخ ثبت:</span>
+                  <span className="mr-2 font-medium">
+                    {formatJalaliDateTime(formData.created_at)}
+                  </span>
+                </div>
+                {formData.updated_at && (
+                  <div>
+                    <span className="text-gray-500">آخرین ویرایش:</span>
+                    <span className="mr-2 font-medium">
+                      {formatJalaliDateTime(formData.updated_at)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ------------------------------------------------ */}
+        {/* تب ۲: تست‌های شنوایی */}
+        {/* ------------------------------------------------ */}
+        <TabsContent value="hearing-tests" className="mt-6">
+          <PatientHearingTestsTab patientId={patientId} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

@@ -17,6 +17,8 @@ import {
   Phone,
   Menu,
   X,
+  Activity,
+  Ear,
 } from "lucide-react";
 import { logout } from "@/src/lib/supabase/actions";
 import { CallFollowupBell } from "@/components/call-followups/CallFollowupBell";
@@ -35,6 +37,11 @@ const menuItems = [
     title: "بیماران",
     href: "/dashboard/patients",
     icon: Users,
+  },
+  {
+    title: "تست‌های شنوایی",
+    href: "/dashboard/audiograms",
+    icon: Ear, // یا از آیکون Ear استفاده کنید
   },
   {
     title: "مدیریت کاربران",
