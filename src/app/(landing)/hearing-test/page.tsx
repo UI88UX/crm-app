@@ -67,7 +67,7 @@ export default function PublicHearingTestPage() {
     const audioContextRef = useRef<AudioContext | null>(null);
     const oscillatorRef = useRef<OscillatorNode | null>(null);
     const gainNodeRef = useRef<GainNode | null>(null);
-    const pannerNodeRef = useRef<StereoPannerNode | null>(null); // 🎧 نود جدید برای جداسازی کانال‌ها
+    const pannerNodeRef = useRef<StereoPannerNode | null>(null);
     const toneTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const actionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isMountedRef = useRef(true);
@@ -149,10 +149,8 @@ export default function PublicHearingTestPage() {
 
             const oscillator = ctx.createOscillator();
             const gain = ctx.createGain();
-            const panner = ctx.createStereoPanner(); // 🎧 ساخت نود پنر
+            const panner = ctx.createStereoPanner();
 
-            // 🎧 تنظیم جهت صدا: -1 برای چپ، +1 برای راست
-            // اگر هدفون استریو باشد، صدا فقط از یک سمت پخش می‌شود
             panner.pan.setValueAtTime(selectedEarRef.current === 'left' ? -1 : 1, ctx.currentTime);
 
             oscillator.type = 'sine';
@@ -161,7 +159,6 @@ export default function PublicHearingTestPage() {
             const gainValue = Math.min(Math.pow(10, (db - 100) / 20), 0.8);
             gain.gain.setValueAtTime(gainValue, ctx.currentTime);
 
-            // اتصال زنجیره: اسیلاتور -> گین -> پنر -> خروجی
             oscillator.connect(gain);
             gain.connect(panner);
             panner.connect(ctx.destination);
@@ -371,50 +368,52 @@ export default function PublicHearingTestPage() {
     };
 
     return (
-        <div className="container mx-auto max-w-4xl space-y-6 p-6" dir="rtl">
-            <div className="space-y-2 text-center">
-                <h1 className="text-3xl font-bold">تست شنوایی آنلاین</h1>
-                <p className="text-muted-foreground">
+        <div className="container mx-auto max-w-4xl space-y-4 p-4 sm:space-y-6 sm:p-6" dir="rtl">
+            <div className="space-y-1.5 text-center sm:space-y-2">
+                <h1 className="text-2xl font-bold sm:text-3xl">تست شنوایی آنلاین</h1>
+                <p className="text-sm text-muted-foreground sm:text-base">
                     با استفاده از هدفون، شنوایی خود را در چند دقیقه بسنجید.
                 </p>
             </div>
 
             {phase === 'intro' && (
                 <Card className="border-blue-200 bg-blue-50/50">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-blue-700">
-                            <Headphones className="h-5 w-5" />
+                    <CardHeader className="p-4 sm:p-6">
+                        <CardTitle className="flex items-center gap-2 text-base text-blue-700 sm:text-lg">
+                            <Headphones className="h-5 w-5 shrink-0" />
                             راهنمای تست
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4 text-sm text-blue-900">
-                        <div className="space-y-2">
+                    <CardContent className="space-y-3 p-4 pt-0 text-xs text-blue-900 sm:space-y-4 sm:p-6 sm:pt-0 sm:text-sm">
+                        <div className="space-y-1.5 leading-relaxed sm:space-y-2">
                             <p>۱. هدفون را به گوش بزنید و در محیطی ساکت قرار بگیرید.</p>
                             <p>۲. صدای سیستم را در سطحی راحت تنظیم کنید.</p>
                             <p>۳. هر بار صدا را شنیدید، پس از پایان پخش «شنیدم» را بزنید.</p>
                             <p>۴. اگر صدا را نشنیدید، «نشنیدم» را بزنید تا سطح صدا افزایش یابد.</p>
                             <p>۵. هر فرکانس حداکثر ۱۲ پاسخ دارد و سپس به‌طور خودکار به فرکانس بعدی می‌رود.</p>
-                            <p className="font-bold text-red-600 pt-2">⚠️ لطفاً قبل از شروع، از قرارگیری صحیح هدفون در گوش اطمینان حاصل کنید. در طول تست، صدا فقط در گوش انتخاب‌شده پخش می‌شود.</p>
+                            <p className="pt-2 font-bold text-red-600">
+                                ⚠️ لطفاً قبل از شروع، از قرارگیری صحیح هدفون در گوش اطمینان حاصل کنید. در طول تست، صدا فقط در گوش انتخاب‌شده پخش می‌شود.
+                            </p>
                         </div>
                         <p className="font-semibold text-red-600">
                             ⚠️ این تست آنلاین کالیبره‌شده نیست و جایگزین ادیومتری بالینی نمی‌شود.
                         </p>
 
-                        <div className="grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2">
+                        <div className="grid grid-cols-1 gap-2.5 pt-2 sm:grid-cols-2 sm:gap-3">
                             <Button
                                 onClick={() => startEarTest('right')}
-                                className="w-full bg-red-600 py-6 text-lg hover:bg-red-700"
+                                className="w-full bg-red-600 py-5 text-sm hover:bg-red-700 sm:py-6 sm:text-base"
                                 size="lg"
                             >
-                                <Ear className="ml-2 h-5 w-5" />
+                                <Ear className="ml-2 h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
                                 شروع تست گوش راست
                             </Button>
                             <Button
                                 onClick={() => startEarTest('left')}
-                                className="w-full bg-blue-600 py-6 text-lg hover:bg-blue-700"
+                                className="w-full bg-blue-600 py-5 text-sm hover:bg-blue-700 sm:py-6 sm:text-base"
                                 size="lg"
                             >
-                                <Ear className="ml-2 h-5 w-5" />
+                                <Ear className="ml-2 h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
                                 شروع تست گوش چپ
                             </Button>
                         </div>
@@ -424,13 +423,17 @@ export default function PublicHearingTestPage() {
 
             {phase === 'testing' && (
                 <Card className="border-slate-200">
-                    <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <CardTitle className={`flex items-center gap-2 ${selectedEar === 'right' ? 'text-red-600' : 'text-blue-600'}`}>
-                                <Ear className="h-5 w-5" />
+                    <CardHeader className="p-4 sm:p-6">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <CardTitle
+                                className={`flex items-center gap-2 text-sm sm:text-base ${
+                                    selectedEar === 'right' ? 'text-red-600' : 'text-blue-600'
+                                }`}
+                            >
+                                <Ear className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
                                 گوش {selectedEar === 'right' ? 'راست' : 'چپ'} - فرکانس {TEST_FREQUENCIES[currentFreqIndex]} هرتز
                             </CardTitle>
-                            <span className="text-sm text-slate-500">
+                            <span className="text-xs text-slate-500 sm:text-sm">
                                 {completedSteps} از {TOTAL_STEPS} مرحله
                             </span>
                         </div>
@@ -442,37 +445,49 @@ export default function PublicHearingTestPage() {
                             aria-valuenow={progress}
                         >
                             <div
-                                className={`h-2 rounded-full transition-all duration-300 ${selectedEar === 'right' ? 'bg-red-600' : 'bg-blue-600'}`}
+                                className={`h-2 rounded-full transition-all duration-300 ${
+                                    selectedEar === 'right' ? 'bg-red-600' : 'bg-blue-600'
+                                }`}
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
-                        <p className="text-left text-xs text-slate-500">{progress}% تکمیل شده</p>
+                        <p className="mt-1 text-left text-[11px] text-slate-500 sm:text-xs">
+                            {progress}% تکمیل شده
+                        </p>
                     </CardHeader>
 
-                    <CardContent className="flex flex-col items-center space-y-6 py-8">
-                        <div className="flex items-center justify-center gap-4">
+                    <CardContent className="flex flex-col items-center space-y-4 px-4 py-6 sm:space-y-6 sm:p-6 sm:py-8">
+                        <div className="flex items-center justify-center gap-3 sm:gap-4">
                             {isPlaying ? (
-                                <div className={`flex animate-pulse items-center gap-2 ${selectedEar === 'right' ? 'text-red-600' : 'text-blue-600'}`}>
-                                    <Volume2 className="h-8 w-8" />
-                                    <span className="text-lg font-semibold">در حال پخش صدا در گوش {selectedEar === 'right' ? 'راست' : 'چپ'}...</span>
+                                <div
+                                    className={`flex animate-pulse items-center gap-2 ${
+                                        selectedEar === 'right' ? 'text-red-600' : 'text-blue-600'
+                                    }`}
+                                >
+                                    <Volume2 className="h-6 w-6 shrink-0 sm:h-8 sm:w-8" />
+                                    <span className="text-sm font-semibold sm:text-lg">
+                                        در حال پخش صدا در گوش {selectedEar === 'right' ? 'راست' : 'چپ'}...
+                                    </span>
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-2 text-slate-500">
-                                    <VolumeX className="h-8 w-8" />
-                                    <span className="text-lg">صدا متوقف است؛ پاسخ دهید یا دوباره پخش کنید</span>
+                                <div className="flex items-center gap-2 text-center text-slate-500">
+                                    <VolumeX className="h-6 w-6 shrink-0 sm:h-8 sm:w-8" />
+                                    <span className="text-xs sm:text-base">
+                                        صدا متوقف است؛ پاسخ دهید یا دوباره پخش کنید
+                                    </span>
                                 </div>
                             )}
                         </div>
 
                         <div className="text-center">
-                            <span className="text-4xl font-bold text-slate-800">{currentDb}</span>
-                            <span className="mr-2 text-sm text-slate-500">dB (سطح نسبی)</span>
+                            <span className="text-3xl font-bold text-slate-800 sm:text-4xl">{currentDb}</span>
+                            <span className="mr-2 text-xs text-slate-500 sm:text-sm">dB (سطح نسبی)</span>
                         </div>
 
-                        <div className="flex w-full max-w-md flex-col gap-3">
+                        <div className="flex w-full max-w-md flex-col gap-2.5 sm:gap-3">
                             <Button
                                 onClick={() => handleAnswer(true)}
-                                className="bg-green-600 py-6 text-lg text-white hover:bg-green-700"
+                                className="bg-green-600 py-5 text-base text-white hover:bg-green-700 sm:py-6 sm:text-lg"
                                 disabled={isPlaying}
                             >
                                 شنیدم
@@ -480,7 +495,7 @@ export default function PublicHearingTestPage() {
                             <Button
                                 onClick={() => handleAnswer(false)}
                                 variant="outline"
-                                className="border-red-300 py-6 text-lg text-red-600 hover:bg-red-50"
+                                className="border-red-300 py-5 text-base text-red-600 hover:bg-red-50 sm:py-6 sm:text-lg"
                                 disabled={isPlaying}
                             >
                                 نشنیدم
@@ -491,24 +506,24 @@ export default function PublicHearingTestPage() {
                             <Button
                                 onClick={replayTone}
                                 variant="secondary"
-                                className="flex-1"
+                                className="flex-1 text-xs sm:text-sm"
                                 disabled={isPlaying}
                             >
-                                <RotateCcw className="ml-2 h-4 w-4" />
+                                <RotateCcw className="ml-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 پخش دوباره صدا
                             </Button>
                             <Button
                                 onClick={stopTestTone}
                                 variant="ghost"
-                                className="flex-1 text-slate-500"
+                                className="flex-1 text-xs text-slate-500 sm:text-sm"
                                 disabled={!isPlaying}
                             >
-                                <Square className="ml-2 h-4 w-4" />
+                                <Square className="ml-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 توقف صدا
                             </Button>
                         </div>
 
-                        <div className="text-xs text-slate-400">
+                        <div className="text-center text-[11px] text-slate-400 sm:text-xs">
                             مرحله {stepInFreq} از {MAX_STEPS_PER_FREQ} در این فرکانس | فرکانس{' '}
                             {currentFreqIndex + 1} از {TEST_FREQUENCIES.length}
                         </div>
@@ -518,23 +533,31 @@ export default function PublicHearingTestPage() {
 
             {phase === 'ear-finished' && (
                 <Card className="border-green-200 bg-green-50/30">
-                    <CardHeader>
-                        <CardTitle className="flex items-center justify-center gap-2 text-center text-green-700">
-                            <CheckCircle2 className="h-5 w-5" />
+                    <CardHeader className="p-4 sm:p-6">
+                        <CardTitle className="flex items-center justify-center gap-2 text-center text-base text-green-700 sm:text-lg">
+                            <CheckCircle2 className="h-5 w-5 shrink-0" />
                             تست گوش {selectedEar === 'right' ? 'راست' : 'چپ'} به پایان رسید
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4 text-center">
-                        <p className="text-sm text-slate-600">
+                    <CardContent className="space-y-4 p-4 text-center sm:p-6">
+                        <p className="text-xs text-slate-600 sm:text-sm">
                             {selectedEar === 'right'
                                 ? 'آیا می‌خواهید تست گوش چپ را نیز انجام دهید؟'
                                 : 'آیا می‌خواهید تست گوش راست را نیز انجام دهید؟'}
                         </p>
-                        <div className="flex justify-center gap-3">
-                            <Button onClick={() => handleEarFinished(true)} variant="default">
+                        <div className="flex flex-col justify-center gap-2 sm:flex-row sm:gap-3">
+                            <Button
+                                onClick={() => handleEarFinished(true)}
+                                variant="default"
+                                className="w-full text-sm sm:w-auto"
+                            >
                                 بله، تست گوش {selectedEar === 'right' ? 'چپ' : 'راست'}
                             </Button>
-                            <Button onClick={() => handleEarFinished(false)} variant="outline">
+                            <Button
+                                onClick={() => handleEarFinished(false)}
+                                variant="outline"
+                                className="w-full text-sm sm:w-auto"
+                            >
                                 خیر، مشاهده نتیجه نهایی
                             </Button>
                         </div>
@@ -544,22 +567,25 @@ export default function PublicHearingTestPage() {
 
             {phase === 'all-finished' && (
                 <Card className="border-green-200 bg-green-50/30">
-                    <CardHeader>
-                        <CardTitle className="flex items-center justify-center gap-2 text-center text-green-700">
-                            <CheckCircle2 className="h-5 w-5" />
+                    <CardHeader className="p-4 sm:p-6">
+                        <CardTitle className="flex items-center justify-center gap-2 text-center text-base text-green-700 sm:text-lg">
+                            <CheckCircle2 className="h-5 w-5 shrink-0" />
                             تست به پایان رسید
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <CardContent className="space-y-5 p-4 sm:space-y-6 sm:p-6">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
                             {hasTestedRight && (
                                 <div className="space-y-2">
-                                    <h3 className="text-center font-semibold text-red-600">گوش راست</h3>
-                                    <div className="rounded-lg border p-2">
+                                    <h3 className="text-center text-sm font-semibold text-red-600 sm:text-base">
+                                        گوش راست
+                                    </h3>
+                                    {/* برای جلوگیری از سرریز نمودار در موبایل، overflow-x-auto اضافه شد */}
+                                    <div className="overflow-x-auto rounded-lg border p-1 sm:p-2">
                                         <AudiogramChart
                                             isRight={true}
                                             data={rightEarData}
-                                            onPointChange={() => { }}
+                                            onPointChange={() => {}}
                                             activeInputType="air"
                                         />
                                     </div>
@@ -568,12 +594,14 @@ export default function PublicHearingTestPage() {
 
                             {hasTestedLeft && (
                                 <div className="space-y-2">
-                                    <h3 className="text-center font-semibold text-blue-600">گوش چپ</h3>
-                                    <div className="rounded-lg border p-2">
+                                    <h3 className="text-center text-sm font-semibold text-blue-600 sm:text-base">
+                                        گوش چپ
+                                    </h3>
+                                    <div className="overflow-x-auto rounded-lg border p-1 sm:p-2">
                                         <AudiogramChart
                                             isRight={false}
                                             data={leftEarData}
-                                            onPointChange={() => { }}
+                                            onPointChange={() => {}}
                                             activeInputType="air"
                                         />
                                     </div>
@@ -581,18 +609,26 @@ export default function PublicHearingTestPage() {
                             )}
                         </div>
 
-                        <div className="text-center text-sm text-slate-600">
+                        <div className="text-center text-xs text-slate-600 sm:text-sm">
                             <p>آستانه‌های تخمینی در فرکانس‌های مختلف در نمودارهای بالا نمایش داده شده‌اند.</p>
-                            <p className="mt-2 text-xs text-muted-foreground">
+                            <p className="mt-2 text-[11px] text-muted-foreground sm:text-xs">
                                 این تست صرفاً غربالگری غیرتشخیصی است. برای ارزیابی دقیق به متخصص شنوایی‌سنجی مراجعه کنید.
                             </p>
                         </div>
 
-                        <div className="no-print flex justify-center gap-3 pt-4">
-                            <Button onClick={() => window.print()} variant="default">
+                        <div className="no-print flex flex-col justify-center gap-2 pt-2 sm:flex-row sm:gap-3 sm:pt-4">
+                            <Button
+                                onClick={() => window.print()}
+                                variant="default"
+                                className="w-full text-sm sm:w-auto"
+                            >
                                 چاپ / دانلود گزارش
                             </Button>
-                            <Button onClick={restartAll} variant="outline">
+                            <Button
+                                onClick={restartAll}
+                                variant="outline"
+                                className="w-full text-sm sm:w-auto"
+                            >
                                 تست مجدد
                             </Button>
                         </div>
