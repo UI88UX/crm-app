@@ -182,6 +182,7 @@ export default function Home() {
               خانه
             </Link>
 
+
             <a
               href="#features"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -196,6 +197,10 @@ export default function Home() {
               مزایا
             </a>
 
+            <Link href="./hearing-test" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              تست شنوایی رایگان
+            </Link>
+            
             <Link
               href="/contact"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
