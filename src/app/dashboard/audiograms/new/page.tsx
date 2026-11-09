@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Suspense } from 'react'; 
 import {
     Select,
     SelectContent,
@@ -97,10 +98,10 @@ async function saveHearingTest(
 }
 
 // -------------------------------------------------------------
-// 2. کامپوننت اصلی
+// 2. کامپوننت داخلی (محتوا) که از useSearchParams استفاده می‌کند
 // -------------------------------------------------------------
 
-export default function NewAudiogramPage() {
+function NewAudiogramPageContent() {
     const router = useRouter();
     const queryClient = useQueryClient();
     const searchParams = useSearchParams();
@@ -409,7 +410,7 @@ export default function NewAudiogramPage() {
                 <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* ستون گوش راست */}
                     <div className="flex flex-col items-center w-full">
-                        <div className="w-full max-w-[450px]"> {/* ← عرض حداکثر را افزایش دهید */}
+                        <div className="w-full max-w-[450px]">
                             <AudiogramChart
                                 isRight={true}
                                 data={rightData}
@@ -620,5 +621,17 @@ export default function NewAudiogramPage() {
                 </Button>
             </div>
         </div>
+    );
+}
+
+// -------------------------------------------------------------
+// 3. کامپوننت پیش‌فرض که محتوا را در Suspense می‌پیچد
+// -------------------------------------------------------------
+
+export default function NewAudiogramPage() {
+    return (
+        <Suspense fallback={<div className="p-8 text-center">در حال بارگذاری...</div>}>
+            <NewAudiogramPageContent />
+        </Suspense>
     );
 }

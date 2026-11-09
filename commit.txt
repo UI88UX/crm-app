@@ -1,0 +1,11 @@
+feat(audiogram): add comprehensive hearing test module with AI report generation
+
+- Add AudiogramChart component with interactive SVG (Air/Bone, Masked testing)
+- Implement live summary table under charts for real-time data verification
+- Create new hearing test page and detail/edit page for patients
+- Add hearing tests tab to patient profile for history tracking
+- Integrate Pollinations AI for automated clinical report generation
+- Implement ReportModal with print-to-PDF and Vazirmatn font support
+- Update Sidebar to include Audiogram module navigation
+- Fix patient list to exclude soft-deleted records
+- Improve responsive layout for audiogram tables and forms
