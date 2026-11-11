@@ -1,7 +1,7 @@
 // src/app/dashboard/audiograms/filters.tsx
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Search, X, Calendar as CalendarIcon, Filter } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
@@ -94,6 +94,7 @@ export function AudiogramFilters({ totalCount, isLoading }: AudiogramFiltersProp
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const lastSearchWeSetRef = useRef<string | null>(null);
 
   const urlSearch = searchParams.get("search") || "";
   const urlFrom = searchParams.get("from") || "";
@@ -105,8 +106,12 @@ export function AudiogramFilters({ totalCount, isLoading }: AudiogramFiltersProp
   );
 
   useEffect(() => {
+    if (lastSearchWeSetRef.current === urlSearch || lastSearchWeSetRef.current === (urlSearch || null)) {
+    lastSearchWeSetRef.current = null;  
+    return;
+    }
     setLocalSearch(urlSearch);
-  }, [urlSearch]);
+}, [urlSearch]);
 
   const activeQuickRange: QuickRange = useMemo(() => {
     if (!urlFrom || !urlTo) return null;
@@ -151,7 +156,7 @@ export function AudiogramFilters({ totalCount, isLoading }: AudiogramFiltersProp
     if (localSearch === urlSearch) return;
     const timer = setTimeout(() => {
       updateUrl({ search: localSearch || null });
-    }, 400);
+    }, 900);
     return () => clearTimeout(timer);
   }, [localSearch, urlSearch, updateUrl]);
 

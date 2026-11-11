@@ -1,32 +1,32 @@
 // src/app/dashboard/sales/page.client.tsx
 "use client";
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
-  ShoppingBag,
-  Plus,
-  Trash2,
-  X,
   Calendar,
   DollarSign,
-  Package,
-  Hash,
-  User,
-  FileText,
-  Search,
-  Loader2,
-  Pencil,
   Eye,
+  FileText,
+  Hash,
+  Loader2,
+  Package,
+  Plus,
+  ShoppingBag,
+  Trash2,
+  User,
+  X,
 } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
-import { useSales, useDeleteSale, useCreateSale } from "@/hooks/useSales";
+import { useCreateSale, useDeleteSale, useSales } from "@/hooks/useSales";
+import { SalesFilters } from "./filters";
+import { Input } from "@/components/ui/input";
 
 interface PatientSimple {
   id: string;
@@ -39,8 +39,16 @@ interface SalesClientProps {
   patients: PatientSimple[];
 }
 
+const getTodayGregorian = (): string => {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+};
+
 export default function SalesClient({ patients }: SalesClientProps) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get("search") || ""
+  const urlFrom = searchParams.get("from") || ""
+  const urlTo = searchParams.get("to") || ""
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const {
@@ -60,35 +68,47 @@ export default function SalesClient({ patients }: SalesClientProps) {
     hearing_aid_model: "",
     hearing_aid_serial: "",
     price: "",
-    sale_date: new Date().toISOString().split("T")[0],
+    sale_date: getTodayGregorian(),
     warranty_expiry: "",
     notes: "",
   });
 
   // فیلتر کردن
+  // فیلتر کردن (جستجو + بازه تاریخ)
   const filteredSales = useMemo(() => {
-    if (!searchTerm.trim()) return sales;
+    let result = sales;
 
-    const lowercasedTerm = searchTerm.toLowerCase().trim();
-    return sales.filter((sale) => {
-      const patientName =
-        `${sale.patient?.first_name || ""} ${sale.patient?.last_name || ""}`.toLowerCase();
-      const model = sale.hearing_aid_model.toLowerCase();
-      const serial = sale.hearing_aid_serial.toLowerCase();
-      const nationalCode = sale.patient?.national_code?.toLowerCase() || "";
+    // 🔍 فیلتر جستجو
+    if (urlSearch.trim()) {
+      const lowercasedTerm = urlSearch.toLowerCase().trim();
+      result = result.filter((sale) => {
+        const patientName =
+          `${sale.patient?.first_name || ""} ${sale.patient?.last_name || ""}`.toLowerCase();
+        const model = sale.hearing_aid_model.toLowerCase();
+        const serial = sale.hearing_aid_serial.toLowerCase();
+        const nationalCode = sale.patient?.national_code?.toLowerCase() || "";
 
-      return (
-        patientName.includes(lowercasedTerm) ||
-        model.includes(lowercasedTerm) ||
-        serial.includes(lowercasedTerm) ||
-        nationalCode.includes(lowercasedTerm)
-      );
-    });
-  }, [sales, searchTerm]);
+        return (
+          patientName.includes(lowercasedTerm) ||
+          model.includes(lowercasedTerm) ||
+          serial.includes(lowercasedTerm) ||
+          nationalCode.includes(lowercasedTerm)
+        );
+      });
+    }
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-  };
+    // 📅 فیلتر از تاریخ
+    if (urlFrom) {
+      result = result.filter((sale) => sale.sale_date >= urlFrom);
+    }
+
+    // 📅 فیلتر تا تاریخ
+    if (urlTo) {
+      result = result.filter((sale) => sale.sale_date <= urlTo);
+    }
+
+    return result;
+  }, [sales, urlSearch, urlFrom, urlTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,7 +160,7 @@ export default function SalesClient({ patients }: SalesClientProps) {
       hearing_aid_model: "",
       hearing_aid_serial: "",
       price: "",
-      sale_date: new Date().toISOString().split("T")[0],
+      sale_date: getTodayGregorian(),
       warranty_expiry: "",
       notes: "",
     });
@@ -347,27 +367,26 @@ export default function SalesClient({ patients }: SalesClientProps) {
         </Card>
       )}
 
-      {/* جستجو و آمار */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full md:w-96">
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            type="text"
-            placeholder="جستجو در فروش‌ها..."
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pr-10"
+      {/* فیلترها */}
+      <Card>
+        <CardContent className="p-4">
+          <SalesFilters
+            totalCount={filteredSales.length}
+            isLoading={isFetching}
           />
-        </div>
-        <div className="flex gap-4 text-sm">
-          <span className="text-gray-500">
-            تعداد کل: <strong className="text-gray-900">{filteredSales.length}</strong>
-          </span>
-          <span className="text-gray-500">
-            مجموع فروش:{" "}
-            <strong className="text-green-600">{formatPrice(totalRevenue)} تومان</strong>
-          </span>
-        </div>
+        </CardContent>
+      </Card>
+
+      {/* آمار */}
+      <div className="flex flex-wrap gap-4 text-sm">
+        <span className="text-gray-500">
+          تعداد کل:{" "}
+          <strong className="text-gray-900">{filteredSales.length}</strong>
+        </span>
+        <span className="text-gray-500">
+          مجموع فروش:{" "}
+          <strong className="text-green-600">{formatPrice(totalRevenue)} تومان</strong>
+        </span>
       </div>
 
       {/* لیست فروش‌ها */}
@@ -376,7 +395,7 @@ export default function SalesClient({ patients }: SalesClientProps) {
           <CardTitle className="flex items-center gap-2">
             <ShoppingBag className="w-5 h-5" />
             لیست فروش‌ها
-            {searchTerm && (
+            {urlSearch && (
               <Badge variant="outline" className="mr-2">
                 {filteredSales.length} نتیجه
               </Badge>
@@ -392,9 +411,11 @@ export default function SalesClient({ patients }: SalesClientProps) {
             <div className="text-center py-12">
               <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500">
-                {searchTerm ? "هیچ فروشی با این جستجو یافت نشد" : "هیچ فروشی ثبت نشده است"}
+                {urlSearch || urlFrom || urlTo
+                  ? "هیچ فروشی با این فیلترها یافت نشد"
+                  : "هیچ فروشی ثبت نشده است"}
               </p>
-              {!searchTerm && (
+              {!urlSearch && !urlFrom && !urlTo && (
                 <Button
                   variant="outline"
                   className="mt-4"
@@ -486,7 +507,7 @@ export default function SalesClient({ patients }: SalesClientProps) {
                         className="flex-1 sm:flex-none"
                       >
                         {deleteSale.isPending &&
-                        deleteSale.variables === sale.id ? (
+                          deleteSale.variables === sale.id ? (
                           <Loader2 className="w-4 h-4 ml-1 animate-spin" />
                         ) : (
                           <Trash2 className="w-4 h-4 ml-1" />
